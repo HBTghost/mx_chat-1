@@ -1,4 +1,4 @@
-
+﻿
 // ServerChatGUIDlg.cpp : implementation file
 //
 
@@ -13,6 +13,7 @@
 #define new DEBUG_NEW
 #endif
 
+#pragma region  CABOUT_DLG
 
 // CAboutDlg dialog used for App About
 
@@ -21,12 +22,12 @@ class CAboutDlg : public CDialogEx
 public:
 	CAboutDlg();
 
-// Dialog Data
+	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 // Implementation
@@ -49,12 +50,22 @@ END_MESSAGE_MAP()
 
 // CServerChatGUIDlg dialog
 
+#pragma endregion
+
 
 // inside the class declaration
 afx_msg LRESULT CServerChatGUIDlg::OnUserDefinedMessage(WPARAM wParam, LPARAM lParam) {
 	//wstring* pString = (wstring*)lParam;
 	//LPCTSTR str = pString->c_str();                 // i.e. std::wstring to wchar_t*
 	SClientPacket* packet = (SClientPacket*)wParam;
+	CString nLog;
+
+	nLog.Format(_T("Tài khoản [ %s ] đã kết nối"), packet->username.c_str());
+	UpdateData(TRUE);
+
+	m_strServerLog.Append(nLog);
+	m_strServerLog.Append(L"\r\n");
+	UpdateData(FALSE);
 	AfxMessageBox((packet->username.c_str()));
 
 	// Do something with pString... You can even pass it to a CStringW constructor. 
@@ -64,8 +75,39 @@ afx_msg LRESULT CServerChatGUIDlg::OnUserDefinedMessage(WPARAM wParam, LPARAM lP
 	return 1;
 }
 
+
+afx_msg LRESULT CServerChatGUIDlg::OnConnectedMsg(WPARAM wParam, LPARAM lParam) {
+	CString nLog = _T("Có thêm 1 Client đã kết nối \r\n");
+
+	UpdateData(TRUE);
+	m_strServerLog.Append(nLog);
+	UpdateData(FALSE);
+	return 1;
+}
+
+afx_msg LRESULT CServerChatGUIDlg::OnSignupMsg(WPARAM wParam, LPARAM lParam) {
+	Account* account = (Account*)wParam;
+	if (account == nullptr) {
+		return -1; 
+	}
+	CString nLog;
+	nLog.Format(_T("Đăng ký :  Tài khoản -  [%s] |  Mật khẩu [%s] \r\n"), account->getUserName().c_str(), account->getPassWord().c_str());
+
+	UpdateData(TRUE);
+	m_strServerLog.Append(nLog);
+	UpdateData(FALSE);
+	return 1;
+}
+afx_msg LRESULT CServerChatGUIDlg::OnDisConnectedMsg(WPARAM wParam, LPARAM lParam) {
+	CString nLog = _T("Có 1 Client đã ngắt kết nối \r\n");
+	UpdateData(TRUE);
+	m_strServerLog.Append(nLog);
+	UpdateData(FALSE);
+	return 1;
+}
 CServerChatGUIDlg::CServerChatGUIDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SERVERCHATGUI_DIALOG, pParent)
+	, m_strServerLog(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -73,6 +115,7 @@ CServerChatGUIDlg::CServerChatGUIDlg(CWnd* pParent /*=nullptr*/)
 void CServerChatGUIDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_SERVER_LOG, m_strServerLog);
 }
 
 BEGIN_MESSAGE_MAP(CServerChatGUIDlg, CDialogEx)
@@ -80,7 +123,9 @@ BEGIN_MESSAGE_MAP(CServerChatGUIDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 
-	ON_MESSAGE(ID_CLIENT_CONNECTED_MESSAGE, OnUserDefinedMessage)
+	ON_MESSAGE(ID_CLIENT_CONNECTED_MESSAGE, OnConnectedMsg)
+	ON_MESSAGE(ID_CLIENT_DISCONNECTED_MESSAGE, OnDisConnectedMsg)
+	ON_MESSAGE(ID_CLIENT_SIGNUP_MESSAGE, OnSignupMsg)
 	ON_BN_CLICKED(IDC_BUTTON1, &CServerChatGUIDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
@@ -146,7 +191,7 @@ void CServerChatGUIDlg::OnPaint()
 	/*
 Init socket
 */
-	
+
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // device context for painting
@@ -181,6 +226,25 @@ HCURSOR CServerChatGUIDlg::OnQueryDragIcon()
 
 void CServerChatGUIDlg::OnBnClickedButton1()
 {
+	WCHAR* message;
+	WCHAR temp[4096];
+	temp[0] = 1;
+	temp[1] = 'a';
+	temp[2] = 'b';
+	temp[3] = '\0';
+	temp[4] = 'c';
+	temp[5] = 'o';
+	temp[6] = 'n';
+	temp[7] = 't';
+	temp[8] = 'e';
+	temp[9] = 'n';
+	temp[10] = 't';
+	temp[11] = '\0';
+
+	message = temp;
+	gServerObj.SendPackageClientAll(message, 12);
+	
+	/*
 	CWnd* c = gServerObj.getCWND();
 	std::wstring msg(L"dulieu1");
 	std::wstring msg2(L"dulieu2");
@@ -190,6 +254,6 @@ void CServerChatGUIDlg::OnBnClickedButton1()
 
 
 	c->SendMessage(ID_CLIENT_CONNECTED_MESSAGE, (WPARAM)packet);
-	
+	*/
 	// TODO: Add your control notification handler code here
 }

@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{2F677399-CBAC-4B9D-8A4C-0F35487A045D}</ProjectGuid>
+    <ProjectGuid>{F7ACE2E6-456C-47A8-BF36-5AAD905A4312}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
-    <RootNamespace>ServerChatGUI</RootNamespace>
+    <RootNamespace>ClientChatGUI</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -183,38 +183,37 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Account.h" />
+    <ClInclude Include="ClientBackgroundService.h" />
+    <ClInclude Include="ClientChatGUI.h" />
+    <ClInclude Include="ClientChatGUIDlg.h" />
+    <ClInclude Include="ClientSocket.h" />
+    <ClInclude Include="ClientStructure.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="ServerBackgroundService.h" />
-    <ClInclude Include="ServerChatGUI.h" />
-    <ClInclude Include="ServerChatGUIDlg.h" />
-    <ClInclude Include="ServerSocket.h" />
-    <ClInclude Include="ServerStructure.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Account.cpp" />
+    <ClCompile Include="ClientBackgroundService.cpp" />
+    <ClCompile Include="ClientChatGUI.cpp" />
+    <ClCompile Include="ClientChatGUIDlg.cpp" />
+    <ClCompile Include="ClientSocket.cpp" />
+    <ClCompile Include="ClientStructure.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ServerBackgroundService.cpp" />
-    <ClCompile Include="ServerChatGUI.cpp" />
-    <ClCompile Include="ServerChatGUIDlg.cpp" />
-    <ClCompile Include="ServerSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ServerChatGUI.rc" />
+    <ResourceCompile Include="ClientChatGUI.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\ServerChatGUI.rc2" />
+    <None Include="res\ClientChatGUI.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\ServerChatGUI.ico" />
+    <Image Include="res\ClientChatGUI.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

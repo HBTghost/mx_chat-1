@@ -8,7 +8,8 @@ public:
 	~ServerSocket();
 	bool IsConnected();
 	void BeginListenClient();
-	void SendPackageClient(SClientPacket *packet, WCHAR*msg, int len);
+	int SendPackageClient(SClientPacket *packet, WCHAR*msg, int len);
+	int SendPackageClientAll( WCHAR*msg, int len);
 	int ReceivePackageClient(SOCKET recvSocket);
 	void setHWND(HWND hwnd);
 	HWND getHWND();
@@ -20,5 +21,5 @@ private:
 	SOCKET _socketClient;
 	SOCKET _socketListenClient;
 	bool _isConnected;
-	vector<SClientPacket*> _listClient;
+	list<SClientPacket*> _listClient;
 };

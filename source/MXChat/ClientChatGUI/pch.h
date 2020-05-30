@@ -6,15 +6,9 @@
 
 #ifndef PCH_H
 #define PCH_H
-
-#define __MX_CHAT_DEBUG__
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 // add headers that you want to pre-compile here
 #include "framework.h"
-#include "Account.h"
-#include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment(lib, "gdiplus.lib")
 
 #endif //PCH_H

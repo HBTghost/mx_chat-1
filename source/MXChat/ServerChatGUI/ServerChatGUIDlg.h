@@ -14,6 +14,9 @@ class CServerChatGUIDlg : public CDialogEx
 {
 // Construction
 public:
+	LRESULT OnConnectedMsg(WPARAM wParam, LPARAM lParam);
+	LRESULT OnSignupMsg(WPARAM wParam, LPARAM lParam);
+	LRESULT OnDisConnectedMsg(WPARAM wParam, LPARAM lParam);
 	CServerChatGUIDlg(CWnd* pParent = nullptr);	// standard constructor
 
 	afx_msg LRESULT OnUserDefinedMessage(WPARAM wParam, LPARAM lParam);
@@ -40,4 +43,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
+	CString m_strServerLog;
 };

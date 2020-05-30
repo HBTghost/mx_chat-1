@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ServerChatGUI.h">
+    <ClInclude Include="ClientChatGUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServerChatGUIDlg.h">
+    <ClInclude Include="ClientChatGUIDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
@@ -33,51 +33,48 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServerSocket.h">
+    <ClInclude Include="ClientSocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServerBackgroundService.h">
+    <ClInclude Include="ClientBackgroundService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServerStructure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Account.h">
+    <ClInclude Include="ClientStructure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ServerChatGUI.cpp">
+    <ClCompile Include="ClientChatGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ServerChatGUIDlg.cpp">
+    <ClCompile Include="ClientChatGUIDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ServerSocket.cpp">
+    <ClCompile Include="ClientSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ServerBackgroundService.cpp">
+    <ClCompile Include="ClientBackgroundService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Account.cpp">
+    <ClCompile Include="ClientStructure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ServerChatGUI.rc">
+    <ResourceCompile Include="ClientChatGUI.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\ServerChatGUI.rc2">
+    <None Include="res\ClientChatGUI.rc2">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\ServerChatGUI.ico">
+    <Image Include="res\ClientChatGUI.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
