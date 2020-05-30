@@ -327,7 +327,7 @@ LRESULT CServerChatMFCDlg::SockMsg(WPARAM wParam, LPARAM lParam)
 
 
 			m_msgString += pSock[post].Name;
-			m_msgString += " logout\r\n";
+			m_msgString += L" logout\r\n";
 			closesocket(wParam);
 			for (int j = post; j < number_Socket; j++)
 			{
