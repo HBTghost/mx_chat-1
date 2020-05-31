@@ -38,13 +38,14 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	CEdit m_msg_chat_private;
-	CEdit m_username;
-	CEdit m_password;
-	CEdit m_user_chat_private;
+	
 	afx_msg void OnBnClickedBtnSignup();
 	afx_msg void OnBnClickedBtnSignin();
 	afx_msg void OnBnClickedBtnChatprivate();
 	afx_msg void OnBnClickedBtnSendPrivate();
 	CString m_log_client;
+	CString m_username;
+	CString m_password;
+	CString m_user_chat_private;
+	CString m_msg_chat_private;
 };

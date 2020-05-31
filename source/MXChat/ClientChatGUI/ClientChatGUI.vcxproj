@@ -189,6 +189,7 @@
     <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="ClientStructure.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="MessageHelper.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="ClientChatGUIDlg.cpp" />
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="ClientStructure.cpp" />
+    <ClCompile Include="MessageHelper.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

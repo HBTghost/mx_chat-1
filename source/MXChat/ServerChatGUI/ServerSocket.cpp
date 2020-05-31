@@ -135,8 +135,9 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 				wstring username;
 				wstring password;
 
-				username = message + 1;
-				password = message + wcsnlen_s(message,4096 - username.length()) + 1;
+				username = message + 2; 
+				password = message + 2 + username.size() + 1;
+				//password = message + 2 + wcsnlen_s(username, 4096 - username.length()) + 1;
 				Account* acc_su = new Account(username, password);
 
 				this->getCWND()->SendMessage(ID_CLIENT_SIGNUP_MESSAGE, (WPARAM)acc_su);
@@ -145,7 +146,16 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 				break;
 			}
 			case EMessageCommand::SIGN_IN: {
-				
+
+				wstring username;
+				wstring password;
+
+				username = message + 2;
+				password = message + 2 + username.size() + 1;
+				Account* acc_su = new Account(username, password);
+
+				this->getCWND()->SendMessage(ID_CLIENT_SIGNIN_MESSAGE, (WPARAM)acc_su);
+
 				break;
 			}
 		}

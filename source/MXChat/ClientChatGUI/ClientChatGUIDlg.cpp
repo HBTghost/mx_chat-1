@@ -12,6 +12,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "MessageHelper.h"
 
 
 // CAboutDlg dialog used for App About
@@ -54,6 +55,10 @@ END_MESSAGE_MAP()
 CClientChatGUIDlg::CClientChatGUIDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CLIENTCHATGUI_DIALOG, pParent)
 	, m_log_client(_T(""))
+	, m_username(_T(""))
+	, m_password(_T(""))
+	, m_user_chat_private(_T(""))
+	, m_msg_chat_private(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -61,11 +66,12 @@ CClientChatGUIDlg::CClientChatGUIDlg(CWnd* pParent /*=nullptr*/)
 void CClientChatGUIDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MSG_PRIVATE, m_msg_chat_private);
-	DDX_Control(pDX, IDC_EDIT_USERNAME, m_username);
-	DDX_Control(pDX, IDC_EDIT_PASSWORD, m_password);
-	DDX_Control(pDX, IDC_EDIT_USER_CHAT_PRIVATE, m_user_chat_private);
+	
 	DDX_Text(pDX, IDC_LOG_CLIENT, m_log_client);
+	DDX_Text(pDX, IDC_EDIT_USERNAME, m_username);
+	DDX_Text(pDX, IDC_EDIT_PASSWORD, m_password);
+	DDX_Text(pDX, IDC_EDIT_USER_CHAT_PRIVATE, m_user_chat_private);
+	DDX_Text(pDX, IDC_MSG_PRIVATE, m_msg_chat_private);
 }
 
 BEGIN_MESSAGE_MAP(CClientChatGUIDlg, CDialogEx)
@@ -207,6 +213,64 @@ void CClientChatGUIDlg::OnBnClickedBtnSignup()
 
 void CClientChatGUIDlg::OnBnClickedBtnSignin()
 {
+	WCHAR message[100]{};
+	wstring username;
+	wstring password;
+	if (!UpdateData(TRUE))
+	{
+		return;
+	}
+
+	username = wstring(m_username);
+	password = wstring(m_password);
+	int len = 11;
+
+	message[0] = 5;
+	message[1] = '\0';
+	message[2] = 'a';
+	message[3] = 'd';
+	message[4] = 'm';
+	message[5] = '\0';
+	message[6] = 'p';
+	message[7] = 'a';
+	message[8] = 's';
+	message[9] = 's';
+	message[10] = '\0';
+
+
+	
+	MessageModel model =  MessageHelper::ParseMessage(message, len);
+	//| COMMAND | NULL |  username | NULL|  password |  NULL
+
+	message[0] = 5;
+	message[1] = '\0';
+	message[2] = 'x';
+	message[3] = 'x';
+	message[4] = 'x';
+	message[5] = '\0';
+	message[6] = 'a';
+	message[7] = 'a';
+	message[8] = 'a';
+	message[9] = 'a';
+	message[10] = '\0';
+	MessageModel model2 = MessageHelper::ParseMessage(message, len);
+
+	wstring str = model2.BuildMessage();
+	CString nLog;
+	WCHAR msg[100]{};
+	for (int  i = 0; i <  str.size(); i++)
+	{
+		msg[i] = str[i];
+	}
+
+	gClientObj.SendMessageServer(msg, str.size());
+
+	nLog.Format(_T("Tài khoản [ %s ] - Mật khẩu [%s] đăng nhập \r\n Tin nhắn [ %s ] \r\n"), username.c_str(), password.c_str() ,str);
+
+	
+	AfxMessageBox(nLog);
+	UpdateData(FALSE);
+
 	// TODO: Add your control notification handler code here
 }
 
