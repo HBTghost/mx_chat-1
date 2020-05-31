@@ -2,7 +2,10 @@
 #define _AFXDLL
 #include "MxObject.h"
 #include "PackageHelper.h"
-class ServerSocket
+
+#include "EventOnMessageHandler.h"
+
+class ServerSocket : public EventOnMessageHandler
 {
 public:
 	ServerSocket();

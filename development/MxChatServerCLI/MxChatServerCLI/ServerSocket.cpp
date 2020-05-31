@@ -37,7 +37,7 @@ ServerSocket::ServerSocket() : _isConnected(false)
 	if (_socketListenClient == INVALID_SOCKET) {
 		return;
 	}
-	if (bind(_socketListenClient, (sockaddr*)&server_addr, sizeof(server_addr)) != 0)
+	if (::bind(_socketListenClient, (sockaddr*)&server_addr, sizeof(server_addr)) != 0)
 	{
 		return;
 	}
@@ -139,6 +139,7 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 		MessageModel model = PackageHelper::ParseMessage(temp, 4096);
 		
 		this->ProcessMessage(model);
+		this->OnMessageEventHandler(model);
 	}
 	return 0;
 
@@ -149,17 +150,17 @@ void ServerSocket::ProcessMessage(MessageModel& model)
 
 	switch (model.command) {
 
-		case EMessageCommand::SIGN_IN: {
-			wstring username;
-			wstring password;
+	case EMessageCommand::SIGN_IN: {
+		wstring username;
+		wstring password;
 
-			username = model.arg[0];
-			password = model.arg[1];
-			//password = message + 2 + wcsnlen_s(username, 4096 - username.length()) + 1;
-			Account* acc_su = new Account(username, password);
-			wcout << "[LOGIN] USERNAME " << username << " | PASS " << password << endl;
-			break;
-		}
+		username = model.arg[0];
+		password = model.arg[1];
+		//password = message + 2 + wcsnlen_s(username, 4096 - username.length()) + 1;
+		Account* acc_su = new Account(username, password);
+		wcout << "[LOGIN] USERNAME " << username << " | PASS " << password << endl;
+		break;
+	}
 
 	}
 }

@@ -144,6 +144,7 @@
     <ClCompile Include="Account.cpp" />
     <ClCompile Include="ClientBackgroundService.cpp" />
     <ClCompile Include="ClientSocket.cpp" />
+    <ClCompile Include="EventOnMessageHandler.cpp" />
     <ClCompile Include="MxChatServerCLI.cpp" />
     <ClCompile Include="PackageHelper.cpp" />
     <ClCompile Include="ServerBackgroundService.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Account.h" />
     <ClInclude Include="ClientBackgroundService.h" />
     <ClInclude Include="ClientSocket.h" />
+    <ClInclude Include="EventOnMessageHandler.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MxObject.h" />
     <ClInclude Include="PackageHelper.h" />

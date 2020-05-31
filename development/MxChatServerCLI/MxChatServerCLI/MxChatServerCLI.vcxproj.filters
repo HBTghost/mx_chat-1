@@ -39,6 +39,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EventOnMessageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetever.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventOnMessageHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

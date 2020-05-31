@@ -9,7 +9,7 @@
 #include "MxObject.h"
 #include <wtypes.h>
 #define PACKAGE_MAX_SIZE 4096
-using namespace std;
+
 class MessageModel {
 public:
 	EMessageCommand command;
