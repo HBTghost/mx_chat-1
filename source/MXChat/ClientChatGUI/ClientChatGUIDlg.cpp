@@ -213,6 +213,36 @@ void CClientChatGUIDlg::OnBnClickedBtnSignup()
 
 void CClientChatGUIDlg::OnBnClickedBtnSignin()
 {
+	
+	// Test signin
+
+	wstring username;
+	wstring password;
+	if (!UpdateData(TRUE))
+	{
+		return;
+	}
+
+	username = wstring(m_username);
+	password = wstring(m_password);
+	MessageModel model;
+	model.command = EMessageCommand::SIGN_IN;
+	model.arg.push_back(username);
+	model.arg.push_back(password);
+	wstring str_msg = model.BuildMessage();
+	WCHAR msg[100]{};
+	for (int i = 0; i < str_msg.size(); i++)
+	{
+		msg[i] = str_msg[i];
+	}	
+	gClientObj.SendMessageServer(msg, str_msg.size());
+
+
+
+	UpdateData(FALSE);
+
+
+	/*
 	WCHAR message[100]{};
 	wstring username;
 	wstring password;
@@ -242,7 +272,7 @@ void CClientChatGUIDlg::OnBnClickedBtnSignin()
 	MessageModel model =  MessageHelper::ParseMessage(message, len);
 	//| COMMAND | NULL |  username | NULL|  password |  NULL
 
-	message[0] = 5;
+	message[0] = EMessageCommand::SIGN_IN;
 	message[1] = '\0';
 	message[2] = 'x';
 	message[3] = 'x';
@@ -270,7 +300,7 @@ void CClientChatGUIDlg::OnBnClickedBtnSignin()
 	
 	AfxMessageBox(nLog);
 	UpdateData(FALSE);
-
+	*/
 	// TODO: Add your control notification handler code here
 }
 

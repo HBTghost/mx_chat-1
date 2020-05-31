@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "ClientStructure.h"
+#include "ServerStructure.h"
 #define PACKAGE_MAX_SIZE 4096
 using namespace std;
 class MessageModel {
@@ -21,7 +21,7 @@ public:
 		buffer_temp.push_back(command);
 		buffer_temp.push_back(L'\0');
 		for (auto& s : arg) {
-			buffer_temp.insert(buffer_temp.end(), s.c_str(), s.c_str() + s.size() +1 );
+			buffer_temp.insert(buffer_temp.end(), s.c_str(), s.c_str() + s.size() );
 		}
 		//WCHAR* wc = const_cast<wchar_t*>(buffer_temp.c_str());
 

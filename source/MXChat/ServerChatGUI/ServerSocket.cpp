@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "ServerSocket.h"
 #include "ServerBackgroundService.h"
+#include "MessageHelper.h"
 
 ServerSocket::ServerSocket() : _isConnected(false)
 {
@@ -130,10 +131,31 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 	}
 	else {
 		message = temp;
+		
+		MessageModel model = MessageHelper::ParseMessage(temp, 4096 );
+		switch (model.command) {
+			case EMessageCommand::SIGN_IN: {
+				wstring username;
+				wstring password;
+
+				username = model.arg[0];
+				password = model.arg[1];
+				//password = message + 2 + wcsnlen_s(username, 4096 - username.length()) + 1;
+				Account* acc_su = new Account(username, password);
+
+				this->getCWND()->SendMessage(ID_CLIENT_SIGNUP_MESSAGE, (WPARAM)acc_su);
+
+
+				break;
+			}
+		}
+		/*
 		switch (message[0]) {
 			case EMessageCommand::SIGN_UP: {
 				wstring username;
 				wstring password;
+
+				
 
 				username = message + 2; 
 				password = message + 2 + username.size() + 1;
@@ -159,6 +181,7 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 				break;
 			}
 		}
+		*/
 	}
 	return 0;
 
