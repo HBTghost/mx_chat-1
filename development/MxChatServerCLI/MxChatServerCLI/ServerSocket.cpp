@@ -87,8 +87,8 @@ void ServerSocket::BeginListenClient()
 	//regis thread server thread 
 	AfxBeginThread(recServerThread, (void*)_socketClient);
 
-
 }
+
 int ServerSocket::SendPackageClient(SClientPacket* packet, WCHAR* msg, int len) {
 	int iStat = 0;
 
@@ -109,7 +109,6 @@ int ServerSocket::SendPackageClientAll(WCHAR* msg, int len)
 	}
 	return 0;
 }
-
 
 int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 {

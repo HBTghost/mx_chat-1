@@ -14,6 +14,9 @@ class MessageModel {
 public:
 	EMessageCommand command;
 	vector<wstring> arg;
+	uint32_t total_size;
+	uint32_t num_package;
+
 	~MessageModel() {
 		arg.clear();
 	}
@@ -21,7 +24,28 @@ public:
 		wstring buffer_temp;
 		buffer_temp.push_back(command);
 		buffer_temp.push_back(L'\0');
+		
+		wchar_t sn_buffer[_MAX_ITOSTR_BASE10_COUNT];
+		
+		_itow(total_size, sn_buffer, 10);
+		for (int i = 0; i < _MAX_ITOSTR_BASE10_COUNT; i++) {
+			if (sn_buffer[i] == '\0') { break; }
+			buffer_temp.push_back(sn_buffer[i]);
+		}
+		buffer_temp.push_back(L'\0');
+
+		_itow(num_package, sn_buffer, 10);
+		for (int i = 0; i < _MAX_ITOSTR_BASE10_COUNT; i++) {
+			if (sn_buffer[i] == '\0') { break; }
+
+			buffer_temp.push_back(sn_buffer[i]);
+		}
+		buffer_temp.push_back(L'\0');
+
+
+
 		for (auto& s : arg) {
+
 			buffer_temp.insert(buffer_temp.end(), s.c_str(), s.c_str() + s.size() + 1);
 		}
 		//WCHAR* wc = const_cast<wchar_t*>(buffer_temp.c_str());
@@ -64,7 +88,9 @@ public:
 		//parts.push_back(L"admin");
 		MessageModel* message = new MessageModel();
 		message->command = (EMessageCommand)(parts[0].c_str()[0]);
-		parts.erase(parts.begin(), parts.begin() + 1);
+		message->total_size = _wtoi(parts[1].c_str()); 
+		message->num_package = _wtoi(parts[2].c_str()); 
+		parts.erase(parts.begin(), parts.begin() + 3);
 		message->arg = parts;
 		//copy(parts.begin(), parts.end(), back_inserter(message.arg));
 		return *message;

@@ -26,14 +26,19 @@ int main()
 
 	MessageModel msg;
 	msg.command = EMessageCommand::SIGN_IN;
+	msg.num_package = 0;
+	//4294967295
+	//4 294 967 295
+	//
+	msg.total_size = 294967295;
 	msg.arg.push_back(L"admin");
 	msg.arg.push_back(L"pass");
 	wstring build_msg = msg.BuildMessage();
-	WCHAR packet[100];
+	WCHAR packet[4096];
 	for (int i = 0; i < build_msg.size(); i++) {
 		packet[i] = build_msg[i];
 	}
-
+	MessageModel parsed = PackageHelper::ParseMessage(packet, 4096);
 	gClientObj.SendMessageServer(packet, build_msg.size());
 	system("pause");
 	return 0; 
