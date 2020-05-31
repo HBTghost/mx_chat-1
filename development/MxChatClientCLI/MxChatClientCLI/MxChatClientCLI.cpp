@@ -2,7 +2,9 @@
 #include "stdafx.h"
 #include <iostream>
 #include "ClientBackgroundService.h"
+
 #include "PackageHelper.h"
+
 int init() {
 
 	gClientObj.Init(L"127.0.0.1", 8084);
@@ -21,6 +23,7 @@ int main()
 {
     std::cout << "Hello World Client!\n";
 	init();
+
 	MessageModel msg;
 	msg.command = EMessageCommand::SIGN_IN;
 	msg.arg.push_back(L"admin");

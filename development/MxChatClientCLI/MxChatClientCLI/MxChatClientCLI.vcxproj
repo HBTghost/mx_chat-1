@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Account.cpp" />
     <ClCompile Include="ClientBackgroundService.cpp" />
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="MxChatClientCLI.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Account.h" />
     <ClInclude Include="ClientBackgroundService.h" />
     <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="framework.h" />
