@@ -63,7 +63,7 @@ void ClientSocket::Init(wstring ipAddress = _T("127.0.0.1"), int port = 8084)
 
 }
 
-int ClientSocket::SendMessageServer(WCHAR* message, int len)
+int ClientSocket::SendMessageServer( WCHAR* message, int len)
 {
 	int iStat = 0;
 

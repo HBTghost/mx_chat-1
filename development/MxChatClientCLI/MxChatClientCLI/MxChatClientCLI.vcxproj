@@ -150,6 +150,7 @@
     <ClCompile Include="ServerBackgroundService.cpp" />
     <ClCompile Include="ServerSocket.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="ServerBackgroundService.h" />
     <ClInclude Include="ServerSocket.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

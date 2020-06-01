@@ -2,5 +2,18 @@
 #include <windows.h>
 #include "ClientSocket.h"
 
-extern ClientSocket gClientObj;
-UINT  recMessageThread(LPVOID lParam);
+
+
+/* MyClass.h */
+class ClientBackgroundService
+{
+public:
+	int InitClient();
+	friend UINT recMessageThread(LPVOID pParam);
+
+	void CreateWorkerThread();
+	void TestLogin();
+private:
+	ClientSocket gClientObj;
+	void SomeFunction();
+};
