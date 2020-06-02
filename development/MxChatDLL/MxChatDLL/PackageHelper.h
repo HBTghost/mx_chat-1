@@ -8,6 +8,7 @@
 #include <sstream>
 #include "MxObject.h"
 #include <wtypes.h>
+#include "StringHelper.h"
 #define PACKAGE_MAX_SIZE 4096
 using namespace std;
 class MessageModel {
@@ -15,18 +16,22 @@ public:
 	EMessageCommand command;
 	vector<wstring> arg;
 	uint32_t total_size = 0;
-	uint32_t num_package =0;
+	uint32_t num_package = 0;
 
 	~MessageModel() {
 		arg.clear();
+	}
+	WCHAR* BuildBlockMessage() {
+		WCHAR* pp = StringHelper::wstringToWcharFixedP(this->BuildMessage(), 4096);
+		return pp;
 	}
 	wstring BuildMessage() {
 		wstring buffer_temp;
 		buffer_temp.push_back(command);
 		buffer_temp.push_back(L'\0');
-		
+
 		wchar_t sn_buffer[_MAX_ITOSTR_BASE10_COUNT];
-		
+
 		_itow(total_size, sn_buffer, 10);
 		for (int i = 0; i < _MAX_ITOSTR_BASE10_COUNT; i++) {
 			if (sn_buffer[i] == '\0') { break; }
@@ -88,8 +93,8 @@ public:
 		//parts.push_back(L"admin");
 		MessageModel* message = new MessageModel();
 		message->command = (EMessageCommand)(parts[0].c_str()[0]);
-		message->total_size = _wtoi(parts[1].c_str()); 
-		message->num_package = _wtoi(parts[2].c_str()); 
+		message->total_size = _wtoi(parts[1].c_str());
+		message->num_package = _wtoi(parts[2].c_str());
 		parts.erase(parts.begin(), parts.begin() + 3);
 		message->arg = parts;
 		//copy(parts.begin(), parts.end(), back_inserter(message.arg));

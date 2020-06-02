@@ -16,5 +16,13 @@ public:
 		}
 		return rslt;
 	}
+	static WCHAR* wstringToWcharFixedP(std::wstring str, int len) {
+		int n = str.size();
+		WCHAR* rslt = new WCHAR[len];
+		for (int i = 0; i < n; i++) {
+			rslt[i] = str[i];
+		}
+		return rslt;
+	}
 };
 
