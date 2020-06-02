@@ -2,9 +2,6 @@
 #include <windows.h>
 #include "ClientSocket.h"
 
-
-
-/* MyClass.h */
 class ClientBackgroundService
 {
 public:
@@ -12,7 +9,7 @@ public:
 	friend UINT recMessageThread(LPVOID pParam);
 
 	void CreateWorkerThread();
-	void TestLogin();
+	void TestLogin(wstring user, wstring pass);
 private:
 	ClientSocket gClientObj;
 	void SomeFunction();

@@ -2,20 +2,26 @@
 #include "stdafx.h"
 #include <iostream>
 #include "ClientBackgroundService.h"
-#include "StringHelper.h"
+#include <chrono>
 
-#include "PackageHelper.h"
+
+
+using namespace std;
 
 ClientBackgroundService client;
-
 int main()
 {
 	std::cout << "Hello World Client!\n";
 	client.InitClient();
 	client.CreateWorkerThread();
-	client.TestLogin();
+	client.TestLogin(L"admin", L"pass");
+	//Sleep(1000); // pauses for 10 seconds
 
+	client.TestLogin(L"admin123", L"pass");
+	//Sleep(1000); // pauses for 10 seconds
 
-	system("pause");
+	client.TestLogin(L"admin1x", L"passdd");
+
+	while (true);
 	return 0;
 }

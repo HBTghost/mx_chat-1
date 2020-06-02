@@ -4,7 +4,9 @@
 #include "ServerBackgroundService.h"
 
 #include "PackageHelper.h"
+#include "MxChatConfigure.h"
 
+MxChatConfigure config;
 void ProcessPackage(MessageModel m) {
 	cout << "RECV Event();" << endl;
 }

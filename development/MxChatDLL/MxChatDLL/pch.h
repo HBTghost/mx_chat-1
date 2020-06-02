@@ -1,4 +1,3 @@
-#pragma once
 // pch.h: This is a precompiled header file.
 // Files listed below are compiled only once, improving build performance for future builds.
 // This also affects IntelliSense performance, including code completion and many code browsing features.
@@ -7,20 +6,8 @@
 
 #ifndef PCH_H
 #define PCH_H
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
 
 // add headers that you want to pre-compile here
-
-#include <afxwin.h>         // MFC core and standard components
-
-#include <afxsock.h>            // MFC socket extensions
-
-#include "PackageHelper.h"
-#include "StringHelper.h"
-#include "MxObject.h"
-
-
-
+#include "framework.h"
 
 #endif //PCH_H

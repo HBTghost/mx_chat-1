@@ -7,8 +7,10 @@ ServerSocket gServerObj;
 UINT  recServerThread(LPVOID lParam)
 {
 	SOCKET recSocket = (SOCKET)lParam;
+	int activity = 0;
 	while (1)
 	{
+	
 		if (gServerObj.ReceivePackageClient(recSocket)) {
 			break;
 		}

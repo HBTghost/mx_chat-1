@@ -2,9 +2,8 @@
 #define _AFXDLL
 #include "MxObject.h"
 #include "PackageHelper.h"
-
 #include "EventOnMessageHandler.h"
-
+#include <mutex>
 class ServerSocket : public EventOnMessageHandler
 {
 public:
@@ -15,9 +14,13 @@ public:
 	int SendPackageClient(SClientPacket* packet, WCHAR* msg, int len);
 	int SendPackageClientAll(WCHAR* msg, int len);
 	int ReceivePackageClient(SOCKET recvSocket);
-	void ProcessMessage(MessageModel& package_msg);
-	
+	void ProcessMessage(MessageModel& package_msg, list<SClientPacket*>::iterator &c_socket);
+	int _total_msg = 0;
+	int activity = 0;
+	int client_socket[30];
 private:
+	std::mutex mtx;           // mutex for critical section
+	fd_set fdread;
 	HWND _hwnd;
 	CWnd* _cWnd;
 	SOCKET _socketClient;

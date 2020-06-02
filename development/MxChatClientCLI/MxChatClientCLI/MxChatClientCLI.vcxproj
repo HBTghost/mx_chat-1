@@ -91,10 +91,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\MxChatDLL\MxChatDLL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,27 +144,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Account.cpp" />
-    <ClCompile Include="ClientBackgroundService.cpp" />
-    <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="MxChatClientCLI.cpp" />
-    <ClCompile Include="PackageHelper.cpp" />
-    <ClCompile Include="ServerBackgroundService.cpp" />
-    <ClCompile Include="ServerSocket.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Account.h" />
-    <ClInclude Include="ClientBackgroundService.h" />
-    <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="MxObject.h" />
-    <ClInclude Include="PackageHelper.h" />
-    <ClInclude Include="ServerBackgroundService.h" />
-    <ClInclude Include="ServerSocket.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StringHelper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MxChatDLL\MxChatDLL\MxChatDLL.vcxproj">
+      <Project>{8ea9b435-363f-4d4b-803d-2cda3d450400}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

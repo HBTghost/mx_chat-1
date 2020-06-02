@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ClientSocket.h"
-#include "MxObject.h"
 
 ClientSocket::ClientSocket() : _isConnected(false), _serverPort(8084)
 {
@@ -63,7 +62,7 @@ void ClientSocket::Init(wstring ipAddress = _T("127.0.0.1"), int port = 8084)
 
 }
 
-int ClientSocket::SendMessageServer(WCHAR* message, int len)
+int ClientSocket::SendMessageServer( WCHAR* message, int len)
 {
 	int iStat = 0;
 
@@ -97,4 +96,9 @@ int ClientSocket::RecvMessageServer()
 bool ClientSocket::IsConnected()
 {
 	return _isConnected;
+}
+
+void ClientSocket::ProcessMessage(char* msg) {
+	//process message here overide it
+
 }

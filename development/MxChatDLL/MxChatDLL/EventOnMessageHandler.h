@@ -3,6 +3,7 @@
 #include <iostream>
 #include "PackageHelper.h"
 #include "MxObject.h"
+
 class EventOnMessageHandler {
 public:
 	std::function<void(MessageModel)> eventOnMessageFnc;

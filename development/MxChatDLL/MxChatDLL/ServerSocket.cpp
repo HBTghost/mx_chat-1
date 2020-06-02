@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "ServerSocket.h"
-#include "ServerSocket.h"
 #include "ServerBackgroundService.h"
 #include "PackageHelper.h"
 #include "Account.h"
@@ -87,8 +86,8 @@ void ServerSocket::BeginListenClient()
 	//regis thread server thread 
 	AfxBeginThread(recServerThread, (void*)_socketClient);
 
-}
 
+}
 int ServerSocket::SendPackageClient(SClientPacket* packet, WCHAR* msg, int len) {
 	int iStat = 0;
 
@@ -110,8 +109,10 @@ int ServerSocket::SendPackageClientAll(WCHAR* msg, int len)
 	return 0;
 }
 
+
 int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 {
+
 	WCHAR* message;
 	WCHAR temp[4096];
 	int iStat;
@@ -133,33 +134,72 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 		return 1;
 	}
 	else {
+		mtx.lock();
+		this->_total_msg++;
 		message = temp;
-
-		MessageModel model = PackageHelper::ParseMessage(temp, 4096);
 		
-		this->ProcessMessage(model);
-		this->OnMessageEventHandler(model);
+		MessageModel model = PackageHelper::ParseMessage(temp, 4096);
+		this->ProcessMessage(model, itl);
+		//this->OnMessageEventHandler(model);
+		mtx.unlock();
 	}
 	return 0;
 
 }
 
-void ServerSocket::ProcessMessage(MessageModel& model)
+void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::iterator &c_socket)
 {
-
-	switch (model.command) {
-
-	case EMessageCommand::SIGN_IN: {
+	EMessageCommand command = model.command;
+	
+	switch (command)	
+	{
+	case CLIENT_SIGN_UP:
+		break;
+	case SERVER_SIGN_UP_ERROR_USER:
+		break;
+	case SERVER_SIGN_UP_SUCCESS:
+		break;
+	case CLIENT_SIGN_IN:{
 		wstring username;
 		wstring password;
-
 		username = model.arg[0];
 		password = model.arg[1];
-		//password = message + 2 + wcsnlen_s(username, 4096 - username.length()) + 1;
-		Account* acc_su = new Account(username, password);
-		wcout << "[LOGIN] USERNAME " << username << " | PASS " << password << endl;
+		wstring server_log;
+		MessageModel res_msg;
+		//Account* acc_su = new Account(username, password);
+	
+
+		if (wcscmp(username.c_str(), L"admin" ) ==0 && wcscmp(password.c_str(), L"pass") == 0) {
+			wcout << "[LOGIN] SUCCESS -  USERNAME " << username << " | PASS " << password << endl;
+			res_msg.command = EMessageCommand::SERVER_SIGN_IN_SUCCESS;
+
+		}
+		else {
+			res_msg.command = EMessageCommand::SERVER_SIGN_IN_ERROR_PASS;
+
+			wcout << "[LOGIN] FAIL -  USERNAME " << username << " | PASS " << password << endl;
+		}
+		
+		res_msg.num_package = 0;
+		wstring build_msg = res_msg.BuildMessage();
+		WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
+		this->SendPackageClient(*c_socket, pp, build_msg.size());
+		
 		break;
 	}
-
+	case SERVER_SIGN_IN_ERROR_PASS:
+		break;
+	case SERVER_SIGN_IN_SUCCESS:
+		break;
+	case CLIENT_PRIVATE_MSG:
+		break;
+	case CLIENT_GROUP_MSG:
+		break;
+	case CLIENT_REQUEST_TRANSFER_FILE:
+		break;
+	case CLIENT_END_TRANSFER_FILE:
+		break;
+	default:
+		break;
 	}
 }

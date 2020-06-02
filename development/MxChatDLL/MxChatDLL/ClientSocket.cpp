@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ClientSocket.h"
-#include "MxObject.h"
 
 ClientSocket::ClientSocket() : _isConnected(false), _serverPort(8084)
 {
@@ -77,16 +76,27 @@ int ClientSocket::SendMessageServer( WCHAR* message, int len)
 
 int ClientSocket::RecvMessageServer()
 {
-	char acRetData[4096];
-	int iStat = 0;
+	WCHAR* message;
+	WCHAR temp[4096];
+	int iStat;
+	int len;
+	iStat = recv(_connect, (char*)temp, 4096, 0);
 
-	iStat = recv(_connect, acRetData, 4096, 0);
 	if (iStat == -1)
+	{
+		wcout << "Has + 1 client disconnected" << endl;
+
+		//this->getCWND()->SendMessage(ID_CLIENT_DISCONNECTED_MESSAGE, (WPARAM)*itl);
 		return 1;
+	}
+	else {
+		message = temp;
+
+		MessageModel model = PackageHelper::ParseMessage(temp, 4096);
+		this->ProcessMessage(model);
+	}
 
 	
-	this->ProcessMessage(acRetData);
-
 	//this->getCWND()->SendMessage(ID_CLIENT_RECEIVE_MESSAGE, (WPARAM)acRetData);
 	//sendmsg receive
 	//SendMessage(_hwnd, WM_COMMAND, (WPARAM)IDC_RECEIVE, (LPARAM)acRetData);
@@ -97,4 +107,39 @@ int ClientSocket::RecvMessageServer()
 bool ClientSocket::IsConnected()
 {
 	return _isConnected;
+}
+
+void ClientSocket::ProcessMessage(MessageModel&msg) {
+	//process message here overide it
+	EMessageCommand command = msg.command;
+	switch (command)
+	{
+	case CLIENT_SIGN_UP:
+		break;
+	case SERVER_SIGN_UP_ERROR_USER:
+		break;
+	case SERVER_SIGN_UP_SUCCESS:
+		break;
+	case CLIENT_SIGN_IN:
+		break;
+	case SERVER_SIGN_IN_ERROR_PASS:
+		cout << "[SERVER RESPONSE] LOGIN PASS \033[1;31m ERROR \033[0m , CHECK PASS !!!" << endl;
+
+		break;
+	case SERVER_SIGN_IN_SUCCESS:
+		cout << "[SERVER RESPONSE] LOGIN \033[1;32m SUCCESSFULLY \033[0m !!!" << endl;
+		//trigger data to form here
+		break;
+	case CLIENT_PRIVATE_MSG:
+		break;
+	case CLIENT_GROUP_MSG:
+		break;
+	case CLIENT_REQUEST_TRANSFER_FILE:
+		break;
+	case CLIENT_END_TRANSFER_FILE:
+		break;
+	default:
+		break;
+	}
+
 }

@@ -14,8 +14,8 @@ class MessageModel {
 public:
 	EMessageCommand command;
 	vector<wstring> arg;
-	uint32_t total_size;
-	uint32_t num_package;
+	uint32_t total_size = 0;
+	uint32_t num_package =0;
 
 	~MessageModel() {
 		arg.clear();
@@ -95,6 +95,4 @@ public:
 		//copy(parts.begin(), parts.end(), back_inserter(message.arg));
 		return *message;
 	}
-
 };
-

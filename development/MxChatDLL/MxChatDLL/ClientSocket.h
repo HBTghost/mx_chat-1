@@ -1,9 +1,11 @@
 #pragma once
+
 #include <Afxwin.h>
 #include <iostream>
 #include <xstring>
 #include <winsock2.h>
 using namespace std;
+
 class ClientSocket
 {
 public:
@@ -14,10 +16,8 @@ public:
 	int SendMessageServer(WCHAR* message, int len);
 	int RecvMessageServer();
 	bool IsConnected();
-	virtual void ProcessMessage(char * msg) {
-		//process message here overide it
-		
-	}
+	void ProcessMessage(MessageModel& msg);
+
 	 
 
 
@@ -28,5 +28,4 @@ private:
 	bool _isConnected;
 	wstring _username;
 	wstring _password;
-
 };

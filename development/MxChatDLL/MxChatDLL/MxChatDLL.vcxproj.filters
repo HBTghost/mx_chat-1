@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1b7ec86e-5d04-4431-a972-dc6375e14f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\client">
+      <UniqueIdentifier>{b11b30c0-f2d7-485b-8862-7a531fbd879b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\server">
+      <UniqueIdentifier>{81cfbd34-8781-405f-8843-cfd36b2ce70c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\model">
+      <UniqueIdentifier>{97f887de-4b4c-49f3-a0ba-4c17825040d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\service">
+      <UniqueIdentifier>{af643f99-8323-4c9b-bf8b-68165b2167d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\default">
+      <UniqueIdentifier>{6154cf5d-97b8-461f-a446-9568ebf17d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\event">
+      <UniqueIdentifier>{2145caf9-b17d-4065-b0e1-548fb0879fd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\helper">
+      <UniqueIdentifier>{6348ea07-b065-4314-98ae-3304fa093778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{1d483b27-c28f-4f4b-9454-f111d01de279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\default">
+      <UniqueIdentifier>{0e4f2e35-8b86-4253-b568-095a4844edb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\helper">
+      <UniqueIdentifier>{94111a7d-930d-4480-8393-39ea7aa62c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\service">
+      <UniqueIdentifier>{1c98eba1-5fdc-4699-b2ae-136ac2dba754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{89d246a4-ac6f-481f-9f8e-6218e59af7a6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Account.cpp">
+      <Filter>src\model</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientBackgroundService.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerBackgroundService.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="MxChatConfigure.cpp">
+      <Filter>src\default</Filter>
+    </ClCompile>
+    <ClCompile Include="MxChatDLL.cpp">
+      <Filter>src\default</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSocket.cpp">
+      <Filter>src\client</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSocket.cpp">
+      <Filter>src\server</Filter>
+    </ClCompile>
+    <ClCompile Include="EventOnMessageHandler.cpp">
+      <Filter>src\event</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>src\default</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>src\default</Filter>
+    </ClCompile>
+    <ClCompile Include="PackageHelper.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\MxChatDLL.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MxChatDLL.def">
+      <Filter>src\default</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Account.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="MxChatConfigure.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="MxChatDLL.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetever.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\default</Filter>
+    </ClInclude>
+    <ClInclude Include="MxObject.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>Header Files\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="PackageHelper.h">
+      <Filter>Header Files\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientBackgroundService.h">
+      <Filter>Header Files\service</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerBackgroundService.h">
+      <Filter>Header Files\service</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSocket.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSocket.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="EventOnMessageHandler.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MxChatDLL.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "ClientSocket.h"
 #include "ClientBackgroundService.h"
-#include "PackageHelper.h"
-#include "StringHelper.h"
+
 
 
 UINT recMessageThread(LPVOID lParam)
@@ -43,17 +42,17 @@ void ClientBackgroundService::CreateWorkerThread()
 	}
 }
 
-void ClientBackgroundService::TestLogin()
+void ClientBackgroundService::TestLogin(wstring user, wstring pass)
 {
 	MessageModel msg;
-	msg.command = EMessageCommand::SIGN_IN;
+	msg.command = EMessageCommand::CLIENT_SIGN_IN;
 	msg.num_package = 0;
 	//4294967295
 	//4 294 967 295
 	//
-	msg.total_size = 294967295;
-	msg.arg.push_back(L"admin");
-	msg.arg.push_back(L"pass");
+	msg.total_size = 4096;
+	msg.arg.push_back(user);
+	msg.arg.push_back(pass);
 	wstring build_msg = msg.BuildMessage();
 
 	WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
@@ -65,3 +64,4 @@ void ClientBackgroundService::SomeFunction()
 {
 	cout << "Some func " << endl;
 }
+
