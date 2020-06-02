@@ -19,9 +19,9 @@
 
 
 
+#include "StringHelper.h"
 
 #include "PackageHelper.h"
-#include "StringHelper.h"
 #include "MxObject.h"
 
 #endif //PCH_H

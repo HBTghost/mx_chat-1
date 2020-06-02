@@ -62,11 +62,11 @@ void ClientSocket::Init(wstring ipAddress = _T("127.0.0.1"), int port = 8084)
 
 }
 
-int ClientSocket::SendMessageServer( WCHAR* message, int len)
+int ClientSocket::SendMessageServer( WCHAR* message, int len = 4096)
 {
 	int iStat = 0;
 
-	iStat = send(_connect, (char*)message, len * 2 + 2, 0);
+	iStat = send(_connect, (char*)message, len * 2 , 0);
 	if (iStat == -1)
 		return 1;
 

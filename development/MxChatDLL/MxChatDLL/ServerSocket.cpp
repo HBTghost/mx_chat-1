@@ -117,7 +117,7 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 	WCHAR temp[4096];
 	int iStat;
 	int len;
-	iStat = recv(recvSocket, (char*)temp, 4096, 0);
+	iStat = recv(recvSocket, (char*)temp, 4096*2, 0);
 	list<SClientPacket*>::iterator itl;
 	for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
 	{

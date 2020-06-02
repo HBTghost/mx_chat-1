@@ -53,11 +53,9 @@ void ClientBackgroundService::TestLogin(wstring user, wstring pass)
 	msg.total_size = 4096;
 	msg.arg.push_back(user);
 	msg.arg.push_back(pass);
-	wstring build_msg = msg.BuildMessage();
+	WCHAR * build_msg = msg.BuildBlockMessage();
 
-	WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
-	//MessageModel parsed = PackageHelper::ParseMessage(packet, 4096);
-	gClientObj.SendMessageServer(pp , build_msg.size());
+	gClientObj.SendMessageServer(build_msg, 4096);
 }
 
 void ClientBackgroundService::SomeFunction()
