@@ -23,12 +23,12 @@ void ClientSocket::Init(wstring ipAddress = _T("127.0.0.1"), int port = 8084)
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0) {
-		cout << "WSAStartup failed: " << iResult << endl;
+		wcout << "WSAStartup failed: " << iResult << endl;
 		return;
 	}
 	else {
-		cout << "The Winsock dll found!" << endl;
-		cout << "The status: " << wsaData.szSystemStatus << endl;
+		wcout << "The Winsock dll found!" << endl;
+		wcout << "The status: " << wsaData.szSystemStatus << endl;
 	}
 
 	struct hostent* hp;
@@ -115,22 +115,33 @@ void ClientSocket::ProcessMessage(MessageModel&msg) {
 	switch (command)
 	{
 	case CLIENT_SIGN_UP:
+		//ONLY SERVER
 		break;
 	case SERVER_SIGN_UP_ERROR_USER:
+		wcout << "[SERVER RESPONSE] REGISTER \033[1;31m ERROR \033[0m , USERNAME EXISTED !!!" << endl;
 		break;
 	case SERVER_SIGN_UP_SUCCESS:
+		wcout << "[SERVER RESPONSE] REGISTER \033[1;32m SUCCESSFULLY \033[0m !!!" << endl;
 		break;
 	case CLIENT_SIGN_IN:
+		//ONLY SERVER
 		break;
 	case SERVER_SIGN_IN_ERROR_PASS:
-		cout << "[SERVER RESPONSE] LOGIN PASS \033[1;31m ERROR \033[0m , CHECK PASS !!!" << endl;
-
+		wcout << "[SERVER RESPONSE] LOGIN PASS \033[1;31m ERROR \033[0m , CHECK PASS !!!" << endl;
 		break;
 	case SERVER_SIGN_IN_SUCCESS:
-		cout << "[SERVER RESPONSE] LOGIN \033[1;32m SUCCESSFULLY \033[0m !!!" << endl;
+		wcout << "[SERVER RESPONSE] LOGIN \033[1;32m SUCCESSFULLY \033[0m !!!" << endl;
 		//trigger data to form here
 		break;
+	case NOTIFY_LIST_USER_ONLINE:
+		_listUserOnline = msg.arg;
+		wcout << " ======= USER ONLINE UPDATE ========== " << endl;
+		wcout << GetListUserOnlineStr() << endl;
+		wcout << " ======= *********** ========== " << endl;
+		break;
 	case CLIENT_PRIVATE_MSG:
+		wcout << "> Receive message from " << msg.arg[0] << endl;
+		wcout << ">\t Content " << msg.arg[1] << endl;
 		break;
 	case CLIENT_GROUP_MSG:
 		break;

@@ -7,7 +7,7 @@
 
 ServerSocket::ServerSocket() : _isConnected(false)
 {
-	cout << "Starting TCP Socket Server " << endl;
+	wcout << "Starting TCP Socket Server " << endl;
 
 	//initialize winsock https://docs.microsoft.com/en-us/windows/win32/winsock/initializing-winsock
 
@@ -18,12 +18,12 @@ ServerSocket::ServerSocket() : _isConnected(false)
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0) {
-		cout << "WSAStartup failed: " << iResult << endl;
+		wcout << "WSAStartup failed: " << iResult << endl;
 		return;
 	}
 	else {
-		cout << "The Winsock dll found!" << endl;
-		cout << "The status: " << wsaData.szSystemStatus << endl;
+		wcout << "The Winsock dll found!" << endl;
+		wcout << "The status: " << wsaData.szSystemStatus << endl;
 	}
 
 	sockaddr_in server_addr;
@@ -72,8 +72,8 @@ void ServerSocket::BeginListenClient()
 	sockaddr_in from;
 	int addr_from_len = sizeof(from);
 	_socketClient = accept(_socketListenClient, (sockaddr*)&from, &addr_from_len);
-	SClientPacket* recvPackage = new SClientPacket;
-	recvPackage->sClient = _socketClient;
+	SClientPacket* recvPackage = new SClientPacket();
+	recvPackage->client = _socketClient;
 
 	HWND hwnd = _cWnd->GetSafeHwnd();
 	if (_socketClient != INVALID_SOCKET) {
@@ -91,7 +91,7 @@ void ServerSocket::BeginListenClient()
 int ServerSocket::SendPackageClient(SClientPacket* packet, WCHAR* msg, int len) {
 	int iStat = 0;
 
-	iStat = send(packet->sClient, (char*)msg, len * 2 + 2, 0);
+	iStat = send(packet->client, (char*)msg, len * 2 + 2, 0);
 	if (iStat == -1)
 		_listClient.remove(packet);
 	if (iStat == -1)
@@ -121,7 +121,7 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 	list<SClientPacket*>::iterator itl;
 	for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
 	{
-		if ((*itl)->sClient == recvSocket)
+		if ((*itl)->client == recvSocket)
 		{
 			break;
 		}
@@ -129,7 +129,7 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 	if (iStat == -1)
 	{
 		wcout << "Has + 1 client disconnected" << endl;
-
+		_listClient.remove(*itl);
 		//this->getCWND()->SendMessage(ID_CLIENT_DISCONNECTED_MESSAGE, (WPARAM)*itl);
 		return 1;
 	}
@@ -147,6 +147,14 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 
 }
 
+void ServerSocket::NotifyListUserOnline() {
+	MessageModel res_msg;
+	res_msg.command = EMessageCommand::NOTIFY_LIST_USER_ONLINE;
+	res_msg.arg = this->ListUserOnline();
+	wstring build_msg = res_msg.BuildMessage();
+	WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
+	this->SendPackageClientAll(pp, build_msg.size());
+}
 void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::iterator &c_socket)
 {
 	EMessageCommand command = model.command;
@@ -154,10 +162,6 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 	switch (command)	
 	{
 	case CLIENT_SIGN_UP:
-		break;
-	case SERVER_SIGN_UP_ERROR_USER:
-		break;
-	case SERVER_SIGN_UP_SUCCESS:
 		break;
 	case CLIENT_SIGN_IN:{
 		wstring username;
@@ -167,24 +171,24 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 		wstring server_log;
 		MessageModel res_msg;
 		//Account* acc_su = new Account(username, password);
-	
 
-		if (wcscmp(username.c_str(), L"admin" ) ==0 && wcscmp(password.c_str(), L"pass") == 0) {
+		bool condition = StringHelper::wstringCompare(username, L"admin") && StringHelper::wstringCompare(password, L"pass");
+		condition = condition || ( StringHelper::wstringCompare(username, L"mod") && StringHelper::wstringCompare(password, L"pass"));
+		if (condition) {
 			wcout << "[LOGIN] SUCCESS -  USERNAME " << username << " | PASS " << password << endl;
 			res_msg.command = EMessageCommand::SERVER_SIGN_IN_SUCCESS;
-
+			(*c_socket)->account = new Account(username, password);
+			this->NotifyListUserOnline();
 		}
 		else {
 			res_msg.command = EMessageCommand::SERVER_SIGN_IN_ERROR_PASS;
-
 			wcout << "[LOGIN] FAIL -  USERNAME " << username << " | PASS " << password << endl;
 		}
-		
 		res_msg.num_package = 0;
+		res_msg.arg = this->ListUserOnline();
 		wstring build_msg = res_msg.BuildMessage();
 		WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
 		this->SendPackageClient(*c_socket, pp, build_msg.size());
-		
 		break;
 	}
 	case SERVER_SIGN_IN_ERROR_PASS:
@@ -192,7 +196,20 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 	case SERVER_SIGN_IN_SUCCESS:
 		break;
 	case CLIENT_PRIVATE_MSG:
-		break;
+	{
+		SClientPacket* desSocket = this->GetClientByUsername(model.arg[0]);
+		if (desSocket == nullptr) {
+			wcout << "[PRIVATE_MSG] DES NOT FOUND" << endl;
+		}
+		else{
+			model.arg[0] = (*c_socket)->account->getUserName();
+			wstring build_msg = model.BuildMessage();
+			WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
+
+			this->SendPackageClient(desSocket, pp, build_msg.size());
+		}
+		break; 
+	}
 	case CLIENT_GROUP_MSG:
 		break;
 	case CLIENT_REQUEST_TRANSFER_FILE:
@@ -202,4 +219,38 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 	default:
 		break;
 	}
+}
+
+SClientPacket* ServerSocket::GetClientByUsername(wstring username)
+{
+	vector<wstring> listOnline;
+	list<SClientPacket*>::iterator itl;
+	for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
+	{
+		if (!(*itl)->account) {
+			continue;
+		}
+		if (StringHelper::wstringCompare((*itl)->account->getUserName(), username))
+		{
+			return *itl;
+		}
+	}
+	return nullptr;
+}
+
+vector<wstring> ServerSocket::ListUserOnline()
+{
+	vector<wstring> listOnline;
+	list<SClientPacket*>::iterator itl;
+	for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
+	{
+		if (!(*itl)->account) {
+			continue; 
+		}
+		if ((*itl)->account->getUserName().c_str() != L"")
+		{
+			listOnline.push_back((*itl)->account->getUserName());
+		}
+	}
+	return listOnline;
 }

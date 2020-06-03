@@ -47,9 +47,6 @@ void ClientBackgroundService::TestLogin(wstring user, wstring pass)
 	MessageModel msg;
 	msg.command = EMessageCommand::CLIENT_SIGN_IN;
 	msg.num_package = 0;
-	//4294967295
-	//4 294 967 295
-	//
 	msg.total_size = 4096;
 	msg.arg.push_back(user);
 	msg.arg.push_back(pass);
@@ -58,8 +55,32 @@ void ClientBackgroundService::TestLogin(wstring user, wstring pass)
 	gClientObj.SendMessageServer(build_msg, 4096);
 }
 
+void ClientBackgroundService::TestSignUp(wstring user, wstring pass) {
+	MessageModel msg;
+	msg.command = EMessageCommand::CLIENT_SIGN_UP;
+	msg.arg.push_back(user);
+	msg.arg.push_back(pass);
+	WCHAR* build_msg = msg.BuildBlockMessage();
+	gClientObj.SendMessageServer(build_msg, 4096);
+
+}
+
+void ClientBackgroundService::TestPrivateMessage(wstring des, wstring msg)
+{
+	MessageModel m_msgModel;
+	m_msgModel.command = EMessageCommand::CLIENT_PRIVATE_MSG; 
+	m_msgModel.arg.push_back(des);
+	m_msgModel.arg.push_back(msg);
+	WCHAR* build_msg = m_msgModel.BuildBlockMessage();
+	gClientObj.SendMessageServer(build_msg, 4096);
+}
+
+void ClientBackgroundService::TestGroupMessage(wstring group_id, wstring msg)
+{
+}
+
 void ClientBackgroundService::SomeFunction()
 {
-	cout << "Some func " << endl;
+	wcout << "Some func " << endl;
 }
 

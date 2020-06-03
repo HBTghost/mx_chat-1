@@ -4,7 +4,7 @@
 using namespace std;
 MxChatConfigure::MxChatConfigure()
 {
-	cout << "Mxchat ne" << endl;
+	wcout << "Mxchat ne" << endl;
 }
 MxChatConfigure::~MxChatConfigure()
 {

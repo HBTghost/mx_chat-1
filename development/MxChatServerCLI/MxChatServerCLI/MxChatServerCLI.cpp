@@ -11,8 +11,7 @@ void ProcessPackage(MessageModel m) {
 	cout << "RECV Event();" << endl;
 }
 int initServer() {
-	char buf[4096];
-	
+	char buf[4096];  
 	if (!gServerObj.IsConnected())
 	{
 		MessageBox(0, L"\nFailed to initialise server socket.", 0, 0);
@@ -21,7 +20,6 @@ int initServer() {
 	gServerObj.addHandler(&ProcessPackage);
 	AfxBeginThread(listenServerThread, 0);
 	return 1;
-
 }
 
 int main()

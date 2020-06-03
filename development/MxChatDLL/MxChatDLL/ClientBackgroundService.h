@@ -10,7 +10,13 @@ public:
 
 	void CreateWorkerThread();
 	void TestLogin(wstring user, wstring pass);
+	void TestSignUp(wstring user, wstring pass);
+
+
+	void TestPrivateMessage(wstring user, wstring msg);
+	void TestGroupMessage(wstring group_id, wstring msg);
 private:
 	ClientSocket gClientObj;
+	
 	void SomeFunction();
 };

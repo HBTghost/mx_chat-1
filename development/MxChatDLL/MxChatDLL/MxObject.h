@@ -7,10 +7,8 @@
 #include <vector>
 #include <iostream>
 using namespace std;
-struct SClientPacket {
-	SOCKET sClient;
-	wstring username;
-};
+
+
 
 enum EMessageCommand {
 	CLIENT_SIGN_UP = 1,
@@ -21,12 +19,18 @@ enum EMessageCommand {
 	SERVER_SIGN_IN_ERROR_PASS,
 	SERVER_SIGN_IN_SUCCESS,
 	
+	CLIENT_LOG_OUT,
+	NOTIFY_CLIENT_LOG_OUT,
+	SERVER_LOG_OUT,
+	NOTIFY_SERVER_LOG_OUT, 
+
 	CLIENT_PRIVATE_MSG,
 	CLIENT_GROUP_MSG,
 	
 	CLIENT_REQUEST_TRANSFER_FILE,
-	CLIENT_END_TRANSFER_FILE
+	CLIENT_END_TRANSFER_FILE,
 
+	NOTIFY_LIST_USER_ONLINE,
 };
 
 #endif
