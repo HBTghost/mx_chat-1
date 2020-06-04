@@ -17,11 +17,11 @@ wstring password = L"pass";
 
 
 void printMenu() {
-   wcout << "*******************************\n";
-    wcout << " 1 - Đăng nhập.\n";
-    wcout << " 2 - Danh sách online.\n";
-    wcout << " 3 - Tạo cuộc hội thoại riêng.\n";
-    wcout << " 4 - Help.\n";
+    wcout << "*******************************\n";
+    wcout << L" 1 - Đăng nhập.\n";
+    wcout << L" 2 - Danh sách online.\n";
+    wcout << L" 3 - Tạo cuộc hội thoại riêng.\n";
+    wcout << L" 4 - Help.\n";
     wcout << " 5 - Exit.\n";
     wcout << " Enter your choice and press return: ";
 }
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
     std::wcout << "Hello World Client!\n";
     client.InitClient();
     client.CreateWorkerThread();
-
+ 
     //
     _setmode(_fileno(stdin), _O_U16TEXT);
     _setmode(_fileno(stdout), _O_U16TEXT);
@@ -85,13 +85,7 @@ int main(int argc, char** argv)
     int choice = 0;
     bool gameOn = true;
     while (gameOn != false) {
-        wcout << "*******************************\n";
-        wcout << " 1 - Đăng nhập.\n";
-        wcout << " 2 - Danh sách online.\n";
-        wcout << " 3 - Tạo cuộc hội thoại riêng.\n";
-        wcout << " 4 - Help.\n";
-        wcout << " 5 - Exit.\n";
-        wcout << " Enter your choice and press return: ";
+        printMenu();
         wcin >> choice;
 
         switch (choice)
@@ -111,8 +105,5 @@ int main(int argc, char** argv)
     
     
 	//client.TestLogin(L"mod" , L"pass");
-
-
-	while (true);
 	return 0;
 }
