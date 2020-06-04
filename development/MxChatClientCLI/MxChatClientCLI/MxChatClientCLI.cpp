@@ -43,7 +43,9 @@ void dangnhap() {
 
 }
 void get_list_online() {
-    
+    wcout << L" \n\n  >>> Danh sách đang online <<< \n\t" << endl;
+    wcout << client.TestOnlineList() << endl;
+    wcout << L" ====================================== \n\t" << endl;
 }
 void send_private_message() {
     wstring des_user = L"";
@@ -62,23 +64,22 @@ void send_private_message() {
         }
     }
 }
+
 int main(int argc, char** argv)
 {
 
     std::wcout << "Hello World Client!\n";
-    client.InitClient();
-    client.CreateWorkerThread();
- 
-    //
+  
+   // client.InitClient();
+    //client.CreateWorkerThread();
+    //client.TestLogin(L"admin", L"pass");
+    client.TestTransferFile(L"duc");
+    while (1);
+    return 0;
+    
     _setmode(_fileno(stdin), _O_U16TEXT);
     _setmode(_fileno(stdout), _O_U16TEXT);
-    //SetConsoleTitleW(L"Việt Nam Vô Địch!");
-    //HANDLE hdlConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    //CONSOLE_FONT_INFOEX consoleFont;
-    //ConsoleFont.cbSize = sizeof(consoleFont);
-    //GetCurrentConsoleFontEx(hdlConsole, FALSE, &consoleFont);
-    //memcpy(consoleFont.FaceName, L"Consolas", sizeof(consoleFont.FaceName));
-    //SetCurrentConsoleFontEx(hdlConsole, FALSE, &consoleFont);
+ 
 
     int counter;
    

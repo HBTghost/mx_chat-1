@@ -33,4 +33,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="3k.txt" />
+    <Text Include="27k.txt" />
+  </ItemGroup>
 </Project>

@@ -93,6 +93,9 @@
     <ClCompile Include="SClientPackage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\MxChatDLL.rc2">
@@ -155,6 +158,9 @@
       <Filter>Header Files\core</Filter>
     </ClInclude>
     <ClInclude Include="SClientPackage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

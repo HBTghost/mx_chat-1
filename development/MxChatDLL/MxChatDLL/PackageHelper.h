@@ -17,14 +17,41 @@ public:
 	vector<wstring> arg;
 	uint32_t total_size = 0;
 	uint32_t num_package = 0;
+	uint32_t header_len = 2;
 
 	~MessageModel() {
 		arg.clear();
 	}
+	int HeaderLengthFileStruct() {
+		wstring buffer_temp;
+		header_len = 2;
+
+		wchar_t sn_buffer[_MAX_ITOSTR_BASE10_COUNT];
+
+		_itow(total_size, sn_buffer, 10);
+		for (int i = 0; i < _MAX_ITOSTR_BASE10_COUNT; i++) {
+			header_len++;
+			if (sn_buffer[i] == '\0') { break; }
+			buffer_temp.push_back(sn_buffer[i]);
+		}
+
+		_itow(num_package, sn_buffer, 10);
+		for (int i = 0; i < _MAX_ITOSTR_BASE10_COUNT; i++) {
+			header_len++;
+			if (sn_buffer[i] == '\0') { break; }
+			buffer_temp.push_back(sn_buffer[i]);
+		}
+		if(arg.size() > 0){ 
+			header_len += arg[0].length() + 1;
+		}
+		return header_len;
+	}
 	WCHAR* BuildBlockMessage() {
+		
 		WCHAR* pp = StringHelper::wstringToWcharFixedP(this->BuildMessage(), 4096);
 		return pp;
 	}
+	
 	wstring BuildMessage() {
 		wstring buffer_temp;
 		buffer_temp.push_back(command);
@@ -73,6 +100,38 @@ public:
 		message.arg = parts;
 		return message;
 	}
+	static char* ParseGetDataRegion(WCHAR* msg, int max_len, wchar_t delim = '\0') {
+		wstring temp;
+		vector<wstring> parts;
+		int i;
+		for (i = 0; i < max_len; i++) {
+			if (msg[i] == delim) {
+				temp.push_back('\0');
+				parts.push_back(temp);
+				if (parts.size() == 4) {
+					//commamnd | total | num pack | id 
+					break;
+				}
+				temp = L"";
+				continue;
+			}
+			temp.push_back(msg[i]);
+		}
+		int package_header_len = i + 1;
+		int data_size = max_len - package_header_len;
+		temp = L"";
+		for (i = package_header_len; i < max_len; i++) {
+			temp.push_back(msg[i]);
+		}
+		WCHAR* data = StringHelper::wstringToWcharP(temp);
+		
+		char* c_data = new char[data_size * 2 ];
+		memcpy(c_data, data, data_size * 2);
+		
+
+		return c_data;
+	}
+
 	static MessageModel& ParseMessage(WCHAR* msg, int max_len, wchar_t delim = L'\0') {
 		//  struct : | COMMAND (1byte) | N | arg1 | N | arg2 | N | ... | argn | N |
 		wstring temp;

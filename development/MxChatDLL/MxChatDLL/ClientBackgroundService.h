@@ -13,6 +13,10 @@ public:
 	void TestSignUp(wstring user, wstring pass);
 
 
+	wstring TestOnlineList() {
+		return gClientObj.GetListUserOnlineStr();
+	}
+	void TestTransferFile(wstring user); 
 	void TestPrivateMessage(wstring user, wstring msg);
 	void TestGroupMessage(wstring group_id, wstring msg);
 private:

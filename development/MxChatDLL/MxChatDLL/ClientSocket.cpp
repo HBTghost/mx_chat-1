@@ -91,9 +91,7 @@ int ClientSocket::RecvMessageServer()
 	}
 	else {
 		message = temp;
-
-		MessageModel model = PackageHelper::ParseMessage(temp, 4096);
-		this->ProcessMessage(model);
+		this->ProcessMessage(temp);
 	}
 
 	
@@ -109,7 +107,8 @@ bool ClientSocket::IsConnected()
 	return _isConnected;
 }
 
-void ClientSocket::ProcessMessage(MessageModel&msg) {
+void ClientSocket::ProcessMessage(WCHAR* temp) {
+	MessageModel msg = PackageHelper::ParseMessage(temp, 4096);
 	//process message here overide it
 	EMessageCommand command = msg.command;
 	switch (command)
@@ -136,7 +135,7 @@ void ClientSocket::ProcessMessage(MessageModel&msg) {
 	case NOTIFY_LIST_USER_ONLINE:
 		_listUserOnline = msg.arg;
 		wcout << " ======= USER ONLINE UPDATE ========== " << endl;
-		wcout << GetListUserOnlineStr() << endl;
+		//wcout << GetListUserOnlineStr() << endl;
 		wcout << " ======= *********** ========== " << endl;
 		break;
 	case CLIENT_PRIVATE_MSG:
@@ -147,10 +146,14 @@ void ClientSocket::ProcessMessage(MessageModel&msg) {
 		break;
 	case CLIENT_REQUEST_TRANSFER_FILE:
 		break;
+	case CLIENT_BEGIN_TRANSFER_FILE:
+	{
+		ftm.AddChunk(msg, temp);
+		break;
+	}
 	case CLIENT_END_TRANSFER_FILE:
 		break;
 	default:
 		break;
 	}
-
 }

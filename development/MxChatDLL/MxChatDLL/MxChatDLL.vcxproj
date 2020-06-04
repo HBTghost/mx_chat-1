@@ -187,6 +187,7 @@
     <ClCompile Include="ClientBackgroundService.cpp" />
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="EventOnMessageHandler.cpp" />
+    <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="MxChatConfigure.cpp" />
     <ClCompile Include="MxChatDLL.cpp" />
     <ClCompile Include="PackageHelper.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="ClientBackgroundService.h" />
     <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="EventOnMessageHandler.h" />
+    <ClInclude Include="FileHelper.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MxChatConfigure.h" />
     <ClInclude Include="MxChatDLL.h" />

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <xstring>
 #include <winsock2.h>
+#include "FileTransferManagment.h"
 using namespace std;
 
 class ClientSocket
@@ -16,7 +17,8 @@ public:
 	int SendMessageServer(WCHAR* message, int len);
 	int RecvMessageServer();
 	bool IsConnected();
-	void ProcessMessage(MessageModel& msg);
+	//void ProcessMessage(MessageModel& msg);
+	void ProcessMessage(WCHAR* temp);
 	wstring GetListUserOnlineStr() {
 		wstring str_list = L"";
 		for(auto item : _listUserOnline) {
@@ -39,4 +41,5 @@ private:
 	wstring _username;
 	wstring _password;
 	vector<wstring> _listUserOnline;
+	FileTransferManagment ftm;
 };

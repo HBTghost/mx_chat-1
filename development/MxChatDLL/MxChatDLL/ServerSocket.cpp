@@ -211,9 +211,27 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 		break; 
 	}
 	case CLIENT_GROUP_MSG:
+		
 		break;
 	case CLIENT_REQUEST_TRANSFER_FILE:
+		
 		break;
+	case CLIENT_BEGIN_TRANSFER_FILE:
+	{
+		// | Comand | Total size | current pack | id | msg |
+		//
+		//this->TransferFile();
+		//SClientPacket* desSocket = this->GetClientByUsername(L"admin");
+		//if (desSocket == nullptr) {
+		//	wcout << "[PRIVATE_MSG] DES NOT FOUND" << endl;
+		//}
+		//else{
+			wstring build_msg = model.BuildMessage();
+			WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
+			this->SendPackageClient(*c_socket, pp, 4096 );
+		//}
+		break;
+	}
 	case CLIENT_END_TRANSFER_FILE:
 		break;
 	default:
@@ -221,6 +239,9 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 	}
 }
 
+void ServerSocket::TransferFile() {
+
+}
 SClientPacket* ServerSocket::GetClientByUsername(wstring username)
 {
 	vector<wstring> listOnline;

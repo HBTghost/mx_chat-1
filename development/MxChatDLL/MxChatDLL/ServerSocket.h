@@ -5,7 +5,7 @@
 #include "EventOnMessageHandler.h"
 #include <mutex>
 #include "SClientPackage.h"
-
+#include "FileTransferManagment.h"
 class ServerSocket : public EventOnMessageHandler
 {
 public:
@@ -18,6 +18,7 @@ public:
 	int ReceivePackageClient(SOCKET recvSocket);
 	void NotifyListUserOnline();
 	void ProcessMessage(MessageModel& package_msg, list<SClientPacket*>::iterator &c_socket);
+	void TransferFile();
 	SClientPacket* GetClientByUsername(wstring username);
 	vector<wstring> ListUserOnline();
 	int _total_msg = 0;
@@ -32,5 +33,7 @@ private:
 	SOCKET _socketListenClient;
 	bool _isConnected;
 	list<SClientPacket*> _listClient;
+	FileTransferManagment ftm;
+
 	
 };
