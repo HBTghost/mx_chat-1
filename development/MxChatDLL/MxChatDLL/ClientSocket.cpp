@@ -80,7 +80,7 @@ int ClientSocket::RecvMessageServer()
 	WCHAR temp[4096];
 	int iStat;
 	int len;
-	iStat = recv(_connect, (char*)temp, 4096, 0);
+	iStat = recv(_connect, (char*)temp, 4096 *2, 0);
 
 	if (iStat == -1)
 	{
@@ -108,6 +108,7 @@ bool ClientSocket::IsConnected()
 }
 
 void ClientSocket::ProcessMessage(WCHAR* temp) {
+	
 	MessageModel msg = PackageHelper::ParseMessage(temp, 4096);
 	//process message here overide it
 	EMessageCommand command = msg.command;

@@ -70,9 +70,9 @@ int main(int argc, char** argv)
 
     std::wcout << "Hello World Client!\n";
   
-   // client.InitClient();
-    //client.CreateWorkerThread();
-    //client.TestLogin(L"admin", L"pass");
+    client.InitClient();
+    client.CreateWorkerThread();
+    client.TestLogin(L"admin", L"pass");
     client.TestTransferFile(L"duc");
     while (1);
     return 0;

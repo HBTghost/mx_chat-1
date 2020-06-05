@@ -10,14 +10,14 @@ class FileTransferManagment
 {
 public:
 	
-	wchar_t * buffer;
+	vector<char> file_buff;
 
 	string _fileName;
-	uint64_t  _totalSize; 
-	uint32_t  _chunkSize;
+	uint64_t  _totalSize = 3040; 
+	uint32_t  _chunkSize = 1024;
 	uint64_t _chunkCurrentEpoch;
 	uint64_t _chunkEpoch;
-	uint32_t _currentSize;
+	uint32_t _currentSize = 0;
 	string _id;
 	string _src;
 	string _des;
@@ -52,7 +52,16 @@ public:
 	
 		
 		char* buffer = PackageHelper::ParseGetDataRegion(temp, 4096,  '\0' );
-
+		int remain_size = _totalSize - _currentSize;
+		int byte_read = (remain_size < _chunkSize) ? remain_size : _chunkSize;
+		for (int i = 0; i < byte_read; i++) {
+			myfile << buffer[i];
+		}
+		_currentSize += byte_read;
+		if (_currentSize == _totalSize) {
+			wcout << "[END WRITE]" << endl;
+			myfile.close();
+		}
 		/*
 		WCHAR* w_content = StringHelper::wstringToWcharP(content);
 		char* data = new char[content.size() * 2 + 2];
@@ -63,12 +72,4 @@ public:
 		return 1;
 	}
 private:
-};
-class OSFileTransfer {
-public:
-
-};
-class ISFileTransfer {
-public:
-	 
 };

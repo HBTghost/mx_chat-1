@@ -91,7 +91,7 @@ void ServerSocket::BeginListenClient()
 int ServerSocket::SendPackageClient(SClientPacket* packet, WCHAR* msg, int len) {
 	int iStat = 0;
 
-	iStat = send(packet->client, (char*)msg, len * 2 + 2, 0);
+	iStat = send(packet->client, (char*)msg, len * 2 , 0);
 	if (iStat == -1)
 		_listClient.remove(packet);
 	if (iStat == -1)
@@ -139,8 +139,15 @@ int ServerSocket::ReceivePackageClient(SOCKET recvSocket)
 		message = temp;
 		
 		MessageModel model = PackageHelper::ParseMessage(temp, 4096);
-		this->ProcessMessage(model, itl);
+		if (message[0] == EMessageCommand::CLIENT_BEGIN_TRANSFER_FILE) {
+			this->SendPackageClient((*itl), temp, 4096);
+			//ftm.AddChunk(model, temp);
+			wcout << "[Transfer file]" << endl;
+		}
+		else{
+			this->ProcessMessage(model, itl);
 		//this->OnMessageEventHandler(model);
+		}
 		mtx.unlock();
 	}
 	return 0;
@@ -153,7 +160,7 @@ void ServerSocket::NotifyListUserOnline() {
 	res_msg.arg = this->ListUserOnline();
 	wstring build_msg = res_msg.BuildMessage();
 	WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
-	this->SendPackageClientAll(pp, build_msg.size());
+	this->SendPackageClientAll(pp, 4096);
 }
 void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::iterator &c_socket)
 {
@@ -188,7 +195,7 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 		res_msg.arg = this->ListUserOnline();
 		wstring build_msg = res_msg.BuildMessage();
 		WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
-		this->SendPackageClient(*c_socket, pp, build_msg.size());
+		this->SendPackageClient(*c_socket, pp, 4096);
 		break;
 	}
 	case SERVER_SIGN_IN_ERROR_PASS:
@@ -206,7 +213,7 @@ void ServerSocket::ProcessMessage(MessageModel& model, list<SClientPacket*>::ite
 			wstring build_msg = model.BuildMessage();
 			WCHAR* pp = StringHelper::wstringToWcharP(build_msg);
 
-			this->SendPackageClient(desSocket, pp, build_msg.size());
+			this->SendPackageClient(desSocket, pp,  4096);
 		}
 		break; 
 	}

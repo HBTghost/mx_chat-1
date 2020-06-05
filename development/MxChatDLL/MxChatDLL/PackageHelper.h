@@ -126,7 +126,7 @@ public:
 		WCHAR* data = StringHelper::wstringToWcharP(temp);
 		
 		char* c_data = new char[data_size * 2 ];
-		memcpy(c_data, data, data_size * 2);
+		memcpy(c_data, data, data_size*2);
 		
 
 		return c_data;

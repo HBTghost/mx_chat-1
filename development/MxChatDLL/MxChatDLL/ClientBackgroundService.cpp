@@ -131,18 +131,18 @@ void ClientBackgroundService::TestTransferFile(wstring user) {
 			this_chunk_size); /* this many bytes is to be read */
 		char* c_chunk_data = chunk_data.data();
 
-  /* do something with chunk_data before next iteration */
+		 /* do something with chunk_data before next iteration */
 		cout << "chunk #" << chunk << endl;
 		WCHAR* w_chunk_data = new WCHAR[chunk_data.size() / 2];
-		int w_data_size = chunk_data.size() / 2;
-		memcpy(w_chunk_data, c_chunk_data, w_data_size);
+		//int w_data_size = chunk_data.size() / 2;
+		memcpy(w_chunk_data, c_chunk_data, chunk_data.size());
 		msg.arg.push_back(w_chunk_data);
 
 		wstring build_msg = msg.BuildMessage();
 		WCHAR* pp = StringHelper::wstringToWcharFixedP(build_msg, 4096);
-		ftm.AddChunk(msg, pp);
+		//ftm.AddChunk(msg, pp);
 		
-		//gClientObj.SendMessageServer(pp, 4096);
+		gClientObj.SendMessageServer(pp, 4096);
 		/*
 		for (const auto c : chunk_data) 
 		{
