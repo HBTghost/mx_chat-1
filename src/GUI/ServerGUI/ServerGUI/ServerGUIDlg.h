@@ -19,7 +19,7 @@ public:
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-
+	
 
 // Implementation
 protected:
@@ -31,10 +31,19 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+	friend int initServer();
+	HWND* GetHwnd() {
+		HWND win = this->GetSafeHwnd();
+		return &win; 
+	}
+	afx_msg LRESULT OnCommandIdTestMsg(WPARAM wParam, LPARAM lParam);
+
+
 public:
 	CString m_ServerIP;
 	CString m_ServerPort;
 	afx_msg void OnBnClickedButtonListen();
 
 
+	CString m_ServerLogger;
 };

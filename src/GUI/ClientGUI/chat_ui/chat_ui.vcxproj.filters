@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="chat_ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatUiDlg.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="messenger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Account.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditProfileDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddFriendDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditPasswordDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SHA256.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChooseFriend.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfirmDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EmojiDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShowEmoijDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateGroupDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChooseGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="chat_ui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatUiDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="messenger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EditProfileDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddFriendDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EditPasswordDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SHA256.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChooseFriend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfirmDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EmojiDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShowEmoijDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateGroupDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChooseGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="chatui.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\chatui.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-2-Man.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Male-User-Help.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Edit-Male-User.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Accept-Male-User.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Remove-Male-User.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-mail-send.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-balloon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Add-Male-User.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Green-plus.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-document-plus.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Designbolts-Free-Valentine-Heart-Hearts.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Red-heart.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Yellow-document-plus.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Green-document-plus.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Green-user.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Red-user.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-user.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Yellow-user.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Oxygen-Icons.org-Oxygen-Emotes-face-smile.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Vcferreira-Firefox-Os-Clock.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Iconleak-Or-Light-bulb.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Flatastic-11-Truck.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Icons-Land-Metro-Raster-Sport-Soccer-Ball.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Google-Noto-Emoji-Animals-Nature-22214-dog-face.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Pixelkit-Tasty-Bites-Hamburger.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Icons8-Ios7-Hands-Hand.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\Google-Noto-Emoji-People-Family-Love-11874-family-man-woman-girl-boy.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\icons8-add-user-group-man-woman-64.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="c:\users\hacba\downloads\icon3.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\hacba\Downloads\icons8-add-user-group-man-woman-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-add-user-group-man-man-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-add-user-male-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-admin-settings-male-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-attach-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-car-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-cat-head-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-chat-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-checked-user-male-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-clock-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-communicate-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-conference-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-denied-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-hamburger-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-heart-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-in-love-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-light-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-no-reminders-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-notification-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-people-working-together-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-sent-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-soccer-ball-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-so-so-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\add_group.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

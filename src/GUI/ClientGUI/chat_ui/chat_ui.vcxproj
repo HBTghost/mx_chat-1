@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{C898EB43-0F58-4DD1-BEA2-E96A532CEB1C}</ProjectGuid>
+    <ProjectGuid>{B6019430-4206-457B-975A-6211BE832B24}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
-    <RootNamespace>ServerGUI</RootNamespace>
+    <RootNamespace>chatui</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -31,7 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -39,7 +39,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -93,6 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,6 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,63 +185,109 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Account.h" />
-    <ClInclude Include="Conversation.h" />
-    <ClInclude Include="DataHelper.h" />
-    <ClInclude Include="DebugHelper.h" />
+    <ClInclude Include="Account.hpp" />
+    <ClInclude Include="AddFriendDlg.h" />
+    <ClInclude Include="AttachFile.h" />
+    <ClInclude Include="ChatUiDlg.hpp" />
+    <ClInclude Include="chat_ui.h" />
+    <ClInclude Include="ChooseFriend.h" />
+    <ClInclude Include="ChooseGroup.h" />
+    <ClInclude Include="ConfirmDlg.h" />
+    <ClInclude Include="CreateGroupDlg.h" />
+    <ClInclude Include="EditPasswordDlg.h" />
+    <ClInclude Include="EditProfileDlg.h" />
+    <ClInclude Include="EmojiDlg.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GroupConversation.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="mxdef.h" />
+    <ClInclude Include="messenger.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PrivateConversation.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SDataPacket.h" />
-    <ClInclude Include="ServerBackgroundService.h" />
-    <ClInclude Include="ServerGUI.h" />
-    <ClInclude Include="ServerGUIDlg.h" />
-    <ClInclude Include="ServerManagement.h" />
-    <ClInclude Include="ServerSocket.h" />
-    <ClInclude Include="sha256.h" />
-    <ClInclude Include="StringHelper.h" />
+    <ClInclude Include="SHA256.h" />
+    <ClInclude Include="ShowEmoijDlg.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Tools.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Account.cpp" />
-    <ClCompile Include="Conversation.cpp" />
-    <ClCompile Include="DataHelper.cpp" />
-    <ClCompile Include="DebugHelper.cpp" />
-    <ClCompile Include="GroupConversation.cpp" />
-    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="AddFriendDlg.cpp" />
+    <ClCompile Include="AttachFile.cpp" />
+    <ClCompile Include="ChatUiDlg.cpp" />
+    <ClCompile Include="chat_ui.cpp" />
+    <ClCompile Include="ChooseFriend.cpp" />
+    <ClCompile Include="ChooseGroup.cpp" />
+    <ClCompile Include="ConfirmDlg.cpp" />
+    <ClCompile Include="CreateGroupDlg.cpp" />
+    <ClCompile Include="EditPasswordDlg.cpp" />
+    <ClCompile Include="EditProfileDlg.cpp" />
+    <ClCompile Include="EmojiDlg.cpp" />
+    <ClCompile Include="messenger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PrivateConversation.cpp" />
-    <ClCompile Include="SDataPacket.cpp" />
-    <ClCompile Include="ServerBackgroundService.cpp" />
-    <ClCompile Include="ServerGUI.cpp" />
-    <ClCompile Include="ServerGUIDlg.cpp" />
-    <ClCompile Include="ServerManagement.cpp" />
-    <ClCompile Include="ServerSocket.cpp" />
-    <ClCompile Include="sha256.cpp" />
-    <ClCompile Include="StringHelper.cpp" />
+    <ClCompile Include="SHA256.cpp" />
+    <ClCompile Include="ShowEmoijDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ServerGUI.rc" />
+    <ResourceCompile Include="chatui.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="debug_dump.bin" />
-    <None Include="res\ServerGUI.rc2" />
-    <None Include="ServerGUI.aps" />
+    <None Include="res\chatui.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\ServerGUI.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="MyLogFile.log" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Flatastic-11-Truck.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-2-Man.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Accept-Male-User.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Add-Male-User.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Edit-Male-User.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Male-User-Help.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Remove-Male-User.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Designbolts-Free-Valentine-Heart-Hearts.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-balloon.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-document-plus.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-mail-send.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Blue-user.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Green-document-plus.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Green-plus.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Green-user.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Red-heart.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Red-user.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Yellow-document-plus.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Double-J-Design-Origami-Colored-Pencil-Yellow-user.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Google-Noto-Emoji-Animals-Nature-22214-dog-face.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Google-Noto-Emoji-People-Family-Love-11874-family-man-woman-girl-boy.ico" />
+    <Image Include="c:\users\hacba\downloads\icon3.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Iconleak-Or-Light-bulb.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Icons-Land-Metro-Raster-Sport-Soccer-Ball.ico" />
+    <Image Include="C:\Users\hacba\Downloads\icons8-add-user-group-man-woman-64.ico" />
+    <Image Include="C:\Users\hacba\Downloads\icons8-add-user-group-man-woman-64.png" />
+    <Image Include="C:\Users\hacba\Downloads\Icons8-Ios7-Hands-Hand.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Oxygen-Icons.org-Oxygen-Emotes-face-smile.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Pixelkit-Tasty-Bites-Hamburger.ico" />
+    <Image Include="C:\Users\hacba\Downloads\Vcferreira-Firefox-Os-Clock.ico" />
+    <Image Include="res\add_group.ico" />
+    <Image Include="res\icons8-add-user-group-man-man-64.ico" />
+    <Image Include="res\icons8-add-user-male-64.ico" />
+    <Image Include="res\icons8-admin-settings-male-64.ico" />
+    <Image Include="res\icons8-attach-64.ico" />
+    <Image Include="res\icons8-car-64.ico" />
+    <Image Include="res\icons8-cat-head-64.ico" />
+    <Image Include="res\icons8-chat-64.ico" />
+    <Image Include="res\icons8-checked-user-male-64.ico" />
+    <Image Include="res\icons8-clock-64.ico" />
+    <Image Include="res\icons8-communicate-64.ico" />
+    <Image Include="res\icons8-conference-64.ico" />
+    <Image Include="res\icons8-denied-64.ico" />
+    <Image Include="res\icons8-hamburger-64.ico" />
+    <Image Include="res\icons8-heart-64.ico" />
+    <Image Include="res\icons8-in-love-64.ico" />
+    <Image Include="res\icons8-light-64.ico" />
+    <Image Include="res\icons8-no-reminders-64.ico" />
+    <Image Include="res\icons8-notification-64.ico" />
+    <Image Include="res\icons8-people-working-together-64.ico" />
+    <Image Include="res\icons8-sent-64.ico" />
+    <Image Include="res\icons8-so-so-64.ico" />
+    <Image Include="res\icons8-soccer-ball-64.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

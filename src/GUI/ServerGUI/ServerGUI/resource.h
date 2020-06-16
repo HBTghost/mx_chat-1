@@ -13,6 +13,7 @@
 #define IDC_BUTTON_LISTEN               1002
 #define IDC_RICHEDIT_LOGGER             1003
 
+#define IDC_MSG_TEST					10004
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

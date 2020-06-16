@@ -7,6 +7,9 @@
 #include "ServerGUI.h"
 #include "ServerGUIDlg.h"
 #include "afxdialogex.h"
+#include "ServerBackgroundService.h"
+#include "Logger.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,6 +17,8 @@
 
 
 // CAboutDlg dialog used for App About
+
+
 
 class CAboutDlg : public CDialogEx
 {
@@ -33,6 +38,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
+
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
 }
@@ -50,12 +56,32 @@ END_MESSAGE_MAP()
 
 
 
+int initServer() {
+	char buf[4096];
+	if (!gServerObj.IsConnected())
+	{
+		cout << "Failed to initialise server socket." << endl;
+		LOG_INFO("Failed to init server socket");
+		//MessageBox(0, L"\nFailed to initialise server socket.", 0, 0);4
+		return 0;
+	}
+	LOG_INFO("initServer() Running!!!");
+
+	AfxBeginThread(listenServerThread, 0);
+
+	return 1;
+}
+
 CServerGUIDlg::CServerGUIDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SERVERGUI_DIALOG, pParent)
 	, m_ServerIP(_T("127.0.0.1"))
 	, m_ServerPort(_T("8084"))
+	, m_ServerLogger(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+	
+
 }
 
 void CServerGUIDlg::DoDataExchange(CDataExchange* pDX)
@@ -63,13 +89,24 @@ void CServerGUIDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_IP, m_ServerIP);
 	DDX_Text(pDX, IDC_EDIT_PORT, m_ServerPort);
+	DDX_Text(pDX, IDC_RICHEDIT_LOGGER, m_ServerLogger);
 }
 
+LRESULT CServerGUIDlg::OnCommandIdTestMsg(WPARAM wParam, LPARAM lParam)
+{
+	UpdateData(true);
+	CString* message = (CString*)wParam;
+	m_ServerLogger.Append(*message);
+	UpdateData(false);
+	return 0;
+}
 BEGIN_MESSAGE_MAP(CServerGUIDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON_LISTEN, &CServerGUIDlg::OnBnClickedButtonListen)
+
+	ON_MESSAGE(IDC_MSG_TEST, &CServerGUIDlg::OnCommandIdTestMsg)
 END_MESSAGE_MAP()
 
 
@@ -105,6 +142,16 @@ BOOL CServerGUIDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+
+
+
+	Logger* pLogger = NULL; // Create the object pointer for Logger Class
+	pLogger = Logger::getInstance();
+	pLogger->updateLogType(LOG_TYPE::BOTH_LOG);
+	pLogger->setHwnd(*this->GetHwnd());
+	initServer();
+	LOG_INFO("Init GUI Dlg");
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -171,4 +218,5 @@ void CServerGUIDlg::OnBnClickedButtonListen()
 
 	AfxMessageBox(L"Sign in ....");
 	UpdateData(false);
+
 }
