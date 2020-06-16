@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Account.hpp"
+#include "ClientBackgroundService.h"
 
 // ChatUiDlg dialog
 class ChatUiDlg : public CDialog
@@ -32,6 +33,13 @@ protected:
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP();
+
+
+	afx_msg LRESULT OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam);
+	HWND* GetHwnd() {
+		HWND win = this->GetSafeHwnd();
+		return &win;
+	}
 public:
 	AccountManagement accMa;
 	CStatic title;
@@ -42,4 +50,6 @@ public:
 	afx_msg void OnBnClickedBtnRegister();
 	afx_msg void OnEnUpdateUsername();
 	afx_msg void OnEnChangePassword();
+
+	ClientBackgroundService m_ClientService;
 };

@@ -12,6 +12,9 @@ using namespace std;
 class ServerSocket
 {
 public:
+	AccountManagement accMa;
+
+
 	ServerSocket() {
 		this->InitServer();
 	}
@@ -112,15 +115,67 @@ public:
 		{
 		case CLIENT_SIGN_IN: {
 			LOG_INFO("SIGN IN REQUEST");
-			string user = model._data_items[0];
+			string user = model._data_items[0]; 
 			string pass = model._data_items[1];
 			cout << "CLIENT request sign in from User: [" << user << "] & Password: [" << pass << "]" << endl;
 			LOG_INFO("CLIENT request sign in from User: [" + user + "] & Password: [" + pass + "]");
 
-			(*c_socket)->account = new Account(user, pass);
-			(*c_socket)->username = user;
+			SDataPackage* res_msg = (new SDataPackage())
+				->SetHeaderDesSrc("server", "client")
+				->SetHeaderNumPackage(0)
+				->SetHeaderTotalSize(4096);;
+
+			int flag = accMa.CheckAccount(Account(user, pass));
+
+			if (flag == RIGHT_PASSWORD) {
+				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_SUCCESS);
+				(*c_socket)->account = new Account(user, pass);
+				(*c_socket)->username = user;
+				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] success => Response");
+
+			}
+			else if (flag == WRONG_PASSWORD) {
+				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error => Response");
+				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_ERROR);
+			}
+			else {
+				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error => Response");
+				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_ERROR);
+			}
+			res_msg->_data_items.push_back(user);
+			char* res_msg_buff = res_msg->BuildMessage();
+			this->SendMessagePackage(*c_socket, res_msg_buff, PACKAGE_SIZE);
 			break;
 		}
+		case CLIENT_SIGN_UP: {
+			LOG_INFO("SIGN UP REQUEST");
+			string user = model._data_items[0];
+			string pass = model._data_items[1];
+			cout << "CLIENT request sign up from User: [" << user << "] & Password: [" << pass << "]" << endl;
+			LOG_INFO("CLIENT request sign up from User: [" + user + "] & Password: [" + pass + "]");
+
+			SDataPackage* res_msg = (new SDataPackage())
+				->SetHeaderDesSrc("server", "client")
+				->SetHeaderNumPackage(0)
+				->SetHeaderTotalSize(4096);;
+
+			int flag = 	accMa.AddAccount(Account(user, pass));
+			if (flag) {
+				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_SUCCESS);
+				LOG_INFO("Sign up [" + user + "] & Password: [" + pass + "] success => Response");
+
+			}
+			else {
+				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_ERROR);
+				LOG_INFO("Sign up [" + user + "] & Password: [" + pass + "] error => Response");
+
+			}
+			res_msg->_data_items.push_back(user);
+			char* res_msg_buff = res_msg->BuildMessage();
+			this->SendMessagePackage(*c_socket, res_msg_buff, PACKAGE_SIZE);
+			break;
+		}
+						   
 		case CLIENT_REQUEST_PRIVATE_CHAT: {
 			InitRequestPrivateChat(&model, c_socket);
 			break;

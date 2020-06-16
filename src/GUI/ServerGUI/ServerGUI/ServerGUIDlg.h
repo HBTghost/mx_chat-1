@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Account.h"
 
 
 // CServerGUIDlg dialog

@@ -1,53 +1,83 @@
-#ifndef SHA256_H
-#define SHA256_H
+// //////////////////////////////////////////////////////////
+// sha256.h
+// Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
+// see http://create.stephan-brumme.com/disclaimer.html
+//
+
+#pragma once
+
+//#include "hash.h"
 #include <string>
+#include "Tools.hpp"
 
-class SHA256
-{
-protected:
-    typedef unsigned char uint8;
-    typedef unsigned int uint32;
-    typedef unsigned long long uint64;
-
-    const static uint32 sha256_k[];
-    static const unsigned int SHA224_256_BLOCK_SIZE = (512 / 8);
-public:
-    void init();
-    void update(const unsigned char* message, unsigned int len);
-    void final(unsigned char* digest);
-    static const unsigned int DIGEST_SIZE = (256 / 8);
-
-protected:
-    void transform(const unsigned char* message, unsigned int block_nb);
-    unsigned int m_tot_len;
-    unsigned int m_len;
-    unsigned char m_block[2 * SHA224_256_BLOCK_SIZE];
-    uint32 m_h[8];
-};
-
-std::string sha256(std::string input);
-
-#define SHA2_SHFR(x, n)    (x >> n)
-#define SHA2_ROTR(x, n)   ((x >> n) | (x << ((sizeof(x) << 3) - n)))
-#define SHA2_ROTL(x, n)   ((x << n) | (x >> ((sizeof(x) << 3) - n)))
-#define SHA2_CH(x, y, z)  ((x & y) ^ (~x & z))
-#define SHA2_MAJ(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
-#define SHA256_F1(x) (SHA2_ROTR(x,  2) ^ SHA2_ROTR(x, 13) ^ SHA2_ROTR(x, 22))
-#define SHA256_F2(x) (SHA2_ROTR(x,  6) ^ SHA2_ROTR(x, 11) ^ SHA2_ROTR(x, 25))
-#define SHA256_F3(x) (SHA2_ROTR(x,  7) ^ SHA2_ROTR(x, 18) ^ SHA2_SHFR(x,  3))
-#define SHA256_F4(x) (SHA2_ROTR(x, 17) ^ SHA2_ROTR(x, 19) ^ SHA2_SHFR(x, 10))
-#define SHA2_UNPACK32(x, str)                 \
-{                                             \
-    *((str) + 3) = (uint8) ((x)      );       \
-    *((str) + 2) = (uint8) ((x) >>  8);       \
-    *((str) + 1) = (uint8) ((x) >> 16);       \
-    *((str) + 0) = (uint8) ((x) >> 24);       \
-}
-#define SHA2_PACK32(str, x)                   \
-{                                             \
-    *(x) =   ((uint32) *((str) + 3)      )    \
-           | ((uint32) *((str) + 2) <<  8)    \
-           | ((uint32) *((str) + 1) << 16)    \
-           | ((uint32) *((str) + 0) << 24);   \
-}
+// define fixed size integer types
+#ifdef _MSC_VER
+// Windows
+typedef unsigned __int8  uint8_t;
+typedef unsigned __int32 uint32_t;
+typedef unsigned __int64 uint64_t;
+#else
+// GCC
+#include <stdint.h>
 #endif
+
+
+/// compute SHA256 hash
+/** Usage:
+	SHA256 sha256;
+	std::string myHash  = sha256("Hello World");     // std::string
+	std::string myHash2 = sha256("How are you", 11); // arbitrary data, 11 bytes
+
+	// or in a streaming fashion:
+
+	SHA256 sha256;
+	while (more data available)
+	  sha256.add(pointer to fresh data, number of new bytes);
+	std::string myHash3 = sha256.getHash();
+  */
+class SHA256 //: public Hash
+{
+public:
+	/// split into 64 byte blocks (=> 512 bits), hash is 32 bytes long
+	enum { BlockSize = 512 / 8, HashBytes = 32 };
+
+	/// same as reset()
+	SHA256();
+
+	/// compute SHA256 of a memory block
+	std::string operator()(const void* data, size_t numBytes);
+	/// compute SHA256 of a string, excluding final zero
+	std::string operator()(const std::string& text);
+	std::wstring operator()(const std::wstring& text) {
+		std::string pass = (Tools()).WstringToString(text);
+		return (Tools()).StringToWstring(SHA256()(pass));
+	}
+
+	/// add arbitrary number of bytes
+	void add(const void* data, size_t numBytes);
+
+	/// return latest hash as 64 hex characters
+	std::string getHash();
+	/// return latest hash as bytes
+	void        getHash(unsigned char buffer[HashBytes]);
+
+	/// restart
+	void reset();
+
+private:
+	/// process 64 bytes
+	void processBlock(const void* data);
+	/// process everything left in the internal buffer
+	void processBuffer();
+
+	/// size of processed data in bytes
+	uint64_t m_numBytes;
+	/// valid bytes in m_buffer
+	size_t   m_bufferSize;
+	/// bytes not processed yet
+	uint8_t  m_buffer[BlockSize];
+
+	enum { HashValues = HashBytes / 4 };
+	/// hash, stored as integers
+	uint32_t m_hash[HashValues];
+};

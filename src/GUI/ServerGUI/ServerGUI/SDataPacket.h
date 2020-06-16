@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdio.h>
 #include "StringHelper.h"
-#include "sha256.h"
+#include "SHA256.h"
 #include "DataHelper.h"
 
 class SDataPackage {
@@ -18,9 +18,9 @@ private:
 	uint32_t current_packet = 0;
 
 	string raw_src;
-	string sha256_hash_src;
+	string SHA256_hash_src;
 	string raw_des;
-	string sha256_hash_des;
+	string SHA256_hash_des;
 
 	uint32_t num_data_item = 0;
 	char delim = '\0';
@@ -43,8 +43,8 @@ public:
 		if (hash_src.length() != 64 || hash_des.length() != 64) {
 			throw "Hash SHA256 must contain 64 characters";
 		}
-		this->sha256_hash_src = hash_src;
-		this->sha256_hash_des = hash_des;
+		this->SHA256_hash_src = hash_src;
+		this->SHA256_hash_des = hash_des;
 		return this;
 	}
 	SDataPackage* SetHeaderDesSrc(string src, string des) {
@@ -79,8 +79,8 @@ public:
 	void DebugPackage() {
 		std::ostringstream ss;
 		ss << endl<<"\t[CUR PAK] "  << this->current_packet << endl;
-		ss << "\t[SHA DES] "  << this->sha256_hash_des << endl;
-		ss << "\t[SHA SRC] "  << this->sha256_hash_src << endl;
+		ss << "\t[SHA DES] "  << this->SHA256_hash_des << endl;
+		ss << "\t[SHA SRC] "  << this->SHA256_hash_src << endl;
 		ss << "\t[Raw DES] " << this->raw_src << endl;
 		ss << "\t[Raw SRC] "  << this->raw_des << endl;
 		ss << "\t[Num DAT] " << this->num_data_item << endl;
@@ -105,10 +105,10 @@ public:
 		current_packet = DataHelper::ConvertBitUint32(temp_num);
 
 		memcpy(temp_sha, _package + 12, 64);
-		sha256_hash_src = string(temp_sha);
+		SHA256_hash_src = string(temp_sha);
 
 		memcpy(temp_sha, _package + 76, 64);
-		sha256_hash_des = string(temp_sha);
+		SHA256_hash_des = string(temp_sha);
 
 		if (_package[140] == 0x01) {
 			//true
@@ -171,14 +171,14 @@ public:
 		memcpy(_package + 8, temp_num, sizeof(uint32_t));
 
 
-		//sha256_hash_src = sha256(raw_src);
-		if (sha256_hash_src.length() > 0) {
-			memcpy(_package + 12, sha256_hash_src.data(), 64);
+		//SHA256_hash_src = SHA256(raw_src);
+		if (SHA256_hash_src.length() > 0) {
+			memcpy(_package + 12, SHA256_hash_src.data(), 64);
 		}
-		if (sha256_hash_des.length() > 0) {
+		if (SHA256_hash_des.length() > 0) {
 
-			//sha256_hash_des = sha256(raw_des);
-			memcpy(_package + 76, sha256_hash_des.data(), 64);
+			//SHA256_hash_des = SHA256(raw_des);
+			memcpy(_package + 76, SHA256_hash_des.data(), 64);
 		}
 
 		if (_use_raw_user == true) {
@@ -210,10 +210,10 @@ public:
 
 
 	string& GetSHA256Src() {
-		return this->sha256_hash_src;
+		return this->SHA256_hash_src;
 	}
 	string& GetSHA256Des() {
-		return this->sha256_hash_des;
+		return this->SHA256_hash_des;
 	}
 	string& GetSrc() {
 		return this->raw_src;

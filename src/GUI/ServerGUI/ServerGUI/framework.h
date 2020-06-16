@@ -13,7 +13,7 @@
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
-
+#define sha256 SHA256()
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions

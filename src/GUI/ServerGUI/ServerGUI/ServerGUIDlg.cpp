@@ -150,9 +150,8 @@ BOOL CServerGUIDlg::OnInitDialog()
 	pLogger = Logger::getInstance();
 	pLogger->updateLogType(LOG_TYPE::BOTH_LOG);
 	pLogger->setHwnd(*this->GetHwnd());
+	
 	initServer();
-	LOG_INFO("Init GUI Dlg");
-
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -215,8 +214,9 @@ void CServerGUIDlg::OnBnClickedButtonListen()
 	CT2A ascii_port(m_ServerPort);
 	char* ip = ascii_ip.m_psz;
 	char* port = ascii_port.m_psz;
-
-	AfxMessageBox(L"Sign in ....");
+	//initServer();
+	LOG_INFO("Init GUI Server 127.0.0.1 8084");
+	//AfxMessageBox(L"Sign in ....");
 	UpdateData(false);
 
 }

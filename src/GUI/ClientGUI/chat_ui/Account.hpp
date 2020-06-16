@@ -89,7 +89,7 @@ public:
     std::vector<std::wstring> members;
 
 public:
-    Group() = default;
+    Group() = default; 
     Group(std::vector<std::wstring> info) {
         if (info.size() > 0) {
             name = info[0];
@@ -112,10 +112,10 @@ public:
 class AccountManagement
 {
 private:
-    std::wstring UserValidation{ L"./data/accounts/UserValidation.txt" };
-    std::wstring UserFriends{ L"./data/accounts/UserFriends.txt" };
-    std::wstring UserGroups{ L"./data/accounts/UserGroups.txt" };
-    std::wstring GroupMembers{ L"./data/accounts/GroupMembers.txt" };
+    std::wstring UserValidation{ L"./data/accounts/UserValidation.txt" }; //account
+    std::wstring UserFriends{ L"./data/accounts/UserFriends.txt" }; //friend
+    std::wstring UserGroups{ L"./data/accounts/UserGroups.txt" }; //list groups
+    std::wstring GroupMembers{ L"./data/accounts/GroupMembers.txt" }; //member of group
     std::vector<std::wstring> fileList;
     std::vector<std::vector<std::vector<std::wstring>>> files;
     int FILE_FLAG;

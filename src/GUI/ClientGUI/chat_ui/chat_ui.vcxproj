@@ -192,17 +192,28 @@
     <ClInclude Include="chat_ui.h" />
     <ClInclude Include="ChooseFriend.h" />
     <ClInclude Include="ChooseGroup.h" />
+    <ClInclude Include="ClientBackgroundService.h" />
+    <ClInclude Include="ClientConversation.h" />
+    <ClInclude Include="ClientGroupConversation.h" />
+    <ClInclude Include="ClientPrivateConversation.h" />
+    <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="CreateGroupDlg.h" />
+    <ClInclude Include="DataHelper.h" />
+    <ClInclude Include="DebugHelper.h" />
     <ClInclude Include="EditPasswordDlg.h" />
     <ClInclude Include="EditProfileDlg.h" />
     <ClInclude Include="EmojiDlg.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="messenger.h" />
+    <ClInclude Include="mxdef.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SDataPacket.h" />
     <ClInclude Include="SHA256.h" />
     <ClInclude Include="ShowEmoijDlg.h" />
+    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Tools.hpp" />
   </ItemGroup>
@@ -213,11 +224,19 @@
     <ClCompile Include="chat_ui.cpp" />
     <ClCompile Include="ChooseFriend.cpp" />
     <ClCompile Include="ChooseGroup.cpp" />
+    <ClCompile Include="ClientBackgroundService.cpp" />
+    <ClCompile Include="ClientConversation.cpp" />
+    <ClCompile Include="ClientGroupConversation.cpp" />
+    <ClCompile Include="ClientPrivateConversation.cpp" />
+    <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="CreateGroupDlg.cpp" />
+    <ClCompile Include="DataHelper.cpp" />
+    <ClCompile Include="DebugHelper.cpp" />
     <ClCompile Include="EditPasswordDlg.cpp" />
     <ClCompile Include="EditProfileDlg.cpp" />
     <ClCompile Include="EmojiDlg.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="messenger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -225,8 +244,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SDataPacket.cpp" />
     <ClCompile Include="SHA256.cpp" />
     <ClCompile Include="ShowEmoijDlg.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="chatui.rc" />
@@ -288,6 +309,9 @@
     <Image Include="res\icons8-sent-64.ico" />
     <Image Include="res\icons8-so-so-64.ico" />
     <Image Include="res\icons8-soccer-ball-64.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="MyLogFile.log" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

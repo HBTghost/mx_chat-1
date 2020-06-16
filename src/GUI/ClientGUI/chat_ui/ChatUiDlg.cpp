@@ -67,8 +67,37 @@ BEGIN_MESSAGE_MAP(ChatUiDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_REGISTER, &ChatUiDlg::OnBnClickedBtnRegister)
 	ON_EN_UPDATE(IDC_USERNAME, &ChatUiDlg::OnEnUpdateUsername)
 	ON_EN_CHANGE(IDC_PASSWORD, &ChatUiDlg::OnEnChangePassword)
+
+	ON_MESSAGE(IDC_FORM_LOGIN_MSG_HANDLER, &ChatUiDlg::OnFormLoginMsgHandler)
+	
+
 END_MESSAGE_MAP()
 
+LRESULT ChatUiDlg::OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam) {
+	UINT command_msg = (UINT)wParam;
+	switch (command_msg)
+	{
+	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_SUCESS:{
+		AfxMessageBox(L"Login sucessfully!!!");
+		OnOK();
+		messenger mess(L"username");
+		mess.DoModal();
+	}
+		break;
+	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_ERROR:
+		AfxMessageBox(L"Login ERROR!!!");
+		break;
+	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_SUCCESS:
+		AfxMessageBox(L"Register successfuly!!!");
+		break;
+	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR:
+		AfxMessageBox(L"Register ERROR!!!");
+		break;
+	default:
+		break;
+	}
+	return 0L;
+}
 
 // ChatUiDlg message handlers
 
@@ -83,6 +112,14 @@ BOOL ChatUiDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	username.SetWindowTextW(_username);
+
+	Logger::getInstance()->updateLogType(BOTH_LOG);
+
+
+	m_ClientService.AddHwnd(*this->GetHwnd());
+	m_ClientService.InitClient();
+	m_ClientService.CreateWorkerThread();
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -175,7 +212,17 @@ void ChatUiDlg::OnBnClickedBtnLogin()
 	CString _username, _password;
 	GetDlgItemText(IDC_USERNAME, _username);
 	GetDlgItemText(IDC_PASSWORD, _password);
+	
+
+	CT2A ascii_user(_username);
+	CT2A ascii_pass(_password);
+	string s_user = ascii_user.m_psz;
+	string s_pass = ascii_pass.m_psz;
+
 	std::wstring username(_username), password(_password);
+
+
+
 
 	if (_username == _T("")) {
 		MessageBox(_T("Username must not be empty!"), _T("Alert"), MB_ICONERROR);
@@ -184,6 +231,8 @@ void ChatUiDlg::OnBnClickedBtnLogin()
 		MessageBox(_T("Password must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
 	else {
+		this->m_ClientService.Login(s_user, s_pass);
+		/*
 		int flag = accMa.CheckAccount(Account(username, password));
 		if (flag == RIGHT_PASSWORD) {
 			MessageBox(_T("Logged in successfully!"), _T("Alert"), MB_ICONINFORMATION);
@@ -197,12 +246,40 @@ void ChatUiDlg::OnBnClickedBtnLogin()
 		else {
 			MessageBox(_T("Account does not exist!"), _T("Alert"), MB_ICONERROR);
 		}
+		*/
 	}
 }
 
 
 void ChatUiDlg::OnBnClickedBtnRegister()
 {
+	// TODO: Add your control notification handler code here
+	CString _username, _password;
+	GetDlgItemText(IDC_USERNAME, _username);
+	GetDlgItemText(IDC_PASSWORD, _password);
+
+
+	CT2A ascii_user(_username);
+	CT2A ascii_pass(_password);
+	string s_user = ascii_user.m_psz;
+	string s_pass = ascii_pass.m_psz;
+
+	std::wstring username(_username), password(_password);
+
+
+
+
+	if (_username == _T("")) {
+		MessageBox(_T("Username must not be empty!"), _T("Alert"), MB_ICONERROR);
+	}
+	else if (_password == _T("")) {
+		MessageBox(_T("Password must not be empty!"), _T("Alert"), MB_ICONERROR);
+	}
+	else {
+		this->m_ClientService.Register(s_user, s_pass);
+	}
+
+	/*
 	// TODO: Add your control notification handler code here
 	CString _username, _password;
 	GetDlgItemText(IDC_USERNAME, _username);
@@ -223,6 +300,7 @@ void ChatUiDlg::OnBnClickedBtnRegister()
 			MessageBox(_T("Username already exists!"), _T("Alert"), MB_ICONERROR);
 		}
 	}
+	*/
 }
 
 
