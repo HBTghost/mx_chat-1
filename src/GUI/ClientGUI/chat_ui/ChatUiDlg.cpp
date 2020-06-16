@@ -29,6 +29,7 @@ ChatUiDlg::ChatUiDlg(CString _username)
 	, _username (_username)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
+
 }
 
 void ChatUiDlg::DoDataExchange(CDataExchange* pDX)
@@ -78,20 +79,23 @@ LRESULT ChatUiDlg::OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam) {
 	switch (command_msg)
 	{
 	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_SUCESS:{
-		AfxMessageBox(L"Login sucessfully!!!");
-		OnOK();
-		messenger mess(L"username");
+		MessageBox(_T("Login successfully. Enjoy this app!!!"), _T("Alert"), MB_ICONINFORMATION);
+
+		//OnOK();
+		messenger mess(this->m_ClientService);
+		//this->m_ClientService->AddHwnd(mess.GetSafeHwnd());
 		mess.DoModal();
-	}
+	
 		break;
+	}
 	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_ERROR:
-		AfxMessageBox(L"Login ERROR!!!");
+		MessageBox(_T("Login error, please check username or password!!!"), _T("Alert"), MB_ICONERROR);
 		break;
 	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_SUCCESS:
-		AfxMessageBox(L"Register successfuly!!!");
+		MessageBox(_T("Register successfuly. Click Login to continue"), _T("Alert"), MB_ICONINFORMATION );
 		break;
 	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR:
-		AfxMessageBox(L"Register ERROR!!!");
+		MessageBox(_T("Register error. Username existed, choose another username to continue !!!"), _T("Alert"), MB_ICONERROR);
 		break;
 	default:
 		break;
@@ -112,13 +116,9 @@ BOOL ChatUiDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	username.SetWindowTextW(_username);
+	this->m_ClientService->AddHwnd(this->GetSafeHwnd());
+	this->m_ClientService->CreateWorkerThread();
 
-	Logger::getInstance()->updateLogType(BOTH_LOG);
-
-
-	m_ClientService.AddHwnd(*this->GetHwnd());
-	m_ClientService.InitClient();
-	m_ClientService.CreateWorkerThread();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -231,7 +231,7 @@ void ChatUiDlg::OnBnClickedBtnLogin()
 		MessageBox(_T("Password must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
 	else {
-		this->m_ClientService.Login(s_user, s_pass);
+		this->m_ClientService->Login(s_user, s_pass);
 		/*
 		int flag = accMa.CheckAccount(Account(username, password));
 		if (flag == RIGHT_PASSWORD) {
@@ -276,7 +276,7 @@ void ChatUiDlg::OnBnClickedBtnRegister()
 		MessageBox(_T("Password must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
 	else {
-		this->m_ClientService.Register(s_user, s_pass);
+		this->m_ClientService->Register(s_user, s_pass);
 	}
 
 	/*

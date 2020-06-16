@@ -51,5 +51,5 @@ public:
 	afx_msg void OnEnUpdateUsername();
 	afx_msg void OnEnChangePassword();
 
-	ClientBackgroundService m_ClientService;
+	ClientBackgroundService *m_ClientService;
 };

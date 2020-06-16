@@ -10,6 +10,7 @@
 
 #include "resource.h"		// main symbols
 
+#include "ClientBackgroundService.h"
 
 // ChatUiApp:
 // See chat_ui.cpp for the implementation of this class
@@ -22,6 +23,8 @@ public:
 
 // Overrides
 public:
+	ClientBackgroundService m_ClientService;
+
 	virtual BOOL InitInstance();
 
 // Implementation

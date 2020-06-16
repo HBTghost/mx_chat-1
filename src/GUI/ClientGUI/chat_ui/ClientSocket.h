@@ -17,13 +17,14 @@ private:
 	int _serverPort = 8084;
 	bool _isConnected = false;
 
+
 	bool IsLogined = false;
 
 	HWND hwnd;
 public:
 	string username;
 	bool task_sync = false;
-
+	vector<string> _list_online;
 
 
 	vector<ClientConversation*> _list_conversation;
@@ -31,7 +32,9 @@ public:
 
 	}
 	void AddHwnd(HWND hwnd) {
-		this->hwnd = hwnd;
+		if (hwnd) {
+			this->hwnd = hwnd;
+		}
 	}
 	~ClientSocket() {
 		if (_isConnected) {
@@ -148,8 +151,8 @@ public:
 			cout << "Login successfully!!!" << endl;
 			this->username = model._data_items[0];
 			SendMessageW(hwnd, IDC_FORM_LOGIN_MSG_HANDLER, IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_SUCESS, 0);
+			break;
 		}
-		break;
 		case SERVER_RESPONSE_SIGN_IN_ERROR:
 			cout << "Login error, please check again!!!" << endl;
 			SendMessageW(hwnd, IDC_FORM_LOGIN_MSG_HANDLER, IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_ERROR, 0);
@@ -163,12 +166,15 @@ public:
 		case SERVER_RESPONSE_SIGN_UP_ERROR:
 			SendMessageW(hwnd, IDC_FORM_LOGIN_MSG_HANDLER, IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR, 0);
 			break;
+		case CLIENT_REQUEST_LIST_ONLINE:
+
+			MessageBoxW(hwnd, _T("Client list received "), _T("Alert"), MB_ICONERROR);
+			break;
 		case SERVER_RESPONSE_HASH_KEY:
 			//send message to window to init and open new dialog chat
 			//|hash|usr0|usr1
 			model.DebugPackage();
 			cout << "Response hash key" << endl;
-			
 			break;
 		case CLIENT_SEND_PRIVATE_CHAT:
 			model.DebugPackage();

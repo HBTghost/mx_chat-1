@@ -25,12 +25,12 @@ class CAboutDlg : public CDialogEx
 public:
 	CAboutDlg();
 
-// Dialog Data
+	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 // Implementation
@@ -80,7 +80,7 @@ CServerGUIDlg::CServerGUIDlg(CWnd* pParent /*=nullptr*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-	
+
 
 }
 
@@ -150,7 +150,7 @@ BOOL CServerGUIDlg::OnInitDialog()
 	pLogger = Logger::getInstance();
 	pLogger->updateLogType(LOG_TYPE::BOTH_LOG);
 	pLogger->setHwnd(*this->GetHwnd());
-	
+
 	initServer();
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

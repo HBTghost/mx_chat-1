@@ -10,7 +10,8 @@ class messenger : public CDialog
 
 public:
 	messenger(CWnd* pParent = nullptr);   // standard constructor
-	messenger(std::wstring username);
+	messenger(ClientBackgroundService* mClientService);
+	messenger(wstring username);
 	virtual ~messenger();
 
 	// Dialog Data
@@ -25,6 +26,8 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 public:
+	ClientBackgroundService* mClientService;
+
 	void ShowFriends();
 	void ShowGroups();
 	void ShowGroupsClick();
@@ -69,4 +72,6 @@ public:
 	afx_msg void OnBnClickedBtnNotification();
 	bool notification = true;
 	afx_msg void OnBnClickedBtnAddGroup();
+
+
 };

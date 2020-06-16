@@ -74,8 +74,14 @@ BOOL ChatUiApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
 	ChatUiDlg dlg;
+	dlg.m_ClientService = &m_ClientService;
 	m_pMainWnd = &dlg;
+	Logger::getInstance()->updateLogType(BOTH_LOG);
+	m_ClientService.InitClient();
 	INT_PTR nResponse = dlg.DoModal();
+
+
+
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is

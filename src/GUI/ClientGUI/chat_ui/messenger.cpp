@@ -25,6 +25,27 @@ IMPLEMENT_DYNAMIC(messenger, CDialog)
 messenger::messenger(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_messenger, pParent)
 {
+	
+}
+
+messenger::messenger(ClientBackgroundService* mClientService) : CDialog(IDD_messenger, nullptr)
+{
+	this->mClientService = mClientService;
+	this->mClientService->CreateWorkerThread();
+	wstring username = L"a";
+	accMa = new AccountManagement;
+	account = accMa->GetAccount(username).Clone();
+	friends = accMa->GetFriends(*account);
+	groups = accMa->GetGroups(*account);
+	if (friends.size()) {
+		target = friends[0];
+		targetIsGroup = false;
+	}
+	else if (groups.size()) {
+		target = groups[0].name;
+		targetIsGroup = true;
+	}
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
 messenger::messenger(std::wstring username)
@@ -120,6 +141,7 @@ BOOL messenger::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+	this->mClientService->AddHwnd(this->GetSafeHwnd());
 
 	// TODO: Add extra initialization here
 	return TRUE;  // return TRUE  unless you set the focus to a control

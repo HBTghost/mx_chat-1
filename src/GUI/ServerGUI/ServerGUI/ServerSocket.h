@@ -8,6 +8,8 @@
 #include "Conversation.h"
 #include "PrivateConversation.h"
 
+#include <chrono>
+#include <thread>
 using namespace std;
 class ServerSocket
 {
@@ -115,7 +117,7 @@ public:
 		{
 		case CLIENT_SIGN_IN: {
 			LOG_INFO("SIGN IN REQUEST");
-			string user = model._data_items[0]; 
+			string user = model._data_items[0];
 			string pass = model._data_items[1];
 			cout << "CLIENT request sign in from User: [" << user << "] & Password: [" << pass << "]" << endl;
 			LOG_INFO("CLIENT request sign in from User: [" + user + "] & Password: [" + pass + "]");
@@ -131,6 +133,7 @@ public:
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_SUCCESS);
 				(*c_socket)->account = new Account(user, pass);
 				(*c_socket)->username = user;
+
 				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] success => Response");
 
 			}
@@ -144,7 +147,13 @@ public:
 			}
 			res_msg->_data_items.push_back(user);
 			char* res_msg_buff = res_msg->BuildMessage();
+			
 			this->SendMessagePackage(*c_socket, res_msg_buff, PACKAGE_SIZE);
+			//std::this_thread::sleep_for(std::chrono::seconds(3));
+
+			this->NotifyOnlineList();
+		
+
 			break;
 		}
 		case CLIENT_SIGN_UP: {
@@ -159,11 +168,11 @@ public:
 				->SetHeaderNumPackage(0)
 				->SetHeaderTotalSize(4096);;
 
-			int flag = 	accMa.AddAccount(Account(user, pass));
+			int flag = accMa.AddAccount(Account(user, pass));
 			if (flag) {
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_SUCCESS);
 				LOG_INFO("Sign up [" + user + "] & Password: [" + pass + "] success => Response");
-
+				
 			}
 			else {
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_ERROR);
@@ -175,7 +184,17 @@ public:
 			this->SendMessagePackage(*c_socket, res_msg_buff, PACKAGE_SIZE);
 			break;
 		}
-						   
+		case CLIENT_REQUEST_LIST_ONLINE: {
+			SDataPackage* res_msg = (new SDataPackage())
+				->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_LIST_ONLINE)
+				->SetHeaderDesSrc("server", "client")
+				->SetHeaderNumPackage(0)
+				->SetHeaderTotalSize(4096);
+			res_msg->_data_items = this->GetListOnline();
+			char* res_msg_buff = res_msg->BuildMessage();
+			this->SendMessagePackage(*c_socket, res_msg_buff, PACKAGE_SIZE);
+			break;
+		}
 		case CLIENT_REQUEST_PRIVATE_CHAT: {
 			InitRequestPrivateChat(&model, c_socket);
 			break;
@@ -184,14 +203,27 @@ public:
 			TransferPrivateChatMessage(&model, c_socket);
 			break;
 		}
+
 		default:
 			break;
 		}
 	}
 
-	// manage conservation
+	int SendMessagePackage(SClientPacket* packet, char* msg, int len) {
+		int iStat = 0;
 
-	// 
+		iStat = send(packet->client, (char*)msg, len, 0);
+		if (iStat == -1) {
+			_listClient.remove(packet);
+			LOG_ERROR("SendMessagePackage() - Client disconnected error");
+			return -1;
+		}
+		if (iStat == 0) {
+			LOG_ERROR("SendMessagePackage() - Client disconnected");
+			return 1;
+		}
+		return 0;
+	}
 #pragma region Feature Support Function
 	list<SClientPacket*>::iterator FindClientByUsername(string username) {
 		list<SClientPacket*>::iterator itl;
@@ -237,31 +269,30 @@ public:
 			LOG_ERROR("TransferPrivateChatMessage() : Cannot find conversation ");
 		}
 	}
+	void NotifyOnlineList() {
 
+		PSIClientPacket itl;
+
+		SDataPackage* res_msg = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_LIST_ONLINE)
+			->SetHeaderDesSrc("server", "client")
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		res_msg->_data_items = this->GetListOnline();
+		char* res_msg_buff = res_msg->BuildMessage();
+		
+
+		for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
+		{
+			if (!((*itl)->username).empty())
+			{
+				this->SendMessagePackage(*itl, res_msg_buff, PACKAGE_SIZE);
+			}
+		}
+	}
+	
 
 #pragma endregion
-
-
-
-
-
-
-	int SendMessagePackage(SClientPacket* packet, char* msg, int len) {
-		int iStat = 0;
-
-		iStat = send(packet->client, (char*)msg, len, 0);
-		if (iStat == -1) {
-			_listClient.remove(packet);
-			LOG_ERROR("SendMessagePackage() - Client disconnected error");
-			return -1;
-		}
-		if (iStat == 0) {
-			LOG_ERROR("SendMessagePackage() - Client disconnected");
-			return 1;
-		}
-		return 0;
-	}
-
 	bool IsConnected()
 	{
 		return _isConnected;
@@ -269,12 +300,23 @@ public:
 	list<SClientPacket*>& GetListClient() {
 		return _listClient;
 	}
+	vector<string>& GetListOnline() {
+		_list_online.clear();
+		PSIClientPacket itl;
+		for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
+		{
+			if (!((*itl)->username).empty())
+			{
+				_list_online.push_back((*itl)->username);
+			}
+		}
+		return _list_online;
+	}
 
 private:
-
+	//string cache_list_online = "";
+	vector<string> _list_online;
 	map<string, Conversation*> _lcs;
-
-
 	bool _isConnected = false;
 	list<SClientPacket*> _listClient;
 

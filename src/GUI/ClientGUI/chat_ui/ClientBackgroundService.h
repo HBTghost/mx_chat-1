@@ -108,8 +108,8 @@ public:
 	void Shutdown() {
 		gClientObj.Shutdown();
 	}
-	
+	string username = "";
+
 private:
 	ClientSocket gClientObj;
-	string username = "";
 };
