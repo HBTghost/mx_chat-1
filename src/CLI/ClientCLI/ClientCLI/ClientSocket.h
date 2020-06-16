@@ -5,6 +5,8 @@
 #include <xstring>
 #include <winsock2.h>
 #include "SDataPacket.h"
+#include "ClientConversation.h"
+#include <string>
 using namespace std;
 class ClientSocket
 {
@@ -14,13 +16,20 @@ private:
 	int _serverPort = 8084;
 	bool _isConnected = false;
 
+	bool IsLogined = false;
 
 public:
+	string username;
+	bool task_sync = false;
+
+
+
+	vector<ClientConversation*> _list_conversation;
 	ClientSocket() {
 
 	}
 	~ClientSocket() {
-		if (_isConnected){
+		if (_isConnected) {
 			_isConnected = false;
 			closesocket(_connect);
 		}
@@ -121,10 +130,38 @@ public:
 
 		return 0;
 	}
+
+	
 	void ProcessMessage(char* messsage) {
 		SDataPackage model(messsage);
 		EMessageCommand command = (EMessageCommand)model.command;
-		cout << "Processing message  - " << model.command << endl;
+		switch (command)
+		{
+		case SERVER_RESPONSE_SIGN_IN_SUCCESS:
+		{
+			//login success even
+			cout << "Login successfully!!!" << endl;
+			this->username = model._data_items[0];
+		}
+		break;
+		case SERVER_RESPONSE_SIGN_IN_ERROR:
+			cout << "Login error, please check again!!!" << endl;
+			break;
+		case SERVER_RESPONSE_HASH_KEY:
+			//send message to window to init and open new dialog chat
+			//|hash|usr0|usr1
+			model.DebugPackage();
+			cout << "Response hash key" << endl;
+			
+			break;
+		case CLIENT_SEND_PRIVATE_CHAT:
+			model.DebugPackage();
+			cout << model._data_items[0] << endl; 
+			cout << "Receive message client" << endl;
+			break;
+		default:
+			break;
+		}
 	}
 
 };

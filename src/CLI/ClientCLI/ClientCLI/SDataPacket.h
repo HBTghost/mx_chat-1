@@ -64,11 +64,6 @@ public:
 		this->current_packet = current_package;
 		return this;
 	}
-	SDataPackage* EnableHashRawDesSrc() {
-		this->sha256_hash_des = sha256(this->raw_des);
-		this->sha256_hash_src = sha256(this->raw_src);
-		return this;
-	}
 
 	SDataPackage(char* package) {
 		for (int i = 0; i < PACKAGE_SIZE; i++) {
@@ -81,6 +76,18 @@ public:
 	~SDataPackage() {
 	}
 
+	void DebugPackage() {
+		std::ostringstream ss;
+		ss << endl << "\t[CUR PAK] " << this->current_packet << endl;
+		ss << "\t[SHA DES] " << this->sha256_hash_des << endl;
+		ss << "\t[SHA SRC] " << this->sha256_hash_src << endl;
+		ss << "\t[Raw DES] " << this->raw_src << endl;
+		ss << "\t[Raw SRC] " << this->raw_des << endl;
+		ss << "\t[Num DAT] " << this->num_data_item << endl;
+		//copy(_data_items.begin(), _data_items.end(), ostream_iterator<int>(ss, ","));
+		string debug = ss.str();
+		LOG_DEBUG(debug);
+	}
 
 #pragma region PARSE_PACKAGE_FROM_BUFFEr
 

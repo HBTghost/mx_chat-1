@@ -60,9 +60,10 @@ public:
 	int ReceivePackageClient(SOCKET recvSocket)
 	{
 		char* message;
-		char temp[PACKAGE_SIZE]{0};
+		char temp[PACKAGE_SIZE]{ 0 };
 		int iStat;
-		int len;
+		int len_remain;
+
 		iStat = recv(recvSocket, (char*)temp, PACKAGE_SIZE, 0);
 		list<SClientPacket*>::iterator itl;
 		for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
@@ -74,9 +75,8 @@ public:
 		}
 		if (iStat == -1)
 		{
-			//log server offline
 			DWORD err = GetLastError();
-			cout << "error connection " << err << endl;
+			cout << "[CLIENT DISCONNECT OR ERROR] error connection " << err << endl;
 			_listClient.remove(*itl);
 			return 1;
 		}
@@ -89,25 +89,38 @@ public:
 		else {
 			message = temp;
 			this->ProcessMessage(temp, itl);
-			
 			cout << "Processing message" << endl;
 		}
 		return 0;
 	}
-	void ProcessMessage(char * temp , list<SClientPacket*>::iterator& c_socket) {
+	void ProcessMessage(char* temp, list<SClientPacket*>::iterator& c_socket) {
 		SDataPackage model(temp);
-		EMessageCommand command =  (EMessageCommand) model.command;
+		EMessageCommand command = (EMessageCommand)model.command;
+		model.DebugPackage();
 		switch (command)
-		{ 
+		{
 		case CLIENT_SIGN_IN:
+			LOG_INFO("SIGN IN REQUEST");
 			cout << "CLIENT request sign in" << endl;
-			break;
-		case CLIENT_SIGN_UP:
-			cout << "CLIENT request sign up" << endl;
 			break;
 		default:
 			break;
 		}
+	}
+	int SendMessagePackage(SClientPacket* packet, char* msg, int len) {
+		int iStat = 0;
+
+		iStat = send(packet->client, (char*)msg, len, 0);
+		if (iStat == -1){
+			_listClient.remove(packet);
+			LOG_ERROR("SendMessagePackage() - Client disconnected error");
+			return -1;
+		}
+		if (iStat == 0){
+			LOG_ERROR("SendMessagePackage() - Client disconnected");
+			return 1;
+		}
+		return 0;
 	}
 	bool IsConnected()
 	{

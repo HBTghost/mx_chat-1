@@ -7,6 +7,7 @@
 #include <thread>
 #include "DebugHelper.h"
 
+
 class ClientBackgroundService
 {
 public:
@@ -27,19 +28,59 @@ public:
 	friend UINT recMessageThread(LPVOID pParam);
 	void CreateWorkerThread();
 	 
+	void SendPrivateMessage(string hash_des, string message) {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_SEND_PRIVATE_CHAT)
+			->SetHeaderDesSrc(username, "server")
+			->SetHeaderDesSrcHash(sha256(username), hash_des)
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		sdata->_data_items.push_back(message);
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+	}
+	void OpenDialogSession(SDataPackage* package) {
+		string hash_conservation_id = package->_data_items[0];
+		bool chatOn = true;
+		string message = "";
+
+		while (chatOn == true) {
+			cout << username << ">";
+			getline(cin, message);
+			SendPrivateMessage(hash_conservation_id, message);
+			if (message.compare("exit") == 0) {
+				chatOn = false;
+			}
+		}
+	}
+	
 	void Login(string username, string password) {
 		SDataPackage* sdata = (new SDataPackage())
 			->SetHeaderCommand(EMessageCommand::CLIENT_SIGN_IN)
 			->SetHeaderDesSrc("client", "server")
-			->SetHeaderNumPackage(2)
-			->SetHeaderTotalSize(4096)
-			->EnableHashRawDesSrc();
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
 		sdata->_data_items.push_back(username);
 		sdata->_data_items.push_back(password);
 		char* data = sdata->BuildMessage();
 		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+		this->username = username;
 		DebugHelper::DumpArray(__DEBUG_CLIENT_LOGIN_FILE, data, PACKAGE_SIZE);
 	}
+	void CreatePrivateConversation(string des_username) {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_PRIVATE_CHAT)
+			->SetHeaderDesSrc("client", "server")
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		sdata->_data_items.push_back(des_username);
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+		LOG_INFO("CreatePrivateConversation9) : Sent request "); 
+		//DebugHelper::DumpArray(__DEBUG_CLIENT_LOGIN_FILE, data, PACKAGE_SIZE);
+	
+	}
+	
 	void CloseConnection() {
 		gClientObj.CloseConnection();
 	}
@@ -49,5 +90,5 @@ public:
 	
 private:
 	ClientSocket gClientObj;
-	
+	string username = "";
 };

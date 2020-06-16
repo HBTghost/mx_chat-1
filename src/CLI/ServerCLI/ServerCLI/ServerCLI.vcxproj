@@ -153,6 +153,7 @@
     <ClCompile Include="SDataPacket.cpp" />
     <ClCompile Include="ServerBackgroundService.cpp" />
     <ClCompile Include="ServerCLI.cpp" />
+    <ClCompile Include="ServerManagement.cpp" />
     <ClCompile Include="ServerSocket.cpp" />
     <ClCompile Include="sha256.cpp" />
     <ClCompile Include="StringHelper.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="PrivateConversation.h" />
     <ClInclude Include="SDataPacket.h" />
     <ClInclude Include="ServerBackgroundService.h" />
+    <ClInclude Include="ServerManagement.h" />
     <ClInclude Include="ServerSocket.h" />
     <ClInclude Include="sha256.h" />
     <ClInclude Include="StringHelper.h" />

@@ -1,26 +1,26 @@
-#pragma once
+#pragma onceServerSocket
 #include <string>
-#include "mxdef.h"
-#include "SDataPacket.h"
+#include "ServerSocket.h"
 using namespace std;
 class Conversation
 {
 public:
 	vector<SClientPacket*> _list_client;
+	ServerSocket* _server;
 	string id_hash;
 	string id_key;
-	Conversation() {
-
+	string user_created;
+	Conversation(ServerSocket* server) {
+		this->_server = server;
 	}
 
-	char* BuildNewHashMsg() {
+	virtual void TransferCreateHash() {
+		id_key = user_created + StringHelper::random_string();
+		this->id_hash = sha256(id_key);
 		if (_list_client.size() < 2) {
 			LOG_ERROR("TransferCreateHash - num clients < 2");
-			return nullptr;
+			return;
 		}
-		id_key = _list_client[0]->username + StringHelper::random_string();
-		this->id_hash = sha256(id_key);
-	
 		SDataPackage* sdata = (new SDataPackage())
 			->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_HASH_KEY)
 			->SetHeaderDesSrc("server", "client")
@@ -33,7 +33,9 @@ public:
 		}
 
 		char* msg = sdata->BuildMessage();
-		return msg;
+		for (SClientPacket*& p_client : _list_client) {
+			_server->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+		}
 	}
 	virtual void TransferMessage(SDataPackage* package) {
 		//private use raw use and destination
@@ -47,7 +49,7 @@ public:
 				continue;
 			}
 			else {
-				//_server->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+				_server->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
 				string log_msg = ss.str();
 				LOG_INFO(log_msg);
 			}

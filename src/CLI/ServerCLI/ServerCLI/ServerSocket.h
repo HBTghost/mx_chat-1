@@ -2,8 +2,12 @@
 #include "mxdef.h"
 #include <iostream>
 #include <list>
+#include <map>
 #include "SDataPacket.h"
 #include "DebugHelper.h"
+#include "Conversation.h"
+#include "PrivateConversation.h"
+
 using namespace std;
 class ServerSocket
 {
@@ -99,39 +103,117 @@ public:
 		model.DebugPackage();
 		switch (command)
 		{
-		case CLIENT_SIGN_IN:
+		case CLIENT_SIGN_IN: {
 			LOG_INFO("SIGN IN REQUEST");
-			cout << "CLIENT request sign in" << endl;
+			string user = model._data_items[0];
+			string pass = model._data_items[1];
+			cout << "CLIENT request sign in " << user << " pass " << pass << endl;
+			(*c_socket)->account = new Account(user, pass);
+			(*c_socket)->username = user;
 			break;
-		case CLIENT_SIGN_UP:
-			cout << "CLIENT request sign up" << endl;
+		}
+		case CLIENT_REQUEST_PRIVATE_CHAT: {
+			InitRequestPrivateChat(&model, c_socket);
 			break;
+		}
+		case CLIENT_SEND_PRIVATE_CHAT: {
+			TransferPrivateChatMessage(&model, c_socket);
+			break;
+		}
 		default:
 			break;
 		}
 	}
-	int SendMessagePackage(SClientPacket* packet, char* msg, int len) {
+
+	// manage conservation
+
+	// 
+#pragma region Feature Support Function
+	list<SClientPacket*>::iterator FindClientByUsername(string username) {
+		list<SClientPacket*>::iterator itl;
+		for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
+		{
+			if ((*itl)->username == username)
+			{
+				break;
+			}
+		}
+		return itl;
+	}
+	void InitRequestPrivateChat(SDataPackage* package, PSIClientPacket srcClient) {
+		PSIClientPacket desClient = this->FindClientByUsername(package->_data_items[0]);
+
+		PrivateConversation* pcon = new PrivateConversation();
+		pcon->_list_client.push_back(*srcClient);
+		pcon->_list_client.push_back(*desClient);
+
+		char* msg = pcon->BuildNewHashMsg();
+		for (SClientPacket*& p_client : pcon->_list_client) {
+			this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+		}
+		//insert to list
+		_lcs.insert(pair<string, Conversation*>(pcon->id_hash, pcon));
+		LOG_INFO("InitRequestPrivateChat() : Sent ");
+	}
+	void TransferPrivateChatMessage(SDataPackage* package, PSIClientPacket srcClient) {
+		//find conversation
+		//sha des is package conversation
+		string hash_key_con = package->GetSHA256Des();
+		Conversation* pcon = _lcs[hash_key_con];
+		if (pcon != nullptr) {
+			char* msg = package->data();
+			for (SClientPacket*& p_client : pcon->_list_client) {
+				if (p_client != *srcClient) {
+					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+					LOG_INFO("TransferPrivateChatMessage() : + 1 Sent to other clients ");
+				}
+			}
+		}
+		else {
+			LOG_ERROR("TransferPrivateChatMessage() : Cannot find conversation ");
+		}
+	}
+
+
+#pragma endregion
+
+
+
+
+
+
+	int SendMessagePackage(SClientPacket* packet, char* msg, int len) { 
 		int iStat = 0;
 
 		iStat = send(packet->client, (char*)msg, len, 0);
-		if (iStat == -1){
+		if (iStat == -1) {
 			_listClient.remove(packet);
 			LOG_ERROR("SendMessagePackage() - Client disconnected error");
 			return -1;
 		}
-		if (iStat == 0){
+		if (iStat == 0) {
 			LOG_ERROR("SendMessagePackage() - Client disconnected");
 			return 1;
 		}
 		return 0;
 	}
+
 	bool IsConnected()
 	{
 		return _isConnected;
 	}
+	list<SClientPacket*>& GetListClient() {
+		return _listClient;
+	}
+
 private:
+
+	map<string, Conversation*> _lcs;
+
+
 	bool _isConnected = false;
 	list<SClientPacket*> _listClient;
+
 	SOCKET _socketClient;
 	SOCKET _socketListenClient;
 };

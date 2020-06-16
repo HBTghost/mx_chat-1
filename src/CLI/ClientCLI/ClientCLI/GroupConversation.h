@@ -1,18 +1,20 @@
 #pragma once
-#include "mxdef.h"
 #include "Conversation.h"
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include "mxdef.h"
 using namespace std; 
-class GroupConversation : public Conversation
+class GroupConversation :
+    public Conversation
 {
 public:
-    GroupConversation() : Conversation() {
+ 
+    GroupConversation(ServerSocket* server) : Conversation(server) {
         
     }
     ~GroupConversation() {
 
     }
+
 };
