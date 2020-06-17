@@ -80,11 +80,13 @@ LRESULT ChatUiDlg::OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam) {
 	{
 	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_SUCESS:{
 		MessageBox(_T("Login successfully. Enjoy this app!!!"), _T("Alert"), MB_ICONINFORMATION);
-
+		
+		//this->ShowWindow(false);
 		//OnOK();
 		messenger mess(this->m_ClientService);
 		//this->m_ClientService->AddHwnd(mess.GetSafeHwnd());
 		mess.DoModal();
+
 	
 		break;
 	}

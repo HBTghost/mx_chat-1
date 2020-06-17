@@ -31,6 +31,9 @@ public:
 	friend UINT recMessageThread(LPVOID pParam);
 	void CreateWorkerThread();
 	 
+	void RequestPrivateMessage(string des) {
+
+	}
 	void SendPrivateMessage(string hash_des, string message) {
 		SDataPackage* sdata = (new SDataPackage())
 			->SetHeaderCommand(EMessageCommand::CLIENT_SEND_PRIVATE_CHAT)
@@ -42,6 +45,7 @@ public:
 		char* data = sdata->BuildMessage();
 		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
 	}
+
 	void OpenDialogSession(SDataPackage* package) {
 		string hash_conservation_id = package->_data_items[0];
 		bool chatOn = true;

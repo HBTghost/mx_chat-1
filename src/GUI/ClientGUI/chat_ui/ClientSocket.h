@@ -174,11 +174,21 @@ public:
 		case SERVER_RESPONSE_HASH_KEY:
 			//send message to window to init and open new dialog chat
 			//|hash|usr0|usr1
-			model.DebugPackage();
+			//model.DebugPackage();
+			LOG_INFO("Response hash key");
+			LOG_INFO("Hash : " + model._data_items[0]);
+			LOG_INFO("User src: " + model._data_items[1]);
+			LOG_INFO("User des: " + model._data_items[2]);
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_HASH_CONVERSATION,  (LPARAM) &model);
+
 			cout << "Response hash key" << endl;
 			break;
 		case CLIENT_SEND_PRIVATE_CHAT:
-			model.DebugPackage();
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION, (LPARAM)&model);
+
+			LOG_INFO("Response private chat");
+			LOG_INFO("MSG: " + model._data_items[0]);
+			//model.DebugPackage();
 			cout << model._data_items[0] << endl; 
 			cout << "Receive message client" << endl;
 			break;

@@ -29,6 +29,9 @@ public:
 	ClientBackgroundService* mClientService;
 	LRESULT OnFormMsgHandler(WPARAM wParam, LPARAM lParam);
 
+
+	string current_hash = "";
+	string current_des_name = "";
 	void ShowFriends();
 	void ShowGroups();
 	void ShowGroupsClick();

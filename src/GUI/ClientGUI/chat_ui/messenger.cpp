@@ -185,6 +185,8 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 {
 
 	UINT command_msg = (UINT)wParam;
+	SDataPackage* model;
+
 	switch (command_msg)
 	{
 	case IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE:
@@ -194,6 +196,21 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 		ShowFriends();
 		break;
 	}
+	case IDC_FORM_CHAT_MSG_HANDLER_HASH_CONVERSATION:
+		if (lParam) {
+			model = (SDataPackage*)lParam;
+			this->current_hash = model->_data_items[0];
+			LOG_INFO("Handle set hash");
+		}
+		break;
+	case IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION:
+		if (lParam) {
+			model = (SDataPackage*)lParam;
+			wstring msg_received = StringHelper::utf8_decode(model->_data_items[0]);
+			list_mess.InsertItem(count++, msg_received.c_str());
+			LOG_INFO("Handle insert to chatbox");
+		}
+		break;
 	default:
 		break;
 	}
@@ -413,12 +430,31 @@ void messenger::OnBnClickedCancel()
 
 void messenger::OnBnClickedBtnSend()
 {
+	
 	// TODO: Add your control notification handler code here
 	CString content;
 	GetDlgItemText(IDC_MESS_CONTENT, content);
+
+		
+				
+	//pending
+	//this->mClientService->SendPrivateMessage()
 	if (content.GetLength() > 0) {
 		wchar_t space(L' ');
 		std::wstring mess(content);
+
+		string s_content = StringHelper::utf8_encode(mess);
+		/*
+		SDataPackage* msg_send = (new SDataPackage())
+			->SetHeaderDesSrc(this->mClientService->username, this->current_des_name)
+			->SetHeaderDesSrcHash(SHA256()(this->mClientService->username), current_hash)
+			->SetHeaderTotalSize(4096)
+			->SetHeaderNumPackage(0);
+		char* msg_raw = msg_send->BuildMessage();
+		*/
+		this->mClientService->SendPrivateMessage(current_hash, s_content);
+
+
 		int line_size = 60;
 		std::vector<std::wstring> contents;
 		int p1, buf;
@@ -463,6 +499,8 @@ void messenger::OnBnClickedBtnSend()
 					}
 				}
 				std::wstring mess = tmp.substr(0, end_s);
+			
+
 				mess = (j == 0 && i == 0 ? _T("Me: ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
 				list_mess.InsertItem(count++, mess.c_str());
 				i += end_s;
@@ -625,7 +663,7 @@ std::vector<CString> messenger::GetSelectedItemText(CListCtrl* plctrl)
 }
 
 void messenger::StartChat(std::wstring item, bool isGroup) {
-	SaveMessages();
+	// SaveMessages();
 	target = item;
 	targetIsGroup = isGroup;
 	ShowGroupsClick();
@@ -760,6 +798,9 @@ void messenger::OnNMDblclkListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	int nSelected = pNMItemActivate->iItem;
 	CString strItem = list_friends.GetItemText(nSelected, 0);
+	CT2A strName(strItem);
+
+	this->mClientService->CreatePrivateConversation(string(strName.m_psz));
 	if (strItem.GetLength()) {
 		StartChat(std::wstring(strItem), false);
 	}
