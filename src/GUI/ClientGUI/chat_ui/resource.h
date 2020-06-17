@@ -85,6 +85,10 @@
 #define IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR		1049
 
 
+#define IDC_FORM_CHAT_MSG_HANDLER						1050
+#define IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE			1051
+
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

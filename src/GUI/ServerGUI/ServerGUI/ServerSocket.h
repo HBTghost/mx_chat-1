@@ -7,7 +7,8 @@
 #include "DebugHelper.h"
 #include "Conversation.h"
 #include "PrivateConversation.h"
-
+#include <vector>
+#include <algorithm>
 #include <chrono>
 #include <thread>
 using namespace std;
@@ -90,6 +91,7 @@ public:
 
 			cout << "[CLIENT DISCONNECT OR ERROR] error connection " << err << endl;
 			_listClient.remove(*itl);
+			this->NotifyOnlineList();
 			return 1;
 		}
 		else if (iStat == 0) {
@@ -98,6 +100,7 @@ public:
 
 			cout << "Disconnected " << endl;
 			_listClient.remove(*itl);
+			this->NotifyOnlineList();
 			return 1;
 		}
 		else {
@@ -127,33 +130,39 @@ public:
 				->SetHeaderNumPackage(0)
 				->SetHeaderTotalSize(4096);;
 
-			int flag = accMa.CheckAccount(Account(user, pass));
-
-			if (flag == RIGHT_PASSWORD) {
-				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_SUCCESS);
-				(*c_socket)->account = new Account(user, pass);
-				(*c_socket)->username = user;
-
-				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] success => Response");
-
-			}
-			else if (flag == WRONG_PASSWORD) {
-				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error => Response");
+			std::vector<string>::iterator it = std::find(_list_online.begin(), _list_online.end(), user);
+			if (it != _list_online.end()) {
+				//found
+				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error session existed => Response");
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_ERROR);
 			}
 			else {
-				LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error => Response");
-				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_ERROR);
+				int flag = accMa.CheckAccount(Account(user, pass));
+
+				if (flag == RIGHT_PASSWORD) {
+					res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_SUCCESS);
+					(*c_socket)->account = new Account(user, pass);
+					(*c_socket)->username = user;
+
+					LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] success => Response");
+
+				}
+				else if (flag == WRONG_PASSWORD) {
+					LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error wrong pass => Response");
+					res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_ERROR);
+				}
+				else {
+					LOG_INFO("Sign in [" + user + "] & Password: [" + pass + "] error => Response");
+					res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_IN_ERROR);
+				}
+
 			}
 			res_msg->_data_items.push_back(user);
+
 			char* res_msg_buff = res_msg->BuildMessage();
-			
 			this->SendMessagePackage(*c_socket, res_msg_buff, PACKAGE_SIZE);
 			//std::this_thread::sleep_for(std::chrono::seconds(3));
-
 			this->NotifyOnlineList();
-		
-
 			break;
 		}
 		case CLIENT_SIGN_UP: {
@@ -167,17 +176,15 @@ public:
 				->SetHeaderDesSrc("server", "client")
 				->SetHeaderNumPackage(0)
 				->SetHeaderTotalSize(4096);;
-
+		
 			int flag = accMa.AddAccount(Account(user, pass));
 			if (flag) {
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_SUCCESS);
 				LOG_INFO("Sign up [" + user + "] & Password: [" + pass + "] success => Response");
-				
 			}
 			else {
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_ERROR);
 				LOG_INFO("Sign up [" + user + "] & Password: [" + pass + "] error => Response");
-
 			}
 			res_msg->_data_items.push_back(user);
 			char* res_msg_buff = res_msg->BuildMessage();
@@ -280,7 +287,7 @@ public:
 			->SetHeaderTotalSize(4096);
 		res_msg->_data_items = this->GetListOnline();
 		char* res_msg_buff = res_msg->BuildMessage();
-		
+
 
 		for (itl = _listClient.begin(); itl != _listClient.end(); itl++)
 		{
@@ -290,7 +297,7 @@ public:
 			}
 		}
 	}
-	
+
 
 #pragma endregion
 	bool IsConnected()

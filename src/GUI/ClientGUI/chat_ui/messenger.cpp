@@ -25,7 +25,7 @@ IMPLEMENT_DYNAMIC(messenger, CDialog)
 messenger::messenger(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_messenger, pParent)
 {
-	
+
 }
 
 messenger::messenger(ClientBackgroundService* mClientService) : CDialog(IDD_messenger, nullptr)
@@ -35,7 +35,8 @@ messenger::messenger(ClientBackgroundService* mClientService) : CDialog(IDD_mess
 	wstring username = L"a";
 	accMa = new AccountManagement;
 	account = accMa->GetAccount(username).Clone();
-	friends = accMa->GetFriends(*account);
+	friends = StringHelper::VectorStringToWideString(this->mClientService->gClientObj._list_online);
+	//friends = accMa->GetFriends(*account);
 	groups = accMa->GetGroups(*account);
 	if (friends.size()) {
 		target = friends[0];
@@ -130,6 +131,7 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_NOTIFY(NM_RCLICK, IDC_LIST_GROUPS, &messenger::OnNMRClickListGroups)
 	ON_BN_CLICKED(IDC_BTN_NOTIFICATION, &messenger::OnBnClickedBtnNotification)
 	ON_BN_CLICKED(IDC_BTN_ADD_GROUP, &messenger::OnBnClickedBtnAddGroup)
+	ON_MESSAGE(IDC_FORM_CHAT_MSG_HANDLER, &messenger::OnFormMsgHandler)
 END_MESSAGE_MAP()
 
 
@@ -178,6 +180,25 @@ void messenger::OnPaint()
 // messenger message handlers
 
 
+
+LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
+{
+
+	UINT command_msg = (UINT)wParam;
+	switch (command_msg)
+	{
+	case IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE:
+	{
+		//MessageBox(_T("Form list online chat update "), _T("Alert"), MB_ICONINFORMATION);
+		friends = StringHelper::VectorStringToWideString(this->mClientService->gClientObj._list_online);
+		ShowFriends();
+		break;
+	}
+	default:
+		break;
+	}
+	return 0L;
+}
 
 void messenger::ShowFriends()
 {

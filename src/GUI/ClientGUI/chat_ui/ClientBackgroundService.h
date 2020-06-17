@@ -110,6 +110,7 @@ public:
 	}
 	string username = "";
 
-private:
 	ClientSocket gClientObj;
+
+private:
 };

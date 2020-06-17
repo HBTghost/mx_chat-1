@@ -167,8 +167,9 @@ public:
 			SendMessageW(hwnd, IDC_FORM_LOGIN_MSG_HANDLER, IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR, 0);
 			break;
 		case CLIENT_REQUEST_LIST_ONLINE:
-
-			MessageBoxW(hwnd, _T("Client list received "), _T("Alert"), MB_ICONERROR);
+			this->_list_online = model._data_items;
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE, 0);
+			//MessageBoxW(hwnd, _T("Client list received "), _T("Alert"), MB_ICONERROR);
 			break;
 		case SERVER_RESPONSE_HASH_KEY:
 			//send message to window to init and open new dialog chat

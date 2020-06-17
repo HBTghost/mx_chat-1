@@ -27,6 +27,7 @@ protected:
 	afx_msg void OnPaint();
 public:
 	ClientBackgroundService* mClientService;
+	LRESULT OnFormMsgHandler(WPARAM wParam, LPARAM lParam);
 
 	void ShowFriends();
 	void ShowGroups();
@@ -43,7 +44,7 @@ public:
 	void StartChat(std::wstring item, bool isGroup = false);
 	bool targetIsGroup = false;
 	Account* account;
-	std::vector<std::wstring> friends;
+	std::vector<wstring> friends;
 	std::wstring target;
 	std::vector<Group> groups;
 	CStatic username;
