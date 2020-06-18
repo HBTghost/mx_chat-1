@@ -1,6 +1,7 @@
 #pragma once
 #include "Account.hpp"
-
+#include <map>
+#include <unordered_map>
 
 // messenger dialog
 
@@ -10,7 +11,7 @@ class messenger : public CDialog
 
 public:
 	messenger(CWnd* pParent = nullptr);   // standard constructor
-	messenger(ClientBackgroundService* mClientService);
+	messenger(ClientBackgroundService* mClientService, CWnd* pParent = nullptr);
 	messenger(wstring username);
 	virtual ~messenger();
 
@@ -26,12 +27,18 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 public:
+	 
+	std::pair<std::string, ClientConversation*> *chatBoxTarget; //selected
+
 	ClientBackgroundService* mClientService;
 	LRESULT OnFormMsgHandler(WPARAM wParam, LPARAM lParam);
 
 
+	unordered_map<string, ClientConversation*> mListChat;
+
 	string current_hash = "";
 	string current_des_name = "";
+	
 	void ShowFriends();
 	void ShowGroups();
 	void ShowGroupsClick();
@@ -66,13 +73,13 @@ public:
 	afx_msg void OnEnUpdateMessContent();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	CBrush m_brush;
-	afx_msg void OnNMRClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnNMDblclkListFriends(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnSendIcon();
 	AccountManagement* accMa;
 	CListCtrl list_groups;
-	afx_msg void OnNMDblclkListGroups(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnNMRClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnNotification();
 	bool notification = true;
 	afx_msg void OnBnClickedBtnAddGroup();

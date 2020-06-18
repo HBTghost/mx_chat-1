@@ -9,32 +9,12 @@ public:
 	vector<SClientPacket*> _list_client;
 	string id_hash;
 	string id_key;
+	string conversation_name = ""; 
 	Conversation() {
 
 	}
 
-	char* BuildNewHashMsg() {
-		if (_list_client.size() < 2) {
-			LOG_ERROR("TransferCreateHash - num clients < 2");
-			return nullptr;
-		}
-		id_key = _list_client[0]->username + StringHelper::random_string();
-		this->id_hash = sha256(id_key);
-	
-		SDataPackage* sdata = (new SDataPackage())
-			->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_HASH_KEY)
-			->SetHeaderDesSrc("server", "client")
-			->SetHeaderNumPackage(0)
-			->SetHeaderTotalSize(4096);
-		sdata->_data_items.push_back(id_hash);
-
-		for (SClientPacket*& p_client : _list_client) {
-			sdata->_data_items.push_back(p_client->username);
-		}
-
-		char* msg = sdata->BuildMessage();
-		return msg;
-	}
+	virtual char* BuildNewHashMsg()= 0 ;
 	virtual void TransferMessage(SDataPackage* package) {
 		//private use raw use and destination
 		//User send message not need to receive this message, otherwise send to other clients in list

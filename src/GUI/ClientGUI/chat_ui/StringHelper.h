@@ -30,6 +30,13 @@ public:
         }
         return rslt;
     }
+    static std::vector<std::string> VectorWideStringToString(std::vector<std::wstring> src){
+        std::vector<std::string> rslt;
+        for (std::wstring item : src) {
+            rslt.push_back(utf8_encode(item));
+        }
+        return rslt;
+    }
     static std::wstring s2ws(const std::string& s)
     {
         int len;

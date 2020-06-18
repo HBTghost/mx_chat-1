@@ -22,8 +22,13 @@ protected:
 	HICON m_hIcon;
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
+	CString m_message_value;
+	
+
 	DECLARE_MESSAGE_MAP()
 public:
+	CString GetMessageValue() const { return m_message_value; }
+
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedOk();
 	Account* account;

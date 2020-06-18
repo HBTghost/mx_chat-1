@@ -99,7 +99,9 @@ void AddFriendDlg::OnBnClickedOk()
 	GetDlgItemText(IDC_FRIEND_USERNAME, _friend_username);
 	GetDlgItemText(IDC_GREETING, _greeting);
 	std::wstring friend_username(_friend_username), greeting(_greeting);
-
+	this->m_message_value = _greeting;
+	OnOK();
+	return;
 	if (_friend_username == _T("")) {
 		MessageBox(_T("Friend's username must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
@@ -114,6 +116,7 @@ void AddFriendDlg::OnBnClickedOk()
 			std::vector<std::wstring> friends = accMa->GetFriends(*account);
 			if (accMa->AddFriend(*account, friend_username)) {
 				CString mess = _T("Add friend '") + _friend_username + "' successfully";
+				this->m_message_value = mess;
 				MessageBox(mess, _T("Alert"), MB_ICONINFORMATION);
 				OnOK();
 			} else {

@@ -26,26 +26,16 @@ public:
 		return 1;
 	}
 	void AddHwnd(HWND hwnd) {
+
 		this->gClientObj.AddHwnd(hwnd);
 	}
 	friend UINT recMessageThread(LPVOID pParam);
 	void CreateWorkerThread();
-	 
+
 	void RequestPrivateMessage(string des) {
 
 	}
-	void SendPrivateMessage(string hash_des, string message) {
-		SDataPackage* sdata = (new SDataPackage())
-			->SetHeaderCommand(EMessageCommand::CLIENT_SEND_PRIVATE_CHAT)
-			->SetHeaderDesSrc(username, "server")
-			->SetHeaderDesSrcHash(SHA256()(username), hash_des)
-			->SetHeaderNumPackage(0)
-			->SetHeaderTotalSize(4096);
-		sdata->_data_items.push_back(message);
-		char* data = sdata->BuildMessage();
-		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
-	}
-
+	
 	void OpenDialogSession(SDataPackage* package) {
 		string hash_conservation_id = package->_data_items[0];
 		bool chatOn = true;
@@ -60,7 +50,7 @@ public:
 			}
 		}
 	}
-	
+
 	void Login(string username, string password) {
 		SDataPackage* sdata = (new SDataPackage())
 			->SetHeaderCommand(EMessageCommand::CLIENT_SIGN_IN)
@@ -91,21 +81,58 @@ public:
 		DebugHelper::DumpArray(__DEBUG_CLIENT_LOGIN_FILE, data, PACKAGE_SIZE);
 	}
 
+	
+	void CreateGroupConversation(vector<string> list_member, string name_conversation) {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_GROUP_CHAT)
+			->SetHeaderDesSrc(this->username, "")
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		sdata->_data_items.push_back(name_conversation);
+		copy(list_member.begin(), list_member.end(), back_inserter(sdata->_data_items));
+		
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+	 	LOG_INFO("CreatePrivateConversation() : Sent request ");
+		//DebugHelper::DumpArray(__DEBUG_CLIENT_LOGIN_FILE, data, PACKAGE_SIZE);
+	}
 
-	void CreatePrivateConversation(string des_username) {
+	void CreatePrivateConversation(string des_username, string name) {
 		SDataPackage* sdata = (new SDataPackage())
 			->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_PRIVATE_CHAT)
 			->SetHeaderDesSrc("client", "server")
 			->SetHeaderNumPackage(0)
 			->SetHeaderTotalSize(4096);
 		sdata->_data_items.push_back(des_username);
+		sdata->_data_items.push_back(name);
 		char* data = sdata->BuildMessage();
 		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
-		LOG_INFO("CreatePrivateConversation9) : Sent request "); 
-		//DebugHelper::DumpArray(__DEBUG_CLIENT_LOGIN_FILE, data, PACKAGE_SIZE);
-	
+		LOG_INFO("CreateGroupConversation) : Sent request ");
 	}
-	
+	void SendPrivateMessage(string hash_des, string message) {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_SEND_PRIVATE_CHAT)
+			->SetHeaderDesSrc(username, "server")
+			->SetHeaderDesSrcHash(SHA256()(username), hash_des)
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		sdata->_data_items.push_back(message);
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+	}
+	void SendGroupMessage(string hash_des, string message) {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_SEND_GROUP_CHAT)
+			->SetHeaderDesSrc(username, "server")
+			->SetHeaderDesSrcHash(SHA256()(username), hash_des)
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		sdata->_data_items.push_back(message);
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+	}
+
+
 	void CloseConnection() {
 		gClientObj.CloseConnection();
 	}

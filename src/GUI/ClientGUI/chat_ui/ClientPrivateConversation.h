@@ -3,5 +3,7 @@
 class ClientPrivateConversation :
     public ClientConversation
 {
+public:
+    
 };
 

@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include "GroupConversation.h"
 using namespace std;
 class ServerSocket
 {
@@ -206,6 +207,15 @@ public:
 			InitRequestPrivateChat(&model, c_socket);
 			break;
 		}
+		case CLIENT_REQUEST_GROUP_CHAT: {
+			InitRequestGroupChat(&model, c_socket);
+			break;
+		}
+		case CLIENT_SEND_GROUP_CHAT: {
+			TransferGroupChatMessage(&model, c_socket);
+			break;
+		}
+
 		case CLIENT_SEND_PRIVATE_CHAT: {
 			TransferPrivateChatMessage(&model, c_socket);
 			break;
@@ -243,10 +253,56 @@ public:
 		}
 		return itl;
 	}
+	vector<SClientPacket*> FindClientOnlineClientPacket(vector<string> list_mem) {
+		vector<SClientPacket*> list_client_on;
+		for (string item : list_mem) {
+			PSIClientPacket desClient = this->FindClientByUsername(item);
+			list_client_on.push_back(*desClient); 
+		}
+		return  list_client_on;
+	}
+	void InitRequestGroupChat(SDataPackage* package, PSIClientPacket srcClient) {
+		vector<string> list_mem;
+		copy(package->_data_items.begin() + 1, package->_data_items.end(), back_inserter(list_mem));
+
+		vector<SClientPacket*> list_client_online = this->FindClientOnlineClientPacket(list_mem);
+		GroupConversation* pcon = new GroupConversation(package->_data_items[0] ,   list_mem);
+		pcon->_list_client = list_client_online;
+
+		char* msg = pcon->BuildNewHashMsg();
+
+		for (SClientPacket*& p_client : pcon->_list_client) {
+			this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+		}
+
+		_lcs.insert(pair<string, Conversation*>(pcon->id_hash, pcon));
+	}
+
+	void TransferGroupChatMessage(SDataPackage* package, PSIClientPacket srcClient) {
+		//find conversation
+		//sha des is package conversation
+		string hash_key_con = package->GetSHA256Des();
+		Conversation* pcon = _lcs[hash_key_con];
+		if (pcon != nullptr) {
+			char* msg = package->data();
+			for (SClientPacket*& p_client : pcon->_list_client) {
+				if (p_client != *srcClient) {
+					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+					LOG_INFO("TransferPrivateChatMessage() : + 1 Sent to other clients ");
+				}
+			}
+		}
+		else {
+			LOG_ERROR("TransferPrivateChatMessage() : Cannot find conversation ");
+		}
+	}
+
+
 	void InitRequestPrivateChat(SDataPackage* package, PSIClientPacket srcClient) {
 		PSIClientPacket desClient = this->FindClientByUsername(package->_data_items[0]);
 
 		PrivateConversation* pcon = new PrivateConversation();
+		
 		pcon->_list_client.push_back(*srcClient);
 		pcon->_list_client.push_back(*desClient);
 
@@ -266,7 +322,7 @@ public:
 		if (pcon != nullptr) {
 			char* msg = package->data();
 			for (SClientPacket*& p_client : pcon->_list_client) {
-				if (p_client != *srcClient) {
+				if (p_client->username != (*srcClient)->username) {
 					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
 					LOG_INFO("TransferPrivateChatMessage() : + 1 Sent to other clients ");
 				}
