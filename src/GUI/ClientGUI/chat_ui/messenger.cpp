@@ -259,6 +259,50 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 			}
 		}
 		break;
+	case IDC_FORM_CHAT_MSG_HANDLER_TRANSFER_FILE:
+		//handle 
+		if (lParam) {
+			model = (SDataPackage*)lParam;
+
+			string from_src = model->GetSrc();
+			string hash_conversation_id = model->GetSHA256Des();
+			ClientConversation* cCon = mListChat[hash_conversation_id];
+			if (cCon) {
+				//use current packet for chunk size
+				cCon->InitFileTransferManagement(model->_data_items[0], model->GetTotalSize(), model->GetCurrentPacket());
+				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
+			}
+			else {
+				LOG_ERROR("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : Cannot find conversation ");
+			}
+		}
+
+		//MessageBox(_T("INIT TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
+		break;
+	case IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE:
+		if (lParam) {
+			model = (SDataPackage*)lParam;
+
+			string from_src = model->GetSrc();
+			string hash_conversation_id = model->GetSHA256Des();
+			ClientConversation* cCon = mListChat[hash_conversation_id];
+			if (cCon) {
+				cCon->ProcessChunk(model);
+				//use current packet for chunk size
+				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
+			}
+			else {
+				LOG_ERROR("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : Cannot find conversation ");
+			}
+		}
+		
+		//MessageBox(_T("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE BEGIN TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
+		break;
+	case IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE:
+		
+		
+		//MessageBox(_T("END TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
+		break;
 	default:
 		break;
 	}
@@ -711,8 +755,27 @@ void messenger::OnBnClickedIcon()
 void messenger::OnBnClickedBtnSendFile()
 {
 	// TODO: Add your control notification handler code here
-	AttachFile attachFile(true);
-	attachFile.DoModal();
+	//AttachFile attachFile(true);
+	//attachFile.DoModal();
+	const TCHAR szFilter[] = _T("Txt Files (*.txt)|*.txt|All Files (*.*)|*.*||");
+	CString sFilePath = _T("");
+	CString sFileName = _T("");
+	CString sFileExt = _T("");
+
+	CFileDialog dlg(TRUE, _T("txt"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, this);
+	if (dlg.DoModal() == IDOK)
+	{
+		sFilePath = dlg.GetPathName();
+		sFileName = dlg.GetFileName();
+		sFileExt = dlg.GetFileExt(); 
+		//m_FilePathEditBox.SetWindowText(sFilePath);
+	}
+	CT2A str_path(sFilePath);
+	CT2A str_file_name(sFileName);
+	CT2A str_file_ext(sFileExt);
+
+
+	mClientService->InitTransferFile(current_hash, str_path.m_psz, string(str_file_name.m_psz) );
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 }
@@ -847,7 +910,6 @@ void messenger::OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 		// Do something
 		break;
 	case IDOK:
-		//AfxMessageBox(res);
 	{
 		if (list_member_chat.size() == 1) {
 			this->mClientService->CreatePrivateConversation(list_member_chat[0], str_name_of_conversation);

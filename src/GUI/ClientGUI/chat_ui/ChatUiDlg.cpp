@@ -101,6 +101,9 @@ LRESULT ChatUiDlg::OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam) {
 	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR:
 		MessageBox(_T("Register error. Username existed, choose another username to continue !!!"), _T("Alert"), MB_ICONERROR);
 		break;
+
+
+
 	default:
 		break;
 	}

@@ -192,13 +192,26 @@ public:
 			break;
 		case CLIENT_SEND_PRIVATE_CHAT:
 			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION, (LPARAM)&model);
-
 			LOG_INFO("Response private chat");
 			LOG_INFO("MSG: " + model._data_items[0]);
 			//model.DebugPackage();
 			cout << "Receive message client" << endl;
 			break;
+		case CLIENT_REQUEST_TRANSFER_FILE:
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_TRANSFER_FILE, (LPARAM)&model);
+			LOG_INFO("Response request transfer file");
 
+			break;
+		case CLIENT_BEGIN_TRANSFER_FILE:
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE, (LPARAM)&model);
+			LOG_INFO("Response begin transfer file");
+
+			break;
+		case CLIENT_END_TRANSFER_FILE:
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE, (LPARAM)&model);
+			LOG_INFO("Response end transfer file");
+
+			break;
 		default:
 			break;
 		}

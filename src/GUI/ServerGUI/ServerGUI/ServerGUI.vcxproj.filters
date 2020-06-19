@@ -78,6 +78,9 @@
     <ClInclude Include="Tools.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ServerFileManagement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ServerGUI.cpp">
@@ -126,6 +129,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DataHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerFileManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

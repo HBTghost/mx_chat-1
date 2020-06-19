@@ -34,7 +34,12 @@ public:
 
 
 	}
-
+	uint32_t GetCurrentPacket() {
+		return this->current_packet;
+	}
+	uint32_t GetTotalSize() {
+		return this->total_size;
+	}
 	SDataPackage* SetHeaderCommand(EMessageCommand type) {
 		this->command = type;
 		return this;
@@ -148,6 +153,26 @@ public:
 			temp.push_back(_package[i]);
 		}
 	}
+	char* ParseDataFile(int limit  = PACKAGE_SIZE -  PACKAGE_HEADER_SIZE) {
+		int pdr = PACKAGE_HEADER_SIZE;
+		int current_data_pos = pdr;
+		char* file_buffer = new char[limit];
+		int idx = 0;
+		for (int i = current_data_pos; i < current_data_pos+ limit; i++) {
+			file_buffer[idx++] = _package[i];
+		}
+		return file_buffer;
+	}
+	char* AddDataFile(char * data_arr , int limit = PACKAGE_SIZE - PACKAGE_HEADER_SIZE) {
+		int pdr = PACKAGE_HEADER_SIZE;
+		int current_data_pos = pdr;
+		char* file_buffer = new char[limit];
+		int idx = 0;
+		for (int i = current_data_pos; i < current_data_pos + limit; i++) {
+			_package[i] = data_arr[idx++];
+		}
+		return _package;
+	}
 
 #pragma endregion
 
@@ -157,6 +182,12 @@ public:
 		memset(_package, 0, sizeof(_package));
 		this->BuildHeader();
 		this->BuildData();
+		return _package;
+	}
+	char* BuildMessageDataFileSpecial(char* data_arr, int limit = PACKAGE_SIZE - PACKAGE_HEADER_SIZE) {
+		memset(_package, 0, sizeof(_package));
+		this->BuildHeader();
+		this->AddDataFile(data_arr, limit);
 		return _package;
 	}
 	void BuildHeader() {

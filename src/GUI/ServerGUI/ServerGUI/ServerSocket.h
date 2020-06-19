@@ -116,7 +116,7 @@ public:
 	void ProcessMessage(char* temp, list<SClientPacket*>::iterator& c_socket) {
 		SDataPackage model(temp);
 		EMessageCommand command = (EMessageCommand)model.command;
-		model.DebugPackage();
+		//model.DebugPackage();
 		switch (command)
 		{
 		case CLIENT_SIGN_IN: {
@@ -177,7 +177,7 @@ public:
 				->SetHeaderDesSrc("server", "client")
 				->SetHeaderNumPackage(0)
 				->SetHeaderTotalSize(4096);;
-		
+
 			int flag = accMa.AddAccount(Account(user, pass));
 			if (flag) {
 				res_msg->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_SIGN_UP_SUCCESS);
@@ -220,7 +220,21 @@ public:
 			TransferPrivateChatMessage(&model, c_socket);
 			break;
 		}
+		case CLIENT_REQUEST_TRANSFER_FILE:
+		{
+			InitRequestTransferFile(&model, c_socket);
+			break;
+		}
+		case CLIENT_BEGIN_TRANSFER_FILE:
+		{
+			TransferFileMessage(&model, c_socket);
+			break;
+		}
+		case CLIENT_END_TRANSFER_FILE:
+		{
 
+			break;
+		}
 		default:
 			break;
 		}
@@ -261,6 +275,46 @@ public:
 		}
 		return  list_client_on;
 	}
+
+
+	void InitRequestTransferFile(SDataPackage* package, PSIClientPacket srcClient) {
+		string hash_key_con = package->GetSHA256Des();
+		Conversation* pcon = _lcs[hash_key_con];
+		if (pcon != nullptr) {
+			char* msg = package->data();
+			for (SClientPacket*& p_client : pcon->_list_client) {
+				if (p_client != *srcClient) {
+					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+					LOG_INFO("InitRequestTransferFile() : + 1 Sent to other clients ");
+				}
+			}
+		}
+		else {
+			LOG_ERROR("InitRequestTransferFile() : Cannot find conversation ");
+		}
+
+	}
+
+	void TransferFileMessage(SDataPackage* package, PSIClientPacket srcClient) {
+		//find conversation
+		//sha des is package conversation
+		string hash_key_con = package->GetSHA256Des();
+		Conversation* pcon = _lcs[hash_key_con];
+		if (pcon != nullptr) {
+			char* msg = package->data();
+			for (SClientPacket*& p_client : pcon->_list_client) {
+				if (p_client != *srcClient) {
+					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+					LOG_INFO("TransferFileMessage() : + 1 Sent to other clients ");
+				}
+			}
+		}
+		else {
+			LOG_ERROR("TransferFileMessage() : Cannot find conversation ");
+		}
+	}
+
+
 	void InitRequestGroupChat(SDataPackage* package, PSIClientPacket srcClient) {
 		vector<string> list_mem;
 		copy(package->_data_items.begin() + 1, package->_data_items.end(), back_inserter(list_mem));
@@ -296,6 +350,8 @@ public:
 			LOG_ERROR("TransferPrivateChatMessage() : Cannot find conversation ");
 		}
 	}
+
+	
 
 
 	void InitRequestPrivateChat(SDataPackage* package, PSIClientPacket srcClient) {

@@ -6,7 +6,7 @@
 #include <mutex>
 #include <thread>
 #include "DebugHelper.h"
-
+#include "FileHelper.h"
 
 class ClientBackgroundService
 {
@@ -80,7 +80,99 @@ public:
 		LOG_INFO("Register() send ");
 		DebugHelper::DumpArray(__DEBUG_CLIENT_LOGIN_FILE, data, PACKAGE_SIZE);
 	}
+	
 
+	void InitTransferFile(string hash_conversation, string path, string file_name ="") {
+		wstring w_path = StringHelper::utf8_decode(path);
+		uint32_t file_size = FileHelper::FileSize(w_path.c_str());
+		int chunk_size = 1024;
+		if (file_name == "") {
+			file_name = path;
+		}
+
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_TRANSFER_FILE)
+			->SetHeaderDesSrc(username, "server")
+			->SetHeaderDesSrcHash(SHA256()(username), hash_conversation)
+			->SetHeaderNumPackage(chunk_size)
+			->SetHeaderTotalSize(file_size);
+		sdata->_data_items.push_back(file_name);
+		 
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+		TestTransferFile(hash_conversation, path);
+		LOG_INFO("Init request file ... ");
+	}
+	void TestTransferFile(string hash_conversation, string path) {
+		wstring w_path = StringHelper::utf8_decode(path);
+		uint32_t total_size = FileHelper::FileSize(w_path.c_str());
+		int chunk_size = 1024;
+		ifstream ifs;
+		ifs.open(path, std::ios::binary);
+		if (ifs.is_open()) {
+			LOG_INFO("IFS open ok");
+
+		}
+		else {
+			LOG_ERROR("ERROR open ifs");
+		}
+		LOG_INFO("Using chunk size: " + to_string(chunk_size) + "\r\n");
+
+		
+		/* on to the actual algorithm */
+		size_t total_chunks = total_size / chunk_size;
+		size_t last_chunk_size = total_size % chunk_size;
+
+		if (last_chunk_size != 0) /* if the above division was uneven */
+		{
+			++total_chunks; /* add an unfilled final chunk */
+		}
+		else /* if division was even, last chunk is full */
+		{
+			last_chunk_size = chunk_size;
+		}
+
+
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_BEGIN_TRANSFER_FILE)
+			->SetHeaderDesSrc(username, "server")
+			->SetHeaderDesSrcHash(SHA256()(username), hash_conversation)
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(total_size);
+		
+
+		/* the loop of chunking */
+		for (size_t chunk = 0; chunk < total_chunks; ++chunk)
+		{
+			sdata->_data_items.clear();
+			sdata->SetHeaderNumPackage(chunk);
+
+			size_t this_chunk_size =
+				chunk == total_chunks - 1 /* if last chunk */
+				? last_chunk_size /* then fill chunk with remaining bytes */
+				: chunk_size; /* else fill entire chunk */
+
+			  /* if needed, we also have the position of this chunk in the file
+				 size_t start_of_chunk = chunk * chunk_size; */
+
+				 /* adapt this portion as necessary, this is the fast C++ way */
+			vector<char> chunk_data(this_chunk_size);
+			ifs.read(&chunk_data[0], /* address of buffer start */
+				this_chunk_size); /* this many bytes is to be read */
+			char* c_chunk_data = chunk_data.data();
+
+			/* do something with chunk_data before next iteration */
+			LOG_INFO("#chunk " + to_string(chunk) + "\r\n");
+			
+			 
+			//copy(chunk_data.begin(), chunk_data.end(), back_inserter(sdata->))
+			//sdata->_data_items.push_back(c_chunk_data); 
+			char* msg = sdata->BuildMessageDataFileSpecial(c_chunk_data, chunk_size);
+			
+			gClientObj.SendMessagePackage(msg, PACKAGE_SIZE);
+		}
+
+	}
 	
 	void CreateGroupConversation(vector<string> list_member, string name_conversation) {
 		SDataPackage* sdata = (new SDataPackage())

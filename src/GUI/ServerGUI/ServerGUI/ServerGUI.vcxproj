@@ -197,6 +197,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SDataPacket.h" />
     <ClInclude Include="ServerBackgroundService.h" />
+    <ClInclude Include="ServerFileManagement.h" />
     <ClInclude Include="ServerGUI.h" />
     <ClInclude Include="ServerGUIDlg.h" />
     <ClInclude Include="ServerManagement.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="PrivateConversation.cpp" />
     <ClCompile Include="SDataPacket.cpp" />
     <ClCompile Include="ServerBackgroundService.cpp" />
+    <ClCompile Include="ServerFileManagement.cpp" />
     <ClCompile Include="ServerGUI.cpp" />
     <ClCompile Include="ServerGUIDlg.cpp" />
     <ClCompile Include="ServerManagement.cpp" />
