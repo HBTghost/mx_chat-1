@@ -9,17 +9,17 @@
 // ChatUiDlg dialog
 class ChatUiDlg : public CDialog
 {
-// Construction
+	// Construction
 public:
 	ChatUiDlg(CWnd* pParent = nullptr);	// standard constructor
 	ChatUiDlg(CString _username);
 
-// Dialog Data
+	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_CHAT_UI_DIALOG };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
 
@@ -51,5 +51,5 @@ public:
 	afx_msg void OnEnUpdateUsername();
 	afx_msg void OnEnChangePassword();
 
-	ClientBackgroundService *m_ClientService;
+	ClientBackgroundService* m_ClientService;
 };

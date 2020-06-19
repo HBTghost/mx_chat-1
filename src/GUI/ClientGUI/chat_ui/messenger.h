@@ -4,7 +4,8 @@
 #include <unordered_map>
 
 // messenger dialog
-
+typedef 	unordered_map<string, ClientConversation*> unorder_mapClientConversation;
+typedef 	unordered_map<string, ClientConversation*>::iterator unorder_mapClientConversationIterator;
 class messenger : public CDialog
 {
 	DECLARE_DYNAMIC(messenger)
@@ -24,6 +25,31 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	DECLARE_MESSAGE_MAP()
 	HICON m_hIcon;
+	BOOL sendWndIconToTaskbar(HWND hWnd, HICON hIcon)
+	{
+		BOOL ret = TRUE;
+		ASSERT(hWnd);
+		if (!::IsWindow(hWnd))
+			return FALSE;
+		CWnd* pWnd;
+		pWnd = pWnd->FromHandle(hWnd);
+		ASSERT(pWnd);
+		if (!pWnd)
+			return FALSE;
+		if (pWnd->GetParent())
+		{
+			if (::SetWindowLong(hWnd, GWL_HWNDPARENT, NULL) == 0)
+				return FALSE;
+		}
+
+
+		if (!(pWnd->ModifyStyle(NULL, WS_OVERLAPPEDWINDOW)))
+			ret = FALSE;
+		pWnd->SetIcon(hIcon, TRUE);
+		pWnd->SetIcon(hIcon, FALSE);
+
+		return ret;
+	}
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 public:
@@ -35,13 +61,14 @@ public:
 
 
 	unordered_map<string, ClientConversation*> mListChat;
-
+	
 	string current_hash = "";
 	string current_des_name = "";
 	
 	void ShowFriends();
 	void ShowGroups();
 	void ShowGroupsClick();
+	void ShowMessgesMember();
 	void ShowMessages();
 	std::vector<CString> GetMessagesFromListMess();
 	void SaveMessages();
@@ -85,4 +112,6 @@ public:
 	afx_msg void OnBnClickedBtnAddGroup();
 
 
+	CEdit m_editMemberChat;
+	CListBox m_messMember;
 };

@@ -26,7 +26,7 @@ ChatUiDlg::ChatUiDlg(CWnd* pParent /*=nullptr*/)
 
 ChatUiDlg::ChatUiDlg(CString _username)
 	: CDialog(IDD_CHAT_UI_DIALOG, nullptr)
-	, _username (_username)
+	, _username(_username)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 
@@ -70,7 +70,7 @@ BEGIN_MESSAGE_MAP(ChatUiDlg, CDialog)
 	ON_EN_CHANGE(IDC_PASSWORD, &ChatUiDlg::OnEnChangePassword)
 
 	ON_MESSAGE(IDC_FORM_LOGIN_MSG_HANDLER, &ChatUiDlg::OnFormLoginMsgHandler)
-	
+
 
 END_MESSAGE_MAP()
 
@@ -78,23 +78,25 @@ LRESULT ChatUiDlg::OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam) {
 	UINT command_msg = (UINT)wParam;
 	switch (command_msg)
 	{
-	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_SUCESS:{
+	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_SUCESS: {
 		MessageBox(_T("Login successfully. Enjoy this app!!!"), _T("Alert"), MB_ICONINFORMATION);
-		
+
 		//this->ShowWindow(false);
 		//OnOK();
 		messenger mess(this->m_ClientService);
 		//this->m_ClientService->AddHwnd(mess.GetSafeHwnd());
+		//this->ShowWindow(SW_HIDE);
+		this->OnOK();
 		mess.DoModal();
 
-	
+
 		break;
 	}
 	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_ERROR:
 		MessageBox(_T("Login error, please check username or password!!!"), _T("Alert"), MB_ICONERROR);
 		break;
 	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_SUCCESS:
-		MessageBox(_T("Register successfuly. Click Login to continue"), _T("Alert"), MB_ICONINFORMATION );
+		MessageBox(_T("Register successfuly. Click Login to continue"), _T("Alert"), MB_ICONINFORMATION);
 		break;
 	case IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR:
 		MessageBox(_T("Register error. Username existed, choose another username to continue !!!"), _T("Alert"), MB_ICONERROR);
@@ -214,7 +216,7 @@ void ChatUiDlg::OnBnClickedBtnLogin()
 	CString _username, _password;
 	GetDlgItemText(IDC_USERNAME, _username);
 	GetDlgItemText(IDC_PASSWORD, _password);
-	
+
 
 	CT2A ascii_user(_username);
 	CT2A ascii_pass(_password);

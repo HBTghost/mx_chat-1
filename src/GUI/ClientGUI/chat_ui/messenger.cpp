@@ -92,6 +92,7 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 	ScreenToClient(&mess_rect);
 	list_mess.GetWindowRect(&list_mess_rect);
 	ScreenToClient(&list_mess_rect);
+	DDX_Control(pDX, IDC_LIST_MEMBER_CHAT, m_messMember);
 }
 
 HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -130,11 +131,27 @@ END_MESSAGE_MAP()
 
 BOOL messenger::OnInitDialog()
 {
+
+//	HICON hIconSm = (HICON)LoadImage(NULL, "default.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
 	CDialog::OnInitDialog();
+	// btnid iconid , size
+	//	SetBtnIcon(IDC_ICON, IDI_AVATAR, 32);
+
 
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
+
+
+	HICON hIcon = (HICON)LoadImage(
+		AfxGetApp()->m_hInstance,
+		MAKEINTRESOURCE(IDI_AVATAR),
+		IMAGE_ICON,
+		32, 32, // use actual size
+		LR_DEFAULTCOLOR
+	);
+	sendWndIconToTaskbar(this->GetSafeHwnd(), m_hIcon );
+
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	this->mClientService->AddHwnd(this->GetSafeHwnd());
@@ -198,6 +215,8 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 			if (model->_data_items[1] == "PRIVATE") {
 				string display_name = model->_data_items[2] == this->mClientService->username ? model->_data_items[3] : model->_data_items[2];
 				tempConv = new ClientConversation(display_name, hash_id, false);
+				copy(model->_data_items.begin() + 2, model->_data_items.end(), back_inserter(tempConv->list_member));
+				
 			}
 			else if (model->_data_items[1] == "GROUP") {
 
@@ -224,6 +243,9 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 			
 			ClientConversation* cCon = mListChat[hash_conversation_id];
 			if (cCon) {
+				if(notification){
+					Tools().PlayGotMessSound();
+				}
 				cCon->list_mess.push_back(from_src + " : " + message);
 				if (current_hash == hash_conversation_id) {
 					wstring msg_received = StringHelper::utf8_decode(model->_data_items[0]);
@@ -333,6 +355,27 @@ void messenger::ShowGroupsClick()
 }
 
 
+void messenger::ShowMessgesMember() {
+	if (current_hash == "") {
+		return;
+	}
+
+	m_messMember.ResetContent(); 
+	for (string item : mListChat[current_hash]->list_member) {
+		wstring msg_received = StringHelper::utf8_decode(item);
+		m_messMember.AddString(msg_received.c_str());
+	}
+	
+	//CString str = _T("");
+	/*
+	for (int i = 0; i < 10; i++) {
+
+		//str.Format(_T("Item %d"), i);
+		m_messMember.AddString(str);
+	}
+	*/
+}
+
 // Show message from path cache
 void messenger::ShowMessages()
 {
@@ -342,6 +385,7 @@ void messenger::ShowMessages()
 	if (current_hash == "") {
 		return;
 	}
+	ShowMessgesMember();
 	for (string item : mListChat[current_hash]->list_mess) {
 		wstring msg_received = StringHelper::utf8_decode(item);
 		list_mess.InsertItem(count++, msg_received.c_str());
@@ -769,6 +813,7 @@ void messenger::OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 	std::vector<CString> selected = GetSelectedItemText(&list_friends);
 	std::vector<std::wstring> friends_name;
 	bool includeTarget = false;
+	
 	for (auto x : selected) {
 		if (x.GetLength()) {
 			std::wstring tmp(x);
@@ -777,11 +822,11 @@ void messenger::OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 			}
 			friends_name.push_back(tmp);
 		}
-
 	}
-
+	
+	
 	std::vector<string> list_member_chat = StringHelper::VectorWideStringToString(friends_name);
-
+	
 	// TODO: Add your control notification handler code here
 	AddFriendDlg addFriend(accMa, account);
 	INT_PTR nRet = -1;
@@ -808,6 +853,16 @@ void messenger::OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 			this->mClientService->CreatePrivateConversation(list_member_chat[0], str_name_of_conversation);
 		}
 		else {
+			bool check_existed_user = false;
+			for (string user : list_member_chat) {
+				if (this->mClientService->username == user) {
+					check_existed_user = true;
+					break;
+				}
+			}
+			if (check_existed_user == false) {
+				list_member_chat.insert(list_member_chat.begin(), this->mClientService->username); 
+			}
 			this->mClientService->CreateGroupConversation(list_member_chat, str_name_of_conversation);
 		}
 	}
@@ -968,14 +1023,19 @@ void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	int nSelected = pNMItemActivate->iItem;
 
+	
+	// 4 3 2 1 
+	// 3 2 1 0 (n-i-1) i = 0 n= 4 => 3
+	int reverse_idx_counter = mListChat.size() - nSelected - 1;
 	for (std::pair<std::string, ClientConversation*> element : mListChat)
 	{
-		if (nSelected-- == 0) {
+		if (reverse_idx_counter-- == 0) {
 			current_hash = element.second->hash_id;
 			break;
 		}
 		//std::cout << element.first << " :: " << element.second << std::endl;
 	}
+	
 	ShowMessages();
 	/*
 	CString strItem = list_groups.GetItemText(nSelected, 0);
