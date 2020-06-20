@@ -38,6 +38,7 @@ messenger::messenger(ClientBackgroundService* mClientService, CWnd* parent) : CD
 	accMa = new AccountManagement;
 	account = accMa->GetAccount(username).Clone();
 	friends = StringHelper::VectorStringToWideString(this->mClientService->gClientObj._list_online);
+	this->username = StringHelper::utf8_decode(mClientService->username).c_str();
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
@@ -72,12 +73,13 @@ messenger::~messenger()
 void messenger::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_CHAT_USERNAME, username);
 	DDX_Control(pDX, IDC_LIST_FRIENDS, list_friends);
 	DDX_Control(pDX, IDC_MESS_CONTENT, mess_content);
 	DDX_Control(pDX, IDC_LIST_MESS, list_mess);
 	DDX_Control(pDX, IDC_MESS_CONTENT, mess_content);
 	DDX_Control(pDX, IDC_LIST_GROUPS, list_groups);
+	DDX_Control(pDX, IDC_LIST_MEMBER_CHAT, m_messMember);
+	DDX_Control(pDX, IDC_LIST_FILE_TRANSFER, m_ListFile);
 
 	SetUserIcon();
 	SetSendBtnIcon();
@@ -92,8 +94,6 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 	ScreenToClient(&mess_rect);
 	list_mess.GetWindowRect(&list_mess_rect);
 	ScreenToClient(&list_mess_rect);
-	DDX_Control(pDX, IDC_LIST_MEMBER_CHAT, m_messMember);
-	DDX_Control(pDX, IDC_LIST_FILE_TRANSFER, m_ListFile);
 }
 
 HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -157,7 +157,7 @@ BOOL messenger::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	this->mClientService->AddHwnd(this->GetSafeHwnd());
-	SetWindowText(StringHelper::utf8_decode(mClientService->username).c_str());
+	SetWindowText(_T("Messenger: ") + username);
 
 	// TODO: Add extra initialization here
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -359,7 +359,10 @@ void messenger::ShowGroups()
 	for (std::pair<std::string, ClientConversation*> element : mListChat)
 	{
 		int pending_msg = element.second->pending_msg;
-		if(pending_msg == 0){
+		if (target.length() && element.second->display_name == Tools().WstringToString(target)) {
+			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP_CHATTING));
+		}
+		else if (pending_msg == 0) {
 			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
 		//strItem.Format(element.second->display_name);
 		}
@@ -500,6 +503,7 @@ std::vector<CString> messenger::GetMessagesFromListMess()
 
 void messenger::SetChatBoxTitle()
 {
+	target = Tools().StringToWstring(mListChat[current_hash]->display_name);
 	CString friendName = target.c_str();
 	CString title;
 	if (friendName.GetLength() > 0) {
@@ -559,28 +563,8 @@ void messenger::SetBtnIcon(int btnId, int iconId, int size) {
 
 void messenger::SetUserIcon()
 {
-	SetBtnIcon(IDC_ICON, IDI_AVATAR, 32);
-	SetBtnIcon(IDC_BTN_NOTIFICATION, IDI_NOTIFICATION, 32);
-
-	CFont font;
-	font.CreateFont(
-		20,                        // nHeight
-		0,                         // nWidth
-		0,                         // nEscapement
-		0,                         // nOrientation
-		FW_BOLD,                   // nWeight
-		FALSE,                     // bItalic
-		FALSE,                     // bUnderline
-		0,                         // cStrikeOut
-		ANSI_CHARSET,              // nCharSet
-		OUT_DEFAULT_PRECIS,        // nOutPrecision
-		CLIP_DEFAULT_PRECIS,       // nClipPrecision
-		DEFAULT_QUALITY,           // nQuality
-		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
-		_T("Arial"));              // lpszFacename
-
-	username.SetWindowTextW(account->GetUsername().c_str());
-	username.SetFont(&font);
+	SetBtnIcon(IDC_ICON, IDI_AVATAR, 40);
+	SetBtnIcon(IDC_BTN_NOTIFICATION, IDI_NOTIFICATION, 40);
 }
 
 void messenger::SetSendBtnIcon()
@@ -592,8 +576,8 @@ void messenger::SetSendBtnIcon()
 
 void messenger::SetAddFriendIcon()
 {
-	SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_ADD_FRIEND, 32);
-	SetBtnIcon(IDC_BTN_ADD_GROUP, IDI_ADD_GROUP, 36);
+	SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_ADD_FRIEND, 40);
+	SetBtnIcon(IDC_BTN_ADD_GROUP, IDI_ADD_GROUP, 44);
 }
 
 void messenger::OnBnClickedCancel()
@@ -1093,7 +1077,8 @@ void messenger::OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 	string des = strName.m_psz;
 	
 	this->mClientService->CreatePrivateConversation(string(strName.m_psz), string(strName.m_psz));
-	
+	mess_content.SetFocus();
+	mess_content.SetSel(-1);
 	
 	
 	/*
@@ -1110,7 +1095,6 @@ void messenger::OnBnClickedBtnSendIcon()
 {
 	// TODO: Add your control notification handler code here
 	CString name;
-	username.GetWindowTextW(name);
 	EmojiDlg emojiDlg(&mess_content, std::wstring(name));
 	emojiDlg.DoModal();
 	mess_content.SetFocus();
@@ -1143,6 +1127,8 @@ void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 	
 	ShowMessages();
 	ShowGroups();
+	mess_content.SetFocus();
+	mess_content.SetSel(-1);
 	/*
 	CString strItem = list_groups.GetItemText(nSelected, 0);
 	if (strItem.GetLength()) {
@@ -1207,10 +1193,10 @@ void messenger::OnBnClickedBtnNotification()
 	Tools().PlayGotMessSound();
 	// TODO: Add your control notification handler code here
 	if (notification) {
-		SetBtnIcon(IDC_BTN_NOTIFICATION, IDI_UNNOTIFICATION, 32);
+		SetBtnIcon(IDC_BTN_NOTIFICATION, IDI_UNNOTIFICATION, 40);
 	}
 	else {
-		SetBtnIcon(IDC_BTN_NOTIFICATION, IDI_NOTIFICATION, 32);
+		SetBtnIcon(IDC_BTN_NOTIFICATION, IDI_NOTIFICATION, 40);
 	}
 	notification = !notification;
 	mess_content.SetFocus();
@@ -1270,6 +1256,7 @@ void messenger::OnLbnDblclkListFileTransfer()
 		
 		CT2A ascii(ItemSelected);
 		system(ascii.m_psz);
+		//ShellExecute(0, 0, ItemSelected, 0, 0, SW_SHOW);
 		//AfxMessageBox(ItemSelected);
 	}
 	else {

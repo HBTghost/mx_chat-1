@@ -84,7 +84,7 @@ public:
 	std::vector<wstring> friends;
 	std::wstring target;
 	std::vector<Group> groups;
-	CStatic username;
+	CString username;
 	CListCtrl list_friends;
 	CEdit mess_content;
 	afx_msg void OnBnClickedCancel();
