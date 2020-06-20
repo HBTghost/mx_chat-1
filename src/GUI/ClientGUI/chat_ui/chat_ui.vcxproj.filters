@@ -404,6 +404,15 @@
     <Image Include="res\group9p.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-double-left-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-double-right-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-replace-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

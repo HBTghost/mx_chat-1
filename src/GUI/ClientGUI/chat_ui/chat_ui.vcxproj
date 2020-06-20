@@ -260,6 +260,9 @@
     <None Include="res\chatui.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-double-left-64.ico" />
+    <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-double-right-64.ico" />
+    <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-replace-64.ico" />
     <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Flatastic-11-Truck.ico" />
     <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-2-Man.ico" />
     <Image Include="C:\Users\hacba\Downloads\Custom-Icon-Design-Pretty-Office-3-Accept-Male-User.ico" />
