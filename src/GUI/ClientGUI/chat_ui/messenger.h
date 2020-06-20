@@ -84,7 +84,7 @@ public:
 	std::vector<wstring> friends;
 	std::wstring target;
 	std::vector<Group> groups;
-	CStatic username;
+	CString username;
 	CListCtrl list_friends;
 	CEdit mess_content;
 	afx_msg void OnBnClickedCancel();
@@ -118,4 +118,5 @@ public:
 	CListBox m_messMember;
 	CListBox m_ListFile;
 	afx_msg void OnLbnDblclkListFileTransfer();
+	afx_msg void OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult);
 };

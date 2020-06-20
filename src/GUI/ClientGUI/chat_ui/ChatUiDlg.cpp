@@ -284,6 +284,7 @@ void ChatUiDlg::OnBnClickedBtnRegister()
 	}
 	else {
 		this->m_ClientService->Register(s_user, s_pass);
+		GetDlgItem(IDC_BTN_LOGIN)->SetFocus();
 	}
 
 	/*
