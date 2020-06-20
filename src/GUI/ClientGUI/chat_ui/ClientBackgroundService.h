@@ -82,7 +82,7 @@ public:
 	}
 	
 
-	void InitTransferFile(string hash_conversation, int chunk_size , string path, string file_name ="") {
+	string InitTransferFile(string hash_conversation, int chunk_size , string path, string file_name ="") {
 		wstring w_path = StringHelper::utf8_decode(path);
 		uint32_t file_size = FileHelper::FileSize(w_path.c_str());
 		if (file_name == "") {
@@ -101,6 +101,7 @@ public:
 		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
 		TestTransferFile(hash_conversation, chunk_size, path);
 		LOG_INFO("Init request file ... ");
+		return sdata->GetSHA256Src();
 	}
 	void TestTransferFile(string hash_conversation, int chunk_size,  string path) {
 		wstring w_path = StringHelper::utf8_decode(path);

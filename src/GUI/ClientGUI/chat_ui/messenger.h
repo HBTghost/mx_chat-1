@@ -118,4 +118,5 @@ public:
 	CListBox m_messMember;
 	CListBox m_ListFile;
 	afx_msg void OnLbnDblclkListFileTransfer();
+	afx_msg void OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult);
 };

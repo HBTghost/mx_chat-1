@@ -1,0 +1,9 @@
+Goi so sector trong moi cluster la a
+So sector dau tien la b
+
+Ta co He phuong trinh:
+	9a  + b = 99
+	99a + b = 999
+ =>> a = 10, b = 9
+
+Suy ra cluster 999 nam tai sector 999a+b=9981

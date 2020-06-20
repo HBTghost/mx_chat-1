@@ -20,6 +20,9 @@
 #include "CreateGroupDlg.h"
 #include "ChooseGroup.h"
 
+const CString ATTACH_FILE_FLAG = _T("\r\r\r");
+const CString ATTACH_FILE_ICON = _T("📌 ");
+
 // messenger dialog
 
 IMPLEMENT_DYNAMIC(messenger, CDialog)
@@ -128,6 +131,7 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_BN_CLICKED(IDC_BTN_ADD_GROUP, &messenger::OnBnClickedBtnAddGroup)
 	ON_MESSAGE(IDC_FORM_CHAT_MSG_HANDLER, &messenger::OnFormMsgHandler)
 	ON_LBN_DBLCLK(IDC_LIST_FILE_TRANSFER, &messenger::OnLbnDblclkListFileTransfer)
+	ON_NOTIFY(NM_CLICK, IDC_LIST_MESS, &messenger::OnNMClickListMess)
 END_MESSAGE_MAP()
 
 
@@ -279,7 +283,12 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 				//use current packet for chunk size
 				cCon->InitFileTransferManagement(model->_data_items[0], model->GetTotalSize(), model->GetCurrentPacket());
 				if (current_hash == model->GetSHA256Des()) {
+					if (notification) {
+						Tools().PlayGotMessSound();
+					}
 					m_ListFile.AddString(StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str());
+					CString _mess = CString((from_src + " : ").c_str()) + ATTACH_FILE_ICON + StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str() + ATTACH_FILE_FLAG;
+					list_mess.InsertItem(count++, _mess);
 				}
 				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
 			}
@@ -796,10 +805,11 @@ void messenger::OnBnClickedBtnSendFile()
 	CT2A str_file_name(sFileName);
 	CT2A str_file_ext(sFileExt);
 
-	m_ListFile.AddString(sFileName);
+	m_ListFile.AddString(sFilePath);
 
-	mClientService->InitTransferFile(current_hash,7680, str_path.m_psz, string(str_file_name.m_psz) );
-	
+	mClientService->InitTransferFile(current_hash,7680, str_path.m_psz, string(str_file_name.m_psz));
+
+	list_mess.InsertItem(count++, _T("Me: ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 }
@@ -1254,13 +1264,46 @@ void messenger::OnLbnDblclkListFileTransfer()
 		CString ItemSelected;
 		pList1->GetText(nSel, ItemSelected);
 		
-		CT2A ascii(ItemSelected);
-		system(ascii.m_psz);
-		//ShellExecute(0, 0, ItemSelected, 0, 0, SW_SHOW);
+		//CT2A ascii(ItemSelected);
+		//system(ascii.m_psz);
+		ConfirmDlg confirmDlg;
+		confirmDlg.SetMess(L"File \"" + std::wstring(ItemSelected) + L"\" may contain viruses that may be harmful to your computer!\r\nAre you sure to open this file?");
+		if (confirmDlg.DoModal() == IDOK) {
+			ShellExecute(0, 0, ItemSelected, 0, 0, SW_SHOW);
+		}
 		//AfxMessageBox(ItemSelected);
 	}
 	else {
 		//return;
 	}
 
+}
+
+
+void messenger::OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	int nSelected = pNMItemActivate->iItem;
+	CString strItem = list_mess.GetItemText(nSelected, 0);
+	if (strItem.GetLength()) {
+		CString flag = ATTACH_FILE_FLAG;
+		bool isFile = false;
+		int p1 = strItem.Find(flag);
+		if (p1 == strItem.GetLength() - flag.GetLength()) {
+			CString icon = ATTACH_FILE_ICON;
+			int p2 = strItem.Find(icon);
+			if (p2 != -1) {
+				p2 += icon.GetLength();
+				CString path = strItem.Mid(p2, p1 - p2);
+				ConfirmDlg confirmDlg;
+				confirmDlg.SetMess(L"File \"" + std::wstring(path) + L"\" may contain viruses that may be harmful to your computer!\r\nAre you sure to open this file?");
+				if (confirmDlg.DoModal() == IDOK) {
+					ShellExecute(0, 0, path, 0, 0, SW_SHOW);
+				}
+			}
+
+		}
+	}
+	*pResult = 0;
 }
