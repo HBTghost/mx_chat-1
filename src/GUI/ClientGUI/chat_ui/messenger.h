@@ -111,7 +111,11 @@ public:
 	bool notification = true;
 	afx_msg void OnBnClickedBtnAddGroup();
 
+	void OnDoubleClickFileItem(NMHDR* pNMHDR, LRESULT* pResult);
+
 
 	CEdit m_editMemberChat;
 	CListBox m_messMember;
+	CListBox m_ListFile;
+	afx_msg void OnLbnDblclkListFileTransfer();
 };

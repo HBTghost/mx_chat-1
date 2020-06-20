@@ -93,6 +93,7 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 	list_mess.GetWindowRect(&list_mess_rect);
 	ScreenToClient(&list_mess_rect);
 	DDX_Control(pDX, IDC_LIST_MEMBER_CHAT, m_messMember);
+	DDX_Control(pDX, IDC_LIST_FILE_TRANSFER, m_ListFile);
 }
 
 HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -126,6 +127,7 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_BN_CLICKED(IDC_BTN_NOTIFICATION, &messenger::OnBnClickedBtnNotification)
 	ON_BN_CLICKED(IDC_BTN_ADD_GROUP, &messenger::OnBnClickedBtnAddGroup)
 	ON_MESSAGE(IDC_FORM_CHAT_MSG_HANDLER, &messenger::OnFormMsgHandler)
+	ON_LBN_DBLCLK(IDC_LIST_FILE_TRANSFER, &messenger::OnLbnDblclkListFileTransfer)
 END_MESSAGE_MAP()
 
 
@@ -248,8 +250,10 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 				}
 				cCon->list_mess.push_back(from_src + " : " + message);
 				if (current_hash == hash_conversation_id) {
-					wstring msg_received = StringHelper::utf8_decode(model->_data_items[0]);
+					wstring msg_received = StringHelper::utf8_decode( from_src + " : " + message);
 					list_mess.InsertItem(count++, msg_received.c_str());
+					//wstring msg_received = StringHelper::utf8_decode(model->_data_items[0]);
+					//list_mess.InsertItem(count++, msg_received.c_str());
 					LOG_INFO("Handle insert to chatbox");
 				}
 				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION() : add new message");
@@ -270,6 +274,9 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 			if (cCon) {
 				//use current packet for chunk size
 				cCon->InitFileTransferManagement(model->_data_items[0], model->GetTotalSize(), model->GetCurrentPacket());
+				if (current_hash == model->GetSHA256Des()) {
+					m_ListFile.AddString(StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str());
+				}
 				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
 			}
 			else {
@@ -593,7 +600,7 @@ void messenger::OnBnClickedBtnSend()
 	// TODO: Add your control notification handler code here
 	CString content;
 	GetDlgItemText(IDC_MESS_CONTENT, content);
-
+	string s_content = "";
 
 
 	//pending
@@ -602,7 +609,7 @@ void messenger::OnBnClickedBtnSend()
 		wchar_t space(L' ');
 		std::wstring mess(content);
 
-		string s_content = StringHelper::utf8_encode(mess);
+		s_content = StringHelper::utf8_encode(mess);
 		mListChat[current_hash]->list_mess.push_back(s_content);
 		/*
 		SDataPackage* msg_send = (new SDataPackage())
@@ -666,6 +673,9 @@ void messenger::OnBnClickedBtnSend()
 
 
 				mess = (j == 0 && i == 0 ? _T("Me: ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
+				string str_mess = StringHelper::utf8_encode(mess);
+				mListChat[current_hash]->list_mess.push_back(str_mess);
+
 				list_mess.InsertItem(count++, mess.c_str());
 				i += end_s;
 				end = line_size + i;
@@ -674,6 +684,18 @@ void messenger::OnBnClickedBtnSend()
 	}
 	else {
 		list_mess.InsertItem(count++, _T("Me: 🖤"));
+		string str_mess = StringHelper::utf8_encode(_T("Me: 🖤"));
+		mListChat[current_hash]->list_mess.push_back(str_mess);
+		wstring tim = _T(" 🖤");
+		s_content = StringHelper::utf8_encode(tim);
+		if (mListChat[current_hash]->_is_group_msg == true) {
+			this->mClientService->SendGroupMessage(current_hash, s_content);
+
+		}
+		else {
+			this->mClientService->SendPrivateMessage(current_hash, s_content);
+		}
+
 	}
 	mess_content.SetWindowTextW(L"");
 	OnEnUpdateMessContent();
@@ -774,8 +796,10 @@ void messenger::OnBnClickedBtnSendFile()
 	CT2A str_file_name(sFileName);
 	CT2A str_file_ext(sFileExt);
 
+	m_ListFile.AddString(sFileName);
 
-	mClientService->InitTransferFile(current_hash, str_path.m_psz, string(str_file_name.m_psz) );
+	mClientService->InitTransferFile(current_hash,7680, str_path.m_psz, string(str_file_name.m_psz) );
+	
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 }
@@ -1088,10 +1112,12 @@ void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 	
 	// 4 3 2 1 
 	// 3 2 1 0 (n-i-1) i = 0 n= 4 => 3
-	int reverse_idx_counter = mListChat.size() - nSelected - 1;
+	// i = 1 => rever = 2 
+	//
+	//int reverse_idx_counter = mListChat.size() - nSelected - 1;
 	for (std::pair<std::string, ClientConversation*> element : mListChat)
 	{
-		if (reverse_idx_counter-- == 0) {
+		if (nSelected-- == 0) {
 			current_hash = element.second->hash_id;
 			break;
 		}
@@ -1205,4 +1231,31 @@ void messenger::OnBnClickedBtnAddGroup()
 
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
+}
+
+void messenger::OnDoubleClickFileItem(NMHDR* pNMHDR, LRESULT* pResult) {
+
+}
+
+void messenger::OnLbnDblclkListFileTransfer()
+{
+	// TODO: Add your control notification handler code here
+
+
+	// TODO: Add your control notification handler code here
+	CListBox* pList1 = (CListBox*)(GetDlgItem(IDC_LIST_FILE_TRANSFER));
+	int nSel = pList1->GetCurSel();
+	if (nSel != LB_ERR)
+	{
+		CString ItemSelected;
+		pList1->GetText(nSel, ItemSelected);
+		
+		CT2A ascii(ItemSelected);
+		system(ascii.m_psz);
+		//AfxMessageBox(ItemSelected);
+	}
+	else {
+		//return;
+	}
+
 }

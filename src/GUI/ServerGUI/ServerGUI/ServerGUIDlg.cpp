@@ -57,7 +57,6 @@ END_MESSAGE_MAP()
 
 
 int initServer() {
-	char buf[4096];
 	if (!gServerObj.IsConnected())
 	{
 		cout << "Failed to initialise server socket." << endl;

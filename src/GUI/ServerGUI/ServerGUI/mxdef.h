@@ -1,5 +1,5 @@
 #pragma once
-#define PACKAGE_SIZE 4096
+#define PACKAGE_SIZE 4096 *2
 #define PACKAGE_HEADER_SIZE 256
 #define PACKAGE_DATA_SIZE  (PACKAGE_SIZE - PACKAGE_HEADER_SIZE)
 #define __DEBUG_CLIENT_LOGIN_FILE "debug_client_login_request.bin"

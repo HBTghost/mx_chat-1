@@ -67,6 +67,7 @@
 #define IDC_LIST1                       1021
 #define IDC_LIST_EMOJI                  1021
 #define IDC_LIST_ICON                   1021
+#define IDC_LIST_FILE_TRANSFER          1021
 #define ID_BTN_START_CHAT               1027
 #define ID_BTN_UNFRIEND                 1028
 #define IDC_CONFIRM_MESS                1029
@@ -88,12 +89,9 @@
 #define IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE 1051
 #define IDC_FORM_CHAT_MSG_HANDLER_HASH_CONVERSATION 1052
 #define IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION 1053
-
 #define IDC_FORM_CHAT_MSG_HANDLER_TRANSFER_FILE 1054
 #define IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE 1055
 #define IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE 1056
-
-
 
 // Next default values for new objects
 // 

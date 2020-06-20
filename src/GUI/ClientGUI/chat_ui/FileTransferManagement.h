@@ -21,7 +21,7 @@ public:
 
 	string _desPart;
 	ofstream myfile;
-
+	string _desFileName = ""; 
 
 	FileTransferManagement() {
 		//myfile.open("debug_out", ios::out | ios::app | ios::binary);
@@ -35,11 +35,11 @@ public:
 		_totalSize = total_size;
 		_chunkSize = chunk_size;
 		//calc
-
+		_desFileName = StringHelper::random_string() + "_c_" + file_name;
 		_chunkCurrentEpoch = 0;
 		_chunkEpoch = (_totalSize / _chunkSize);
 		_chunkEpoch += ((_totalSize % _chunkSize) == 0) ? 0 : 1;
-		myfile.open(StringHelper::random_string() + "_c_" + file_name , std::ofstream::binary);
+		myfile.open(_desFileName, std::ofstream::binary);
 	}
 	int AddChunk(SDataPackage* msg) {
 		uint32_t num_current_package = msg->GetCurrentPacket();

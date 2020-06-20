@@ -82,10 +82,9 @@ public:
 	}
 	
 
-	void InitTransferFile(string hash_conversation, string path, string file_name ="") {
+	void InitTransferFile(string hash_conversation, int chunk_size , string path, string file_name ="") {
 		wstring w_path = StringHelper::utf8_decode(path);
 		uint32_t file_size = FileHelper::FileSize(w_path.c_str());
-		int chunk_size = 1024;
 		if (file_name == "") {
 			file_name = path;
 		}
@@ -100,13 +99,12 @@ public:
 		 
 		char* data = sdata->BuildMessage();
 		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
-		TestTransferFile(hash_conversation, path);
+		TestTransferFile(hash_conversation, chunk_size, path);
 		LOG_INFO("Init request file ... ");
 	}
-	void TestTransferFile(string hash_conversation, string path) {
+	void TestTransferFile(string hash_conversation, int chunk_size,  string path) {
 		wstring w_path = StringHelper::utf8_decode(path);
 		uint32_t total_size = FileHelper::FileSize(w_path.c_str());
-		int chunk_size = 1024;
 		ifstream ifs;
 		ifs.open(path, std::ios::binary);
 		if (ifs.is_open()) {
