@@ -368,6 +368,42 @@
     <Image Include="res\add_group.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icon2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group3.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group4.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group5.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group6.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group7.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group8.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group9.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\group9p.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

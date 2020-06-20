@@ -13,6 +13,7 @@ public:
 	std::vector<std::string> list_member;
 	std::vector<std::string> list_mess;
 	FileTransferManagement* ftm;
+	int pending_msg = 0;
 	bool _is_group_msg = false;
 
 	

@@ -43,6 +43,16 @@
 #define IDI_SEND                        205
 #define IDI_ACTIVITY                    206
 #define IDI_OTHER                       207
+#define IDI_ICO_GROUP_1                 213
+#define IDI_ICO_GROUP_2                 214
+#define IDI_ICO_GROUP_3                 215
+#define IDI_ICO_GROUP_4                 216
+#define IDI_ICO_GROUP_5                 217
+#define IDI_ICO_GROUP_6                 218
+#define IDI_ICO_GROUP_7                 219
+#define IDI_ICO_GROUP_8                 220
+#define IDI_ICO_GROUP_9                 221
+#define IDI_ICO_GROUP_9P                222
 #define IDC_USERNAME                    1000
 #define IDC_PASSWORD                    1001
 #define IDC_BTN_LOGIN                   1002
@@ -97,7 +107,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        211
+#define _APS_NEXT_RESOURCE_VALUE        223
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1049
 #define _APS_NEXT_SYMED_VALUE           113

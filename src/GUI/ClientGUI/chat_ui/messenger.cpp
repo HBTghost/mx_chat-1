@@ -256,6 +256,10 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 					//list_mess.InsertItem(count++, msg_received.c_str());
 					LOG_INFO("Handle insert to chatbox");
 				}
+				else {
+					cCon->pending_msg += 1;
+				}
+				ShowGroups();
 				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION() : add new message");
 			}
 			else {
@@ -354,9 +358,21 @@ void messenger::ShowGroups()
 	int i = 0;
 	for (std::pair<std::string, ClientConversation*> element : mListChat)
 	{
-		imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
+		int pending_msg = element.second->pending_msg;
+		if(pending_msg == 0){
+			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
 		//strItem.Format(element.second->display_name);
+		}
+		else {
+			if (pending_msg > 9) {
+				imgList3.Add(AfxGetApp()->LoadIconW(IDI_ICO_GROUP_9P));
 
+			}
+			else {
+				imgList3.Add(AfxGetApp()->LoadIconW(IDI_ICO_GROUP_1 + pending_msg - 1));
+
+			}
+		}
 		strItem = CString(element.second->display_name.c_str());
 		list_groups.InsertItem(i, strItem, i);
 		i++;
@@ -1119,12 +1135,14 @@ void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 		if (nSelected-- == 0) {
 			current_hash = element.second->hash_id;
+			element.second->pending_msg = 0;//read
 			break;
 		}
 		//std::cout << element.first << " :: " << element.second << std::endl;
 	}
 	
 	ShowMessages();
+	ShowGroups();
 	/*
 	CString strItem = list_groups.GetItemText(nSelected, 0);
 	if (strItem.GetLength()) {
