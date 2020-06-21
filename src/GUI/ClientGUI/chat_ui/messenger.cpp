@@ -136,8 +136,8 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_BN_CLICKED(IDC_BTN_CAMERA, &messenger::OnBnClickedBtnCamera)
 	ON_BN_CLICKED(IDC_BTN_IMAGE, &messenger::OnBnClickedBtnImage)
 	ON_BN_CLICKED(IDC_BTN_VIDEO, &messenger::OnBnClickedBtnVideo)
-	ON_BN_CLICKED(IDC_BTN_PDF, &messenger::OnBnClickedBtnPdf)
-	ON_BN_CLICKED(IDC_BTN_WORD, &messenger::OnBnClickedBtnWord)
+	ON_BN_CLICKED(IDC_BTN_SOUND, &messenger::OnBnClickedBtnSound)
+	ON_BN_CLICKED(IDC_BTN_DOC, &messenger::OnBnClickedBtnDoc)
 END_MESSAGE_MAP()
 
 
@@ -616,8 +616,8 @@ void messenger::SetSendBtnIcon()
 	SetBtnIcon(IDC_BTN_SEND, IDI_LOVE, 22);
 	SetBtnIcon(IDC_BTN_SEND_ICON, IDI_SEND_EMOJI, 22);
 	SetBtnIcon(IDC_BTN_SEND_FILE, IDI_SEND_FILE, 22);
-	SetBtnIcon(IDC_BTN_PDF, IDI_PDF, 22);
-	SetBtnIcon(IDC_BTN_WORD, IDI_WORD, 22);
+	SetBtnIcon(IDC_BTN_SOUND, IDI_SOUND, 22);
+	SetBtnIcon(IDC_BTN_DOC, IDI_DOC, 22);
 	SetBtnIcon(IDC_BTN_IMAGE, IDI_IMAGE, 22);
 	SetBtnIcon(IDC_BTN_VIDEO, IDI_VIDEO, 22);
 	SetBtnIcon(IDC_BTN_CAMERA, IDI_CAMERA, 22);
@@ -835,7 +835,7 @@ void messenger::SendFile(CString filetype) {
 	CString sFileName = _T("");
 	CString sFileExt = _T("");
 
-	CFileDialog dlg(TRUE, _T(""), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filetype, this);
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filetype, this);
 	if (dlg.DoModal() == IDOK)
 	{
 		sFilePath = dlg.GetPathName();
@@ -1316,6 +1316,22 @@ void messenger::OnBnClickedBtnLink()
 		return;
 	}
 	// TODO: Add your control notification handler code here
+	AddFriendDlg sendLink;
+	if (sendLink.DoModal() == IDOK) {
+		CString link = sendLink.GetMessageValue();
+		CString _mess = _T("Me : ") + ATTACH_FILE_ICON + link + ATTACH_FILE_FLAG;
+		list_mess.InsertItem(count++, _mess);
+		string str_mess = StringHelper::utf8_encode(wstring(_mess));
+		mListChat[current_hash]->list_mess.push_back(str_mess);
+		string s_content = StringHelper::utf8_encode(wstring(ATTACH_FILE_ICON + link + ATTACH_FILE_FLAG));
+		if (mListChat[current_hash]->_is_group_msg == true) {
+			this->mClientService->SendGroupMessage(current_hash, s_content);
+		}
+		else {
+			this->mClientService->SendPrivateMessage(current_hash, s_content);
+		}
+	}
+
 }
 
 
@@ -1336,7 +1352,7 @@ void messenger::OnBnClickedBtnImage()
 		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
-	SendFile(_T("Image Files (*.png, *jpeg)|*.png|*jpeg|"));
+	SendFile(_T("Image Files (*.png, *.jpg, *.jpeg, *.gif)|*.png; *.jpg; *.jpeg, *.gif||"));
 }
 
 
@@ -1347,27 +1363,27 @@ void messenger::OnBnClickedBtnVideo()
 		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
-	SendFile(_T("Video Files (*.mp4, *wav)|*.mp4|*wav|"));
+	SendFile(_T("Video Files (*.mp4, *.flv, *.avi, *.wmv)|*.mp4; *.flv; *.avi; *.wmv||"));
 }
 
 
-void messenger::OnBnClickedBtnPdf()
+void messenger::OnBnClickedBtnSound()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
 		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
-	SendFile(_T("Pdf Files (*.pdf)|*.pdf|"));
+	SendFile(_T("Sound Files (*.mp3, *.wav, *.flac, *.aac)|*.mp3; *.wav; *.flac; *.aac||"));
 }
 
 
-void messenger::OnBnClickedBtnWord()
+void messenger::OnBnClickedBtnDoc()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
 		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
-	SendFile(_T("Word Files (*.doc, *docs, *docx)|*.doc|*docs|*docx|"));
+	SendFile(_T("Documents (*txt, *.doc, *.docx, *.pdf, *.epub)|*.doc; *.docx; *.pdf; *.epub||"));
 }

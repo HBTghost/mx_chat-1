@@ -124,6 +124,6 @@ public:
 	afx_msg void OnBnClickedBtnCamera();
 	afx_msg void OnBnClickedBtnImage();
 	afx_msg void OnBnClickedBtnVideo();
-	afx_msg void OnBnClickedBtnPdf();
-	afx_msg void OnBnClickedBtnWord();
+	afx_msg void OnBnClickedBtnSound();
+	afx_msg void OnBnClickedBtnDoc();
 };
