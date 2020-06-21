@@ -53,6 +53,10 @@
 #define IDI_ICO_GROUP_8                 220
 #define IDI_ICO_GROUP_9                 221
 #define IDI_ICO_GROUP_9P                222
+#define IDI_LEFT                        224
+#define IDI_RIGHT                       225
+#define IDI_ICON3                       226
+#define IDI_SWAP                        226
 #define IDC_USERNAME                    1000
 #define IDC_PASSWORD                    1001
 #define IDC_BTN_LOGIN                   1002
@@ -95,8 +99,11 @@
 #define IDC_LIST2                       1048
 #define IDC_LIST_MEMBER_CHAT            1048
 #define IDC_FORM_LOGIN_MSG_HANDLER_REGISTER_ERROR 1049
+#define IDC_BTN_LEFT                    1049
 #define IDC_FORM_CHAT_MSG_HANDLER       1050
+#define IDC_BTN_SWAP                    1050
 #define IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE 1051
+#define IDC_BTN_RIGHT                   1051
 #define IDC_FORM_CHAT_MSG_HANDLER_HASH_CONVERSATION 1052
 #define IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION 1053
 #define IDC_FORM_CHAT_MSG_HANDLER_TRANSFER_FILE 1054
@@ -107,9 +114,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        223
+#define _APS_NEXT_RESOURCE_VALUE        227
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1049
+#define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           113
 #endif
 #endif

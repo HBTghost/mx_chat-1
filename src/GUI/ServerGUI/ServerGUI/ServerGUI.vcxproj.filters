@@ -153,6 +153,9 @@
     <Image Include="res\ServerGUI.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\ClientGUI\chat_ui\res\icons8-chat-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

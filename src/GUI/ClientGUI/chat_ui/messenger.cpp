@@ -116,7 +116,7 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(IDCANCEL, &messenger::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_BTN_SEND, &messenger::OnBnClickedBtnSend)
-	ON_BN_CLICKED(IDC_BTN_ADD_FRIEND, &messenger::OnBnClickedBtnAddFriend)
+//	ON_BN_CLICKED(IDC_BTN_ADD_FRIEND, &messenger::OnBnClickedBtnAddFriend)
 	ON_BN_CLICKED(IDC_ICON, &messenger::OnBnClickedIcon)
 	ON_BN_CLICKED(IDC_BTN_SEND_FILE, &messenger::OnBnClickedBtnSendFile)
 	ON_EN_CHANGE(IDC_MESS_CONTENT, &messenger::OnEnChangeMessContent)
@@ -337,19 +337,26 @@ void messenger::ShowFriends()
 	CString strItem = _T("");
 	imgList.DeleteImageList();
 	imgList.Create(32, 32, ILC_COLOR32, 0, 0);
-	if (list_friends.GetItemCount() != friends.size()) {
+	if (list_friends.GetItemCount() != friends.size()-1) {
 		list_friends.DeleteAllItems();
 	}
+	int buf = 0;
 	for (int i = 0; i < friends.size(); ++i) {
-		if (!targetIsGroup && (friends[i] == target || target.length() == 0)) {
-			imgList.Add(AfxGetApp()->LoadIconW(IDI_USER_CHATTING));
+		if (friends[i].c_str() != username) {
+			//if (!targetIsGroup && (friends[i] == target || target.length() == 0)) {
+			//	imgList.Add(AfxGetApp()->LoadIconW(IDI_USER_CHATTING));
+			//}
+			//else {
+			//	imgList.Add(AfxGetApp()->LoadIconW(IDI_USER_ONL));
+			//}
+			imgList.Add(AfxGetApp()->LoadIconW(IDI_USER_ONL));
+			strItem.Format(friends[i].c_str(), i);
+			if (list_friends.GetItemCount() != friends.size()-1) {
+				list_friends.InsertItem(i-buf, strItem, i-buf);
+			}
 		}
 		else {
-			imgList.Add(AfxGetApp()->LoadIconW(IDI_USER_ONL));
-		}
-		strItem.Format(friends[i].c_str(), i);
-		if (list_friends.GetItemCount() != friends.size()) {
-			list_friends.InsertItem(i, strItem, i);
+			buf++;
 		}
 	}
 	list_friends.SetImageList(&imgList, LVSIL_NORMAL);
@@ -666,7 +673,7 @@ void messenger::OnBnClickedBtnSend()
 			for (int i = 0, end = line_size + i; i < contents[j].size();) {
 				if (end > contents[j].size()) {
 					std::wstring mess = contents[j].substr(i, contents[j].size() - end);
-					mess = (j == 0 && i == 0 ? _T("Me: ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
+					mess = (j == 0 && i == 0 ? _T("Me : ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
 					list_mess.InsertItem(count++, mess.c_str());
 					break;
 				}
@@ -681,7 +688,7 @@ void messenger::OnBnClickedBtnSend()
 				std::wstring mess = tmp.substr(0, end_s);
 
 
-				mess = (j == 0 && i == 0 ? _T("Me: ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
+				mess = (j == 0 && i == 0 ? _T("Me : ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
 				string str_mess = StringHelper::utf8_encode(mess);
 				mListChat[current_hash]->list_mess.push_back(str_mess);
 
@@ -692,10 +699,10 @@ void messenger::OnBnClickedBtnSend()
 		}
 	}
 	else {
-		list_mess.InsertItem(count++, _T("Me: 🖤"));
-		string str_mess = StringHelper::utf8_encode(_T("Me: 🖤"));
+		list_mess.InsertItem(count++, _T("Me : 🖤"));
+		string str_mess = StringHelper::utf8_encode(_T("Me : 🖤"));
 		mListChat[current_hash]->list_mess.push_back(str_mess);
-		wstring tim = _T(" 🖤");
+		wstring tim = _T("🖤");
 		s_content = StringHelper::utf8_encode(tim);
 		if (mListChat[current_hash]->_is_group_msg == true) {
 			this->mClientService->SendGroupMessage(current_hash, s_content);
@@ -714,41 +721,41 @@ void messenger::OnBnClickedBtnSend()
 
 
 // Add friends,
-void messenger::OnBnClickedBtnAddFriend()
-{
-
-	// TODO: Add your control notification handler code here
-	AddFriendDlg addFriend(accMa, account);
-	INT_PTR nRet = -1;
-	nRet = addFriend.DoModal();
-
-	CString res = addFriend.GetMessageValue(); //message between two dlg ~ name of conversation
-
-	// Handle the return value from DoModal
-	switch (nRet)
-	{
-	case -1:
-		AfxMessageBox(_T("Dialog box could not be created!"));
-		break;
-	case IDABORT:
-		// Do something
-		break;
-	case IDOK:
-		//AfxMessageBox(res);
-
-		//friends = accMa->GetFriends(*account);
-		//StartChat(friends[friends.size() - 1], false);
-		break;
-	case IDCANCEL:
-		// Do something
-		break;
-	default:
-		// Do something
-		break;
-	};
-	mess_content.SetFocus();
-	mess_content.SetSel(-1);
-}
+//void messenger::OnBnClickedBtnAddFriend()
+//{
+//
+//	// TODO: Add your control notification handler code here
+//	AddFriendDlg addFriend(accMa, account);
+//	INT_PTR nRet = -1;
+//	nRet = addFriend.DoModal();
+//
+//	CString res = addFriend.GetMessageValue(); //message between two dlg ~ name of conversation
+//
+//	// Handle the return value from DoModal
+//	switch (nRet)
+//	{
+//	case -1:
+//		AfxMessageBox(_T("Dialog box could not be created!"));
+//		break;
+//	case IDABORT:
+//		// Do something
+//		break;
+//	case IDOK:
+//		//AfxMessageBox(res);
+//
+//		//friends = accMa->GetFriends(*account);
+//		//StartChat(friends[friends.size() - 1], false);
+//		break;
+//	case IDCANCEL:
+//		// Do something
+//		break;
+//	default:
+//		// Do something
+//		break;
+//	};
+//	mess_content.SetFocus();
+//	mess_content.SetSel(-1);
+//}
 
 void messenger::OnBnClickedIcon()
 {
@@ -809,7 +816,7 @@ void messenger::OnBnClickedBtnSendFile()
 
 	mClientService->InitTransferFile(current_hash,7680, str_path.m_psz, string(str_file_name.m_psz));
 
-	list_mess.InsertItem(count++, _T("Me: ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
+	list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 }
@@ -920,123 +927,29 @@ void messenger::OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 			friends_name.push_back(tmp);
 		}
 	}
-	
-	
-	std::vector<string> list_member_chat = StringHelper::VectorWideStringToString(friends_name);
-	
-	// TODO: Add your control notification handler code here
-	AddFriendDlg addFriend(accMa, account);
-	INT_PTR nRet = -1;
-	nRet = addFriend.DoModal();
 
-	CString name_of_conversation = addFriend.GetMessageValue(); //message between two dlg ~ name of conversation
-	string str_name_of_conversation;
-	CT2A ascii(name_of_conversation);
-	str_name_of_conversation = string(ascii.m_psz);
+	if (friends_name.size()) {
 
-	// Handle the return value from DoModal
-	switch (nRet)
-	{
-	case -1:
-		AfxMessageBox(_T("Dialog box could not be created!"));
-		break;
-	case IDABORT:
-		// Do something
-		break;
-	case IDOK:
-	{
-		if (list_member_chat.size() == 1) {
-			this->mClientService->CreatePrivateConversation(list_member_chat[0], str_name_of_conversation);
-		}
-		else {
-			bool check_existed_user = false;
-			for (string user : list_member_chat) {
-				if (this->mClientService->username == user) {
-					check_existed_user = true;
-					break;
-				}
-			}
-			if (check_existed_user == false) {
-				list_member_chat.insert(list_member_chat.begin(), this->mClientService->username); 
-			}
-			this->mClientService->CreateGroupConversation(list_member_chat, str_name_of_conversation);
-		}
-	}
-	//friends = accMa->GetFriends(*account);
-	//StartChat(friends[friends.size() - 1], false);
-	break;
-	case IDCANCEL:
-		// Do something
-		break;
-	default:
-		// Do something
-		break;
-	};
 
-	return;
+		std::vector<string> list_member_chat = StringHelper::VectorWideStringToString(friends_name);
 
-	ChooseFriend chooseFriend;
-	std::wstring mess;
+		// TODO: Add your control notification handler code here
+		//AddFriendDlg addFriend(accMa, account);
+		INT_PTR nRet = -1;
+		//nRet = addFriend.DoModal();
 
-LOOP:
-	mess.clear();
-	for (auto x : friends_name) {
-		mess += L"\"" + x + L"\"" + L", ";
-	}
-	mess.erase(mess.end() - 2, mess.end());
+		CreateGroupDlg createGroupDlg(wstring(username), friends_name, friends);
+		nRet = createGroupDlg.DoModal();
 
-	ConfirmDlg confirmDlg;
-	INT_PTR nRet1, nRet2;
-	nRet1 = -1;
-	nRet2 = -1;
-	nRet1 = chooseFriend.DoModal();
-	// Handle the return value from DoModal
-	switch (nRet1)
-	{
-	case -1:
-		AfxMessageBox(_T("Dialog box could not be created!"));
-		break;
-	case ID_BTN_START_CHAT:
-		if (selected.size() == 1) {
-			StartChat(friends_name[0]);
-		}
-		else {
-			CreateGroupDlg createGroupDlg(accMa, account, friends_name);
-			INT_PTR nRet = -1;
-			nRet = createGroupDlg.DoModal();
+		CString name_of_conversation = createGroupDlg.GetGroupName(); //message between two dlg ~ name of conversation
+		string str_name_of_conversation;
+		CT2A ascii(name_of_conversation);
+		str_name_of_conversation = string(ascii.m_psz);
+		list_member_chat = StringHelper::VectorWideStringToString(createGroupDlg.GetMembers());
 
-			// Handle the return value from DoModal
-			switch (nRet)
-			{
-			case -1:
-				AfxMessageBox(_T("Dialog box could not be created!"));
-				break;
-			case IDABORT:
-				// Do something
-				break;
-			case IDOK:
-				groups = accMa->GetGroups(*account);
-				StartChat(groups[groups.size() - 1].name, true);
-				break;
-			case IDCANCEL:
-				// Do something
-				break;
-			default:
-				// Do something
-				break;
-			};
-
-			mess_content.SetFocus();
-			mess_content.SetSel(-1);
-		}
-		break;
-	case ID_BTN_UNFRIEND:
-		mess = L"After this action, (" + mess + L") will not be your friends anymore!\r\n\r\nAre you sure?";
-		confirmDlg.SetMess(mess);
-		nRet2 = confirmDlg.DoModal();
 
 		// Handle the return value from DoModal
-		switch (nRet2)
+		switch (nRet)
 		{
 		case -1:
 			AfxMessageBox(_T("Dialog box could not be created!"));
@@ -1045,32 +958,34 @@ LOOP:
 			// Do something
 			break;
 		case IDOK:
-			accMa->RemoveFriends(*account, friends_name);
-			friends = accMa->GetFriends(*account);
-			if (includeTarget) {
-				if (friends.size() > 0) {
-					target = friends[0];
-				}
-				else {
-					target = L"";
-				}
-				ShowMessages();
+		{
+			if (list_member_chat.size() == 1) {
+				this->mClientService->CreatePrivateConversation(list_member_chat[0], str_name_of_conversation);
 			}
-			ShowFriends();
-			break;
+			else {
+				bool check_existed_user = false;
+				for (string user : list_member_chat) {
+					if (this->mClientService->username == user) {
+						check_existed_user = true;
+						break;
+					}
+				}
+				if (check_existed_user == false) {
+					list_member_chat.insert(list_member_chat.begin(), this->mClientService->username);
+				}
+				this->mClientService->CreateGroupConversation(list_member_chat, str_name_of_conversation);
+			}
+		}
+		break;
 		case IDCANCEL:
 			// Do something
-			goto LOOP;
 			break;
 		default:
 			// Do something
 			break;
-		}
-		break;
-	default:
-		// Do something
-		break;
-	};
+		};
+	}
+
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 	*pResult = 0;
@@ -1083,10 +998,14 @@ void messenger::OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	int nSelected = pNMItemActivate->iItem;
 	CString strItem = list_friends.GetItemText(nSelected, 0);
-	CT2A strName(strItem);
-	string des = strName.m_psz;
-	
-	this->mClientService->CreatePrivateConversation(string(strName.m_psz), string(strName.m_psz));
+	if (strItem.GetLength()) {
+
+		CT2A strName(strItem);
+		string des = strName.m_psz;
+
+		this->mClientService->CreatePrivateConversation(string(strName.m_psz), string(strName.m_psz));
+
+	}
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 	
@@ -1118,25 +1037,27 @@ void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: Add your control notification handler code here
 	int nSelected = pNMItemActivate->iItem;
-
+	CString selected = list_groups.GetItemText(nSelected, 0);
 	
 	// 4 3 2 1 
 	// 3 2 1 0 (n-i-1) i = 0 n= 4 => 3
 	// i = 1 => rever = 2 
 	//
 	//int reverse_idx_counter = mListChat.size() - nSelected - 1;
-	for (std::pair<std::string, ClientConversation*> element : mListChat)
-	{
-		if (nSelected-- == 0) {
-			current_hash = element.second->hash_id;
-			element.second->pending_msg = 0;//read
-			break;
+	if (selected.GetLength()) {
+		for (std::pair<std::string, ClientConversation*> element : mListChat)
+		{
+			if (nSelected-- == 0) {
+				current_hash = element.second->hash_id;
+				element.second->pending_msg = 0;//read
+				break;
+			}
+			//std::cout << element.first << " :: " << element.second << std::endl;
 		}
-		//std::cout << element.first << " :: " << element.second << std::endl;
+
+		ShowMessages();
+		ShowGroups();
 	}
-	
-	ShowMessages();
-	ShowGroups();
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 	/*
@@ -1153,6 +1074,7 @@ void messenger::OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: Add your control notification handler code here
+	int nSelected = pNMItemActivate->iItem;
 	std::vector<CString> selected = GetSelectedItemText(&list_groups);
 	std::vector<std::wstring> groups_name;
 	bool includeTarget = false;
@@ -1165,34 +1087,44 @@ void messenger::OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 			groups_name.push_back(tmp);
 		}
 	}
+	if (groups_name.size()) {
 
-	ChooseGroup chooseGroup(accMa, account, groups_name);
+		ChooseGroup chooseGroup(accMa, account, groups_name);
 
-	//ChooseFriend chooseFriend;
-LOOP2:
-	INT_PTR nRet = -1;
-	nRet = chooseGroup.DoModal();
-	// Handle the return value from DoModal
-	switch (nRet)
-	{
-	case -1:
-		AfxMessageBox(_T("Dialog box could not be created!"));
-		break;
-	case ID_BTN_OUT_GROUP:
-		groups = accMa->GetGroups(*account);
-		ShowGroups();
-		break;
-	case ID_BTN_START_CHAT_GROUP:
-		StartChat(groups_name[0], true);
-		break;
-	case ID_BTN_MODIFY_GROUP:
-		groups = accMa->GetGroups(*account);
-		ShowGroups();
-	default:
-		// Do something
-		break;
-	};
+		//ChooseFriend chooseFriend;
+		INT_PTR nRet = -1;
+		nRet = chooseGroup.DoModal();
+		// Handle the return value from DoModal
+		switch (nRet)
+		{
+		case -1:
+			AfxMessageBox(_T("Dialog box could not be created!"));
+			break;
+		case ID_BTN_OUT_GROUP:
+			groups = accMa->GetGroups(*account);
+			ShowGroups();
+			break;
+		case ID_BTN_START_CHAT_GROUP:
+			for (std::pair<std::string, ClientConversation*> element : mListChat)
+			{
+				if (nSelected-- == 0) {
+					current_hash = element.second->hash_id;
+					element.second->pending_msg = 0;//read
+					break;
+				}
+			}
 
+			ShowMessages();
+			ShowGroups();
+			break;
+		case ID_BTN_MODIFY_GROUP:
+			groups = accMa->GetGroups(*account);
+			ShowGroups();
+		default:
+			// Do something
+			break;
+		};
+	}
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
 	*pResult = 0;
@@ -1217,10 +1149,17 @@ void messenger::OnBnClickedBtnNotification()
 void messenger::OnBnClickedBtnAddGroup()
 {
 	// TODO: Add your control notification handler code here
-	CreateGroupDlg createGroupDlg(accMa, account);
+	CreateGroupDlg createGroupDlg(wstring(username), vector<wstring>(), friends);
 
 	INT_PTR nRet = -1;
 	nRet = createGroupDlg.DoModal();
+
+	CString name_of_conversation = createGroupDlg.GetGroupName(); //message between two dlg ~ name of conversation
+	string str_name_of_conversation;
+	CT2A ascii(name_of_conversation);
+	str_name_of_conversation = string(ascii.m_psz);
+	vector<string> list_member_chat = StringHelper::VectorWideStringToString(createGroupDlg.GetMembers());
+
 
 	// Handle the return value from DoModal
 	switch (nRet)
@@ -1232,9 +1171,25 @@ void messenger::OnBnClickedBtnAddGroup()
 		// Do something
 		break;
 	case IDOK:
-		groups = accMa->GetGroups(*account);
-		StartChat(groups[groups.size() - 1].name, true);
-		break;
+	{
+		if (list_member_chat.size() == 1) {
+			this->mClientService->CreatePrivateConversation(list_member_chat[0], str_name_of_conversation);
+		}
+		else {
+			bool check_existed_user = false;
+			for (string user : list_member_chat) {
+				if (this->mClientService->username == user) {
+					check_existed_user = true;
+					break;
+				}
+			}
+			if (check_existed_user == false) {
+				list_member_chat.insert(list_member_chat.begin(), this->mClientService->username);
+			}
+			this->mClientService->CreateGroupConversation(list_member_chat, str_name_of_conversation);
+		}
+	}
+	break;
 	case IDCANCEL:
 		// Do something
 		break;

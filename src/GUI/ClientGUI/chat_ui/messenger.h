@@ -90,7 +90,7 @@ public:
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedBtnSend();
 	CListCtrl list_mess;
-	afx_msg void OnBnClickedBtnAddFriend();
+//	afx_msg void OnBnClickedBtnAddFriend();
 	int count = 0;
 	afx_msg void OnBnClickedIcon();
 	afx_msg void OnBnClickedBtnSendFile();

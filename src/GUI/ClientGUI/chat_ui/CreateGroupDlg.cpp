@@ -26,6 +26,15 @@ CreateGroupDlg::CreateGroupDlg(AccountManagement* accMa, Account* account, std::
 	this->members.insert(this->members.begin(), account->GetUsername());
 	groups = accMa->GetGroups(*account);
 	friends = accMa->GetFriends(*account);
+	for (size_t i = 0; i < friends.size(); ++i) {
+		for (size_t j = 0; j < members.size(); ++j) {
+			if (friends[i] == members[j]) {
+				friends.erase(friends.begin() + i);
+				--i;
+				break;
+			}
+		}
+	}
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
@@ -63,75 +72,82 @@ CreateGroupDlg::CreateGroupDlg(AccountManagement* accMa, Account* account, std::
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
+CreateGroupDlg::CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends)
+	: CDialog(IDD_CreateGroupDlg, nullptr)
+	, username(username)
+	, members(members)
+	, friends(friends)
+{
+	this->members.insert(this->members.begin(), username);
+	for (size_t i = 0; i < this->friends.size(); ++i) {
+		for (size_t j = 0; j < this->members.size(); ++j) {
+			if (this->friends[i] == this->members[j]) {
+				this->friends.erase(this->friends.begin() + i);
+				--i;
+				break;
+			}
+		}
+	}
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
+}
+
 CreateGroupDlg::~CreateGroupDlg()
 {
+}
+
+void CreateGroupDlg::SetBtnIcon(int btnId, int iconId, int size) {
+	CButton* pBtn = (CButton*)GetDlgItem(btnId);
+	pBtn->ModifyStyle(0, BS_ICON);
+	HICON hIcn = (HICON)LoadImage(
+		AfxGetApp()->m_hInstance,
+		MAKEINTRESOURCE(iconId),
+		IMAGE_ICON,
+		size, size, // use actual size
+		LR_DEFAULTCOLOR
+	);
+
+	pBtn->SetIcon(hIcn);
 }
 
 void CreateGroupDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_ARROW, arrow);
 	DDX_Control(pDX, IDC_LIST_MEMBERS, list_members);
 	DDX_Control(pDX, IDC_LIST_FRIENDS, list_friends);
 	DDX_Control(pDX, IDC_GROUP_NAME, groupname);
 
-	SetArrowFont();
-
 	list_friends.InsertColumn(0, _T(""), LVCFMT_LEFT, 200);
 	list_members.InsertColumn(0, _T(""), LVCFMT_LEFT, 200);
 
-	SetSwitchBox();
+	// Set btn icon
+
+	SetBtnIcon(IDC_BTN_SWAP, IDI_SWAP, 16);
+	SetBtnIcon(IDC_BTN_LEFT, IDI_LEFT, 16);
+	SetBtnIcon(IDC_BTN_RIGHT, IDI_RIGHT, 16);
+
 	if (group.name.size()) {
 		groupname.SetWindowTextW(group.name.c_str());
 		groupname.SetSel(-1);
 		GetDlgItem(IDC_BTN_CREATE_GROUP)->SetWindowTextW(TEXT("Modify"));
 	}
-}
-
-void CreateGroupDlg::SetArrowFont() {
-	CFont font;
-	font.CreateFont(
-		80,                        // nHeight
-		100,                         // nWidth
-		0,                         // nEscapement
-		0,                         // nOrientation
-		FW_EXTRABOLD,                   // nWeight
-		FALSE,                     // bItalic
-		FALSE,                     // bUnderline
-		0,                         // cStrikeOut
-		ARABIC_CHARSET,              // nCharSet
-		OUT_DEFAULT_PRECIS,        // nOutPrecision
-		CLIP_DEFAULT_PRECIS,       // nClipPrecision
-		DEFAULT_QUALITY,           // nQuality
-		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
-		_T("Arial"));              // lpszFacename
-	arrow.SetFont(&font);
-	arrow.SetWindowTextW(TEXT("⇆"));
+	SetSwitchBox();
 }
 
 void CreateGroupDlg::SetSwitchBox()
 {
 	// Set members
 	CString strItem = _T("");
-	if (list_members.GetItemCount() != members.size()) {
-		list_members.DeleteAllItems();
-	}
+	list_members.DeleteAllItems();
 	for (size_t i = 0; i < members.size(); ++i) {
 		strItem.Format(members[i].c_str(), i);
-		if (list_members.GetItemCount() != members.size()) {
-			list_members.InsertItem(i, strItem, i);
-		}
+		list_members.InsertItem(i, strItem, i);
 	}
 
 	// Set friends
-	if (list_friends.GetItemCount() != friends.size()) {
-		list_friends.DeleteAllItems();
-	}
+	list_friends.DeleteAllItems();
 	for (size_t i = 0; i < friends.size(); ++i) {
 		strItem.Format(friends[i].c_str(), i);
-		if (list_friends.GetItemCount() != friends.size()) {
-			list_friends.InsertItem(i, strItem, i);
-		}
+		list_friends.InsertItem(i, strItem, i);
 	}
 
 	// Focus to group name
@@ -142,10 +158,17 @@ void CreateGroupDlg::SetSwitchBox()
 
 BEGIN_MESSAGE_MAP(CreateGroupDlg, CDialog)
 	ON_WM_PAINT()
-	ON_NOTIFY(NM_DBLCLK, IDC_LIST_FRIENDS, &CreateGroupDlg::OnNMDblclkListFriends)
-	ON_NOTIFY(NM_DBLCLK, IDC_LIST_MEMBERS, &CreateGroupDlg::OnNMDblclkListMembers)
+	//	ON_NOTIFY(NM_DBLCLK, IDC_LIST_FRIENDS, &CreateGroupDlg::OnNMDblclkListFriends)
+	//	ON_NOTIFY(NM_DBLCLK, IDC_LIST_MEMBERS, &CreateGroupDlg::OnNMDblclkListMembers)
 	ON_EN_UPDATE(IDC_GROUP_NAME, &CreateGroupDlg::OnEnUpdateGroupName)
 	ON_BN_CLICKED(IDC_BTN_CREATE_GROUP, &CreateGroupDlg::OnBnClickedBtnCreateGroup)
+	ON_NOTIFY(NM_SETFOCUS, IDC_LIST_FRIENDS, &CreateGroupDlg::OnNMSetfocusListFriends)
+	ON_NOTIFY(NM_CLICK, IDC_LIST_MEMBERS, &CreateGroupDlg::OnNMClickListMembers)
+	ON_NOTIFY(NM_CLICK, IDC_LIST_FRIENDS, &CreateGroupDlg::OnNMClickListFriends)
+	ON_NOTIFY(NM_SETFOCUS, IDC_LIST_MEMBERS, &CreateGroupDlg::OnNMSetfocusListMembers)
+	ON_BN_CLICKED(IDC_BTN_SWAP, &CreateGroupDlg::OnBnClickedBtnSwap)
+	ON_BN_CLICKED(IDC_BTN_LEFT, &CreateGroupDlg::OnBnClickedBtnLeft)
+	ON_BN_CLICKED(IDC_BTN_RIGHT, &CreateGroupDlg::OnBnClickedBtnRight)
 END_MESSAGE_MAP()
 
 
@@ -194,34 +217,22 @@ void CreateGroupDlg::OnPaint()
 // CreateGroupDlg message handlers
 
 
-void CreateGroupDlg::OnNMDblclkListFriends(NMHDR* pNMHDR, LRESULT* pResult)
-{
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: Add your control notification handler code here
-	int nSelected = pNMItemActivate->iItem;
-	CString strItem = list_friends.GetItemText(nSelected, 0);
-	if (strItem.GetLength()) {
-		members.emplace_back(strItem);
-		friends.erase(friends.begin() + nSelected);
-		SetSwitchBox();
-	}
-	*pResult = 0;
-}
+//void CreateGroupDlg::OnNMDblclkListFriends(NMHDR* pNMHDR, LRESULT* pResult)
+//{
+//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+//	// TODO: Add your control notification handler code here
+//
+//	*pResult = 0;
+//}
 
 
-void CreateGroupDlg::OnNMDblclkListMembers(NMHDR* pNMHDR, LRESULT* pResult)
-{
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: Add your control notification handler code here
-	int nSelected = pNMItemActivate->iItem;
-	CString strItem = list_members.GetItemText(nSelected, 0);
-	if (strItem.GetLength() && strItem != account->GetUsername().c_str()) {
-		friends.emplace_back(strItem);
-		members.erase(members.begin() + nSelected);
-		SetSwitchBox();
-	}
-	*pResult = 0;
-}
+//void CreateGroupDlg::OnNMDblclkListMembers(NMHDR* pNMHDR, LRESULT* pResult)
+//{
+//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+//	// TODO: Add your control notification handler code here
+//
+//	*pResult = 0;
+//}
 
 bool isIn(std::wstring item, std::vector<Group> list) {
 	for (auto x : list) {
@@ -259,29 +270,139 @@ void CreateGroupDlg::OnBnClickedBtnCreateGroup()
 	GetDlgItemText(IDC_GROUP_NAME, _groupname);
 	std::wstring name(_groupname);
 
-	if (isIn(name, groups)) {
-		MessageBox(_T("Group name already exist!"), _T("Alert"), MB_ICONERROR);
-	}
-	else if (_groupname.GetLength() < 1) {
+	if (_groupname.GetLength() < 1) {
 		MessageBox(_T("Group name must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
 	else if (members.size() < 2) {
-		MessageBox(_T("Group must have at least two members, please add more by double click friend name on friends box!"), _T("Alert"), MB_ICONWARNING);
+		MessageBox(_T("Group must have at least two members, please add more by click friend name on Friends box!"), _T("Alert"), MB_ICONWARNING);
 	}
 	else {
-		CString _mess;
-		if (group.name.size()) {
-			members.insert(members.begin(), name);
-			accMa->UpdateGroup(*account, group.name, Group(members));
-			_mess = _T("Group '") + _groupname + _T("' modify successfully!");
-		}
-		else {
-			accMa->CreateGroup(*account, name, members);
-			_mess = _T("Group '") + _groupname + _T("' create successfully!");
-		}
-		MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
-		CDialog::OnOK();
+		this->_groupname = _groupname;
+		OnOK();
 	}
+
+	//if (isIn(name, groups)) {
+	//	MessageBox(_T("Group name already exist, you're already in this group!"), _T("Alert"), MB_ICONERROR);
+	//}
+	//else if (_groupname.GetLength() < 1) {
+	//	MessageBox(_T("Group name must not be empty!"), _T("Alert"), MB_ICONERROR);
+	//}
+	//else if (members.size() < 2) {
+	//	MessageBox(_T("Group must have at least two members, please add more by click friend name on Friends box!"), _T("Alert"), MB_ICONWARNING);
+	//}
+	//else {
+	//	CString _mess;
+	//	if (group.name.size()) {
+	//		members.insert(members.begin(), name);
+
+	//		if (accMa->UpdateGroup(*account, group.name, Group(members))) {
+	//			_mess = _T("Group '") + _groupname + _T("' modify successfully!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
+	//			CDialog::OnOK();
+	//		}
+	//		else {
+	//			_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONERROR);
+	//		}
+	//	}
+	//	else {
+	//		if (accMa->CreateGroup(*account, name, members)) {
+	//			_mess = _T("Group '") + _groupname + _T("' create successfully!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
+	//			CDialog::OnOK();
+	//		}
+	//		else {
+	//			_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONERROR);
+	//		}
+
+	//	}
+	//}
 	groupname.SetFocus();
 	groupname.SetSel(-1);
+}
+
+
+void CreateGroupDlg::OnNMSetfocusListFriends(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: Add your control notification handler code here
+	groupname.SetFocus();
+	groupname.SetSel(-1);
+	*pResult = 0;
+}
+
+
+void CreateGroupDlg::OnNMClickListMembers(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	int nSelected = pNMItemActivate->iItem;
+	CString strItem = list_members.GetItemText(nSelected, 0);
+	if (strItem.GetLength() && strItem != username.c_str()) {
+		friends.emplace_back(strItem);
+		members.erase(members.begin() + nSelected);
+		SetSwitchBox();
+	}
+	*pResult = 0;
+}
+
+
+void CreateGroupDlg::OnNMClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	int nSelected = pNMItemActivate->iItem;
+	CString strItem = list_friends.GetItemText(nSelected, 0);
+	if (strItem.GetLength()) {
+		members.emplace_back(strItem);
+		friends.erase(friends.begin() + nSelected);
+		SetSwitchBox();
+	}
+	*pResult = 0;
+}
+
+
+void CreateGroupDlg::OnNMSetfocusListMembers(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: Add your control notification handler code here
+	groupname.SetFocus();
+	groupname.SetSel(-1);
+	*pResult = 0;
+}
+
+
+
+void CreateGroupDlg::OnBnClickedBtnSwap()
+{
+	// TODO: Add your control notification handler code here
+	std::vector<std::wstring> temp = friends;
+	temp.insert(temp.begin(), members[0]);
+	members.erase(members.begin());
+	friends = members;
+	members = temp;
+	SetSwitchBox();
+}
+
+
+void CreateGroupDlg::OnBnClickedBtnLeft()
+{
+	// TODO: Add your control notification handler code here
+	for (auto x : friends) {
+		members.push_back(x);
+	}
+	friends.clear();
+	SetSwitchBox();
+}
+
+
+void CreateGroupDlg::OnBnClickedBtnRight()
+{
+	// TODO: Add your control notification handler code here
+	std::wstring username = members[0];
+	for (size_t i = 1; i < members.size(); ++i) {
+		friends.push_back(members[i]);
+	}
+	members.clear();
+	members.push_back(username);
+	SetSwitchBox();
 }
