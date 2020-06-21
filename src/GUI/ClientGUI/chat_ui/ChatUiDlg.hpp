@@ -46,10 +46,15 @@ public:
 	CString _username;
 	CEdit username;
 	CEdit password;
+	bool isInit = true;
 	afx_msg void OnBnClickedBtnLogin();
 	afx_msg void OnBnClickedBtnRegister();
 	afx_msg void OnEnUpdateUsername();
 	afx_msg void OnEnChangePassword();
+
+	void SetIsInit(bool val) {
+		isInit = val;
+	}
 
 	ClientBackgroundService* m_ClientService;
 };

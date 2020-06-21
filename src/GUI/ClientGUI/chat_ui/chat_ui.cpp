@@ -77,7 +77,8 @@ BOOL ChatUiApp::InitInstance()
 	dlg.m_ClientService = &m_ClientService;
 	m_pMainWnd = &dlg;
 	Logger::getInstance()->updateLogType(BOTH_LOG);
-	m_ClientService.InitClient();
+	bool isInit = m_ClientService.InitClient();
+	dlg.SetIsInit(isInit);
 	INT_PTR nResponse = dlg.DoModal();
 
 

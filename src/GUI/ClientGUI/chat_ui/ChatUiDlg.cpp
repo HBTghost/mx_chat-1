@@ -58,6 +58,10 @@ void ChatUiDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_PASSWORD, password);
 
+
+	if (!isInit) {
+		OnCancel();
+	}
 }
 
 BEGIN_MESSAGE_MAP(ChatUiDlg, CDialog)
