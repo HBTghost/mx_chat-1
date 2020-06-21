@@ -413,6 +413,39 @@
     <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-replace-64.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\user1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user2.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user3.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user4.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user5.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user6.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user7.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user8.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user9.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\user9p.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-user-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

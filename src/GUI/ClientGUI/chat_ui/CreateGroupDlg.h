@@ -12,7 +12,7 @@ public:
 	CreateGroupDlg(CWnd* pParent = nullptr);   // standard constructor
 	CreateGroupDlg(AccountManagement* accMa, Account* account, std::vector<std::wstring> members = {});
 	CreateGroupDlg(AccountManagement* accMa, Account* account, std::wstring group_name);
-	CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends);
+	CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends, std::vector<std::wstring> groups);
 	virtual ~CreateGroupDlg();
 
 	// Dialog Data
@@ -29,7 +29,7 @@ protected:
 public:
 	Account* account;
 	AccountManagement* accMa;
-	std::vector<Group> groups;
+	std::vector<std::wstring> groups;
 	std::wstring username;
 	std::vector<std::wstring> friends;
 	std::vector<std::wstring> members;

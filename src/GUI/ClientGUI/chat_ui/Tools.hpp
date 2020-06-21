@@ -20,6 +20,16 @@ public:
         PlaySound(TEXT("./res/uh-oh.wav"), NULL, SND_SYNC);
     }
 
+    bool isIn(CString _item, std::vector<std::string> list) {
+        std::string item = Tools().WstringToString(std::wstring(_item));
+        for (auto x : list) {
+            if (x == item) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     std::vector<std::wstring> split(std::wstring line, wchar_t ch = L',') {
         std::wstring temp;
         std::vector<std::wstring> parts;

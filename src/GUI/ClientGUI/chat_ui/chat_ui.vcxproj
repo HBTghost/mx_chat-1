@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -320,14 +320,31 @@
     <Image Include="res\icons8-denied-64.ico" />
     <Image Include="res\icons8-hamburger-64.ico" />
     <Image Include="res\icons8-heart-64.ico" />
+    <Image Include="res\icons8-image-file-64.ico" />
     <Image Include="res\icons8-in-love-64.ico" />
     <Image Include="res\icons8-light-64.ico" />
+    <Image Include="res\icons8-link-64.ico" />
     <Image Include="res\icons8-no-reminders-64.ico" />
     <Image Include="res\icons8-notification-64.ico" />
+    <Image Include="res\icons8-pdf-64.ico" />
     <Image Include="res\icons8-people-working-together-64.ico" />
     <Image Include="res\icons8-sent-64.ico" />
+    <Image Include="res\icons8-slr-camera-64.ico" />
     <Image Include="res\icons8-so-so-64.ico" />
     <Image Include="res\icons8-soccer-ball-64.ico" />
+    <Image Include="res\icons8-user-64.ico" />
+    <Image Include="res\icons8-video-file-64.ico" />
+    <Image Include="res\icons8-word-64.ico" />
+    <Image Include="res\user1.ico" />
+    <Image Include="res\user2.ico" />
+    <Image Include="res\user3.ico" />
+    <Image Include="res\user4.ico" />
+    <Image Include="res\user5.ico" />
+    <Image Include="res\user6.ico" />
+    <Image Include="res\user7.ico" />
+    <Image Include="res\user8.ico" />
+    <Image Include="res\user9.ico" />
+    <Image Include="res\user9p.ico" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

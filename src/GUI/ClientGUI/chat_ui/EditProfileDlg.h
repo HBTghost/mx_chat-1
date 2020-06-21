@@ -27,4 +27,5 @@ public:
 	afx_msg void OnBnClickedBtnEditPassword();
 	Account* account;
 	AccountManagement* accMa;
+	afx_msg void OnBnClickedBtnAbout();
 };

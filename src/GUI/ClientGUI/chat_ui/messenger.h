@@ -83,7 +83,7 @@ public:
 	Account* account;
 	std::vector<wstring> friends;
 	std::wstring target;
-	std::vector<Group> groups;
+	std::vector<string> groups;
 	CString username;
 	CListCtrl list_friends;
 	CEdit mess_content;
@@ -94,6 +94,7 @@ public:
 	int count = 0;
 	afx_msg void OnBnClickedIcon();
 	afx_msg void OnBnClickedBtnSendFile();
+	void SendFile(CString filetype = _T("All Files (*.*)|*.*||"));
 	afx_msg void OnEnChangeMessContent();
 	CRect mess_rect;
 	CRect list_mess_rect;
@@ -119,4 +120,10 @@ public:
 	CListBox m_ListFile;
 	afx_msg void OnLbnDblclkListFileTransfer();
 	afx_msg void OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedBtnLink();
+	afx_msg void OnBnClickedBtnCamera();
+	afx_msg void OnBnClickedBtnImage();
+	afx_msg void OnBnClickedBtnVideo();
+	afx_msg void OnBnClickedBtnPdf();
+	afx_msg void OnBnClickedBtnWord();
 };

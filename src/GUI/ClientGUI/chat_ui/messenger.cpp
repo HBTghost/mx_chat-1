@@ -51,13 +51,13 @@ messenger::messenger(std::wstring username)
 	accMa = new AccountManagement;
 	account = accMa->GetAccount(username).Clone();
 	friends = accMa->GetFriends(*account);
-	groups = accMa->GetGroups(*account);
+	//groups = accMa->GetGroups(*account);
 	if (friends.size()) {
 		target = friends[0];
 		targetIsGroup = false;
 	}
 	else if (groups.size()) {
-		target = groups[0].name;
+		//target = groups[0].name;
 		targetIsGroup = true;
 	}
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
@@ -132,6 +132,12 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_MESSAGE(IDC_FORM_CHAT_MSG_HANDLER, &messenger::OnFormMsgHandler)
 	ON_LBN_DBLCLK(IDC_LIST_FILE_TRANSFER, &messenger::OnLbnDblclkListFileTransfer)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_MESS, &messenger::OnNMClickListMess)
+	ON_BN_CLICKED(IDC_BTN_LINK, &messenger::OnBnClickedBtnLink)
+	ON_BN_CLICKED(IDC_BTN_CAMERA, &messenger::OnBnClickedBtnCamera)
+	ON_BN_CLICKED(IDC_BTN_IMAGE, &messenger::OnBnClickedBtnImage)
+	ON_BN_CLICKED(IDC_BTN_VIDEO, &messenger::OnBnClickedBtnVideo)
+	ON_BN_CLICKED(IDC_BTN_PDF, &messenger::OnBnClickedBtnPdf)
+	ON_BN_CLICKED(IDC_BTN_WORD, &messenger::OnBnClickedBtnWord)
 END_MESSAGE_MAP()
 
 
@@ -201,7 +207,6 @@ void messenger::OnPaint()
 
 LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 {
-
 	UINT command_msg = (UINT)wParam;
 	SDataPackage* model;
 	ClientConversation* tempConv;
@@ -370,30 +375,53 @@ void messenger::ShowGroups()
 	CString strItem = _T("");
 	imgList3.DeleteImageList();
 	imgList3.Create(34, 34, ILC_COLOR32, 0, 0);
-	list_groups.DeleteAllItems();
+	if (list_groups.GetItemCount() != mListChat.size()) {
+		list_groups.DeleteAllItems();
+	}
 	int i = 0;
+	groups.clear();
 	for (std::pair<std::string, ClientConversation*> element : mListChat)
 	{
+		groups.push_back(element.second->display_name);
 		int pending_msg = element.second->pending_msg;
-		if (target.length() && element.second->display_name == Tools().WstringToString(target)) {
-			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP_CHATTING));
-		}
-		else if (pending_msg == 0) {
-			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
-		//strItem.Format(element.second->display_name);
-		}
-		else {
-			if (pending_msg > 9) {
-				imgList3.Add(AfxGetApp()->LoadIconW(IDI_ICO_GROUP_9P));
-
+		bool isGroup = element.second->list_member.size() > 2;
+		if (isGroup) {
+			if (element.second->display_name == Tools().WstringToString(target)) {
+				imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP_CHATTING));
+			}
+			else if (pending_msg == 0) {
+				imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
 			}
 			else {
-				imgList3.Add(AfxGetApp()->LoadIconW(IDI_ICO_GROUP_1 + pending_msg - 1));
-
+				if (pending_msg > 9) {
+					imgList3.Add(AfxGetApp()->LoadIconW(IDI_ICO_GROUP_9P));
+				}
+				else {
+					imgList3.Add(AfxGetApp()->LoadIconW(IDI_ICO_GROUP_1 + pending_msg - 1));
+				}
 			}
 		}
-		strItem = CString(element.second->display_name.c_str());
-		list_groups.InsertItem(i, strItem, i);
+		else {
+			if (element.second->display_name == Tools().WstringToString(target)) {
+				imgList3.Add(AfxGetApp()->LoadIconW(IDI_USER_CHATTING));
+			}
+			else if (pending_msg == 0) {
+				imgList3.Add(AfxGetApp()->LoadIconW(IDI_USER));
+			}
+			else {
+				if (pending_msg > 9) {
+					imgList3.Add(AfxGetApp()->LoadIconW(IDI_USER_9P));
+				}
+				else {
+					imgList3.Add(AfxGetApp()->LoadIconW(IDI_USER_1 + pending_msg - 1));
+				}
+			}
+		}
+
+		if (list_groups.GetItemCount() != mListChat.size()) {
+			strItem = CString(element.second->display_name.c_str());
+			list_groups.InsertItem(i, strItem, i);
+		}
 		i++;
 		//std::cout << element.first << " :: " << element.second << std::endl;
 	}
@@ -426,13 +454,13 @@ void messenger::ShowGroupsClick()
 		list_groups.DeleteAllItems();
 	}
 	for (int i = 0; i < groups.size(); ++i) {
-		if (targetIsGroup && (groups[i].name == target || target.length() == 0)) {
-			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP_CHATTING));
-		}
-		else {
-			imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
-		}
-		strItem.Format(groups[i].name.c_str(), i);
+		//if (targetIsGroup && (groups[i].name == target || target.length() == 0)) {
+		//	imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP_CHATTING));
+		//}
+		//else {
+		//	imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP));
+		//}
+		//strItem.Format(groups[i].name.c_str(), i);
 		if (list_groups.GetItemCount() != groups.size()) {
 			list_groups.InsertItem(i, strItem, i);
 		}
@@ -588,6 +616,12 @@ void messenger::SetSendBtnIcon()
 	SetBtnIcon(IDC_BTN_SEND, IDI_LOVE, 22);
 	SetBtnIcon(IDC_BTN_SEND_ICON, IDI_SEND_EMOJI, 22);
 	SetBtnIcon(IDC_BTN_SEND_FILE, IDI_SEND_FILE, 22);
+	SetBtnIcon(IDC_BTN_PDF, IDI_PDF, 22);
+	SetBtnIcon(IDC_BTN_WORD, IDI_WORD, 22);
+	SetBtnIcon(IDC_BTN_IMAGE, IDI_IMAGE, 22);
+	SetBtnIcon(IDC_BTN_VIDEO, IDI_VIDEO, 22);
+	SetBtnIcon(IDC_BTN_CAMERA, IDI_CAMERA, 22);
+	SetBtnIcon(IDC_BTN_LINK, IDI_LINK, 22);
 }
 
 void messenger::SetAddFriendIcon()
@@ -600,7 +634,7 @@ void messenger::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
 	//SaveMessages();
-	CDialog::OnCancel();
+	CDialog::OnOK();
 
 }
 
@@ -788,37 +822,44 @@ void messenger::OnBnClickedIcon()
 	mess_content.SetSel(-1);
 }
 
-
-//send file
-void messenger::OnBnClickedBtnSendFile()
-{
+void messenger::SendFile(CString filetype) {
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
 	// TODO: Add your control notification handler code here
 	//AttachFile attachFile(true);
 	//attachFile.DoModal();
-	const TCHAR szFilter[] = _T("Txt Files (*.txt)|*.txt|All Files (*.*)|*.*||");
+	//const TCHAR szFilter[] = filetype;
 	CString sFilePath = _T("");
 	CString sFileName = _T("");
 	CString sFileExt = _T("");
 
-	CFileDialog dlg(TRUE, _T("txt"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, this);
+	CFileDialog dlg(TRUE, _T(""), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filetype, this);
 	if (dlg.DoModal() == IDOK)
 	{
 		sFilePath = dlg.GetPathName();
 		sFileName = dlg.GetFileName();
-		sFileExt = dlg.GetFileExt(); 
+		sFileExt = dlg.GetFileExt();
 		//m_FilePathEditBox.SetWindowText(sFilePath);
+		CT2A str_path(sFilePath);
+		CT2A str_file_name(sFileName);
+		CT2A str_file_ext(sFileExt);
+
+		m_ListFile.AddString(sFilePath);
+
+		mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
+
+		list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
 	}
-	CT2A str_path(sFilePath);
-	CT2A str_file_name(sFileName);
-	CT2A str_file_ext(sFileExt);
-
-	m_ListFile.AddString(sFilePath);
-
-	mClientService->InitTransferFile(current_hash,7680, str_path.m_psz, string(str_file_name.m_psz));
-
-	list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
+}
+
+//send file
+void messenger::OnBnClickedBtnSendFile()
+{
+	SendFile();
 }
 
 
@@ -839,7 +880,7 @@ void messenger::OnEnChangeMessContent()
 	CFont* pOldFont = dc.SelectObject(mess_content.GetFont());
 	CSize size = dc.GetTextExtent(mess);
 
-	int line = int(size.cx / 796);
+	int line = int(size.cx / 858);
 	line = line > 8 ? 8 : line;
 	listRect.top = listRect.top - 22 * line;
 	mess_content.MoveWindow(&listRect);
@@ -938,7 +979,7 @@ void messenger::OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 		INT_PTR nRet = -1;
 		//nRet = addFriend.DoModal();
 
-		CreateGroupDlg createGroupDlg(wstring(username), friends_name, friends);
+		CreateGroupDlg createGroupDlg(wstring(username), friends_name, friends, StringHelper::VectorStringToWideString(groups));
 		nRet = createGroupDlg.DoModal();
 
 		CString name_of_conversation = createGroupDlg.GetGroupName(); //message between two dlg ~ name of conversation
@@ -998,7 +1039,7 @@ void messenger::OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	int nSelected = pNMItemActivate->iItem;
 	CString strItem = list_friends.GetItemText(nSelected, 0);
-	if (strItem.GetLength()) {
+	if (strItem.GetLength() && !Tools().isIn(strItem, groups)) {
 
 		CT2A strName(strItem);
 		string des = strName.m_psz;
@@ -1023,6 +1064,10 @@ void messenger::OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 void messenger::OnBnClickedBtnSendIcon()
 {
 	// TODO: Add your control notification handler code here
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
 	CString name;
 	EmojiDlg emojiDlg(&mess_content, std::wstring(name));
 	emojiDlg.DoModal();
@@ -1101,7 +1146,7 @@ void messenger::OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 			AfxMessageBox(_T("Dialog box could not be created!"));
 			break;
 		case ID_BTN_OUT_GROUP:
-			groups = accMa->GetGroups(*account);
+			//groups = accMa->GetGroups(*account);
 			ShowGroups();
 			break;
 		case ID_BTN_START_CHAT_GROUP:
@@ -1118,7 +1163,7 @@ void messenger::OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 			ShowGroups();
 			break;
 		case ID_BTN_MODIFY_GROUP:
-			groups = accMa->GetGroups(*account);
+			//groups = accMa->GetGroups(*account);
 			ShowGroups();
 		default:
 			// Do something
@@ -1149,7 +1194,7 @@ void messenger::OnBnClickedBtnNotification()
 void messenger::OnBnClickedBtnAddGroup()
 {
 	// TODO: Add your control notification handler code here
-	CreateGroupDlg createGroupDlg(wstring(username), vector<wstring>(), friends);
+	CreateGroupDlg createGroupDlg(wstring(username), vector<wstring>(), friends, StringHelper::VectorStringToWideString(groups));
 
 	INT_PTR nRet = -1;
 	nRet = createGroupDlg.DoModal();
@@ -1261,4 +1306,68 @@ void messenger::OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult)
 		}
 	}
 	*pResult = 0;
+}
+
+
+void messenger::OnBnClickedBtnLink()
+{
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
+	// TODO: Add your control notification handler code here
+}
+
+
+void messenger::OnBnClickedBtnCamera()
+{
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
+	// TODO: Add your control notification handler code here
+}
+
+
+void messenger::OnBnClickedBtnImage()
+{
+	// TODO: Add your control notification handler code here
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
+	SendFile(_T("Image Files (*.png, *jpeg)|*.png|*jpeg|"));
+}
+
+
+void messenger::OnBnClickedBtnVideo()
+{
+	// TODO: Add your control notification handler code here
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
+	SendFile(_T("Video Files (*.mp4, *wav)|*.mp4|*wav|"));
+}
+
+
+void messenger::OnBnClickedBtnPdf()
+{
+	// TODO: Add your control notification handler code here
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
+	SendFile(_T("Pdf Files (*.pdf)|*.pdf|"));
+}
+
+
+void messenger::OnBnClickedBtnWord()
+{
+	// TODO: Add your control notification handler code here
+	if (current_hash == "") {
+		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		return;
+	}
+	SendFile(_T("Word Files (*.doc, *docs, *docx)|*.doc|*docs|*docx|"));
 }

@@ -4,6 +4,7 @@
 //
 #define IDC_BTN_ADD_FRIEND              3
 #define ID_BTN_EDIT_IP                  3
+#define ID_BTN_ABOUT                    3
 #define ID_BTN_EDIT_PASSWORD            4
 #define IDC_BTN_ADD_GROUP               4
 #define IDC_BTN_EDIT                    5
@@ -57,6 +58,24 @@
 #define IDI_RIGHT                       225
 #define IDI_ICON3                       226
 #define IDI_SWAP                        226
+#define IDI_USER_1                      227
+#define IDI_USER_2                      228
+#define IDI_USER_3                      229
+#define IDI_USER_4                      230
+#define IDI_USER_5                      231
+#define IDI_USER_6                      232
+#define IDI_USER_7                      233
+#define IDI_USER_8                      234
+#define IDI_USER_9                      235
+#define IDI_USER_9P                     236
+#define IDI_USER                        237
+#define IDI_IMAGE                       238
+#define IDI_LINK                        239
+#define IDI_PDF                         240
+#define IDI_CAMERA                      241
+#define IDI_VIDEO                       242
+#define IDI_ICON8                       243
+#define IDI_WORD                        243
 #define IDC_USERNAME                    1000
 #define IDC_PASSWORD                    1001
 #define IDC_BTN_LOGIN                   1002
@@ -77,15 +96,29 @@
 #define IDC_CUR_PASS                    1019
 #define IDC_BTN_SEND_FILE               1019
 #define IDC_PASS2                       1020
+#define IDC_BTN_SEND_ICON2              1020
+#define IDC_BTN_CAMERA                  1020
 #define IDC_PASS1                       1021
 #define IDC_LIST1                       1021
 #define IDC_LIST_EMOJI                  1021
 #define IDC_LIST_ICON                   1021
 #define IDC_LIST_FILE_TRANSFER          1021
+#define IDC_BTN_SEND_ICON3              1022
+#define IDC_BTN_LINK                    1022
+#define IDC_BTN_SEND_ICON4              1024
+#define IDC_BTN_SEND_ICON5              1025
+#define IDC_BTN_VIDEO                   1025
 #define ID_BTN_START_CHAT               1027
 #define ID_BTN_UNFRIEND                 1028
 #define IDC_CONFIRM_MESS                1029
 #define ID_BTN_MODIFY_GROUP             1029
+#define IDC_BTN_SEND_ICON6              1029
+#define IDC_BTN_PDF                     1029
+#define IDC_BTN_SEND_ICON7              1030
+#define IDC_BTN_WORD                    1030
+#define IDC_BTN_SEND_ICON8              1031
+#define IDC_BTN_SEND_ICON9              1033
+#define IDC_BTN_IMAGE                   1033
 #define IDC_GROUP_NAME                  1035
 #define IDC_LIST_MEMBERS                1038
 #define IDC_ARROW                       1040
@@ -114,7 +147,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        227
+#define _APS_NEXT_RESOURCE_VALUE        244
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           113
