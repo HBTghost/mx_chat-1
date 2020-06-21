@@ -71,11 +71,12 @@
 #define IDI_USER                        237
 #define IDI_IMAGE                       238
 #define IDI_LINK                        239
-#define IDI_PDF                         240
 #define IDI_CAMERA                      241
 #define IDI_VIDEO                       242
 #define IDI_ICON8                       243
-#define IDI_WORD                        243
+#define IDI_SOUND                       244
+#define IDI_ICON1                       245
+#define IDI_DOC                         245
 #define IDC_USERNAME                    1000
 #define IDC_PASSWORD                    1001
 #define IDC_BTN_LOGIN                   1002
@@ -114,8 +115,10 @@
 #define ID_BTN_MODIFY_GROUP             1029
 #define IDC_BTN_SEND_ICON6              1029
 #define IDC_BTN_PDF                     1029
+#define IDC_BTN_SOUND                   1029
 #define IDC_BTN_SEND_ICON7              1030
 #define IDC_BTN_WORD                    1030
+#define IDC_BTN_DOC                     1030
 #define IDC_BTN_SEND_ICON8              1031
 #define IDC_BTN_SEND_ICON9              1033
 #define IDC_BTN_IMAGE                   1033
@@ -147,7 +150,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        244
+#define _APS_NEXT_RESOURCE_VALUE        246
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           113

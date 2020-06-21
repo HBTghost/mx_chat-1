@@ -446,6 +446,30 @@
     <Image Include="res\icons8-user-64.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\icons8-image-file-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-link-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-pdf-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-slr-camera-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-video-file-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-word-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-musical-notes-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-document-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

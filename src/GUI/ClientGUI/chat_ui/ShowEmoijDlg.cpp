@@ -28,7 +28,7 @@ ShowEmoijDlg::ShowEmoijDlg(CEdit* mess, CString type, std::wstring username)
 	std::wstring fileName = username;
 	if (fileName != L"")
 	{
-		std::wstring path = L"./data/messages/" + fileName + L"/recentEmojis.dat";
+		std::wstring path = L"./data/messages/" + fileName + L".dat";
 		recent = Tools().ReadFile(path);
 	}
 }
@@ -49,7 +49,7 @@ ShowEmoijDlg::~ShowEmoijDlg()
 	std::wstring fileName = username;
 	if (fileName != L"")
 	{
-		std::wstring path = L"./data/messages/" + fileName + L"/recentEmojis.dat";
+		std::wstring path = L"./data/messages/" + fileName + L".dat";
 		HandleRecent();
 		Tools().WriteToFile(path, recent);
 	}
