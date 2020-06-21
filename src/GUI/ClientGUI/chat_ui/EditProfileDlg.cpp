@@ -6,6 +6,7 @@
 #include "EditProfileDlg.h"
 #include "afxdialogex.h"
 #include "EditPasswordDlg.h"
+#include "ConfirmDlg.h"
 
 
 // EditProfileDlg dialog
@@ -38,6 +39,7 @@ void EditProfileDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(EditProfileDlg, CDialog)
 	ON_WM_PAINT()
 	ON_BN_CLICKED(ID_BTN_EDIT_PASSWORD, &EditProfileDlg::OnBnClickedBtnEditPassword)
+	ON_BN_CLICKED(ID_BTN_ABOUT, &EditProfileDlg::OnBnClickedBtnAbout)
 END_MESSAGE_MAP()
 
 
@@ -91,4 +93,13 @@ void EditProfileDlg::OnBnClickedBtnEditPassword()
 	EditPasswordDlg editPass(accMa, account);
 	editPass.DoModal();
 	accMa->UpdateAccountPassword(*account);
+}
+
+
+void EditProfileDlg::OnBnClickedBtnAbout()
+{
+	// TODO: Add your control notification handler code here
+	ConfirmDlg confirm;
+	confirm.SetMess(L"Messenger: Version 1.0");
+	confirm.DoModal();
 }

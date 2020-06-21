@@ -106,6 +106,7 @@ void ChooseGroup::OnBnClickedBtnStartChatGroup()
 
 void ChooseGroup::OnBnClickedBtnOutGroup()
 {
+	return;
 	// TODO: Add your control notification handler code here
 	std::wstring mess;
 	mess.clear();
@@ -145,6 +146,7 @@ void ChooseGroup::OnBnClickedBtnOutGroup()
 void ChooseGroup::OnBnClickedBtnModifyGroup()
 {
 	// TODO: Add your control notification handler code here
+	return;
 	CreateGroupDlg createGroupDlg(accMa, account, groups_name[0]);
 	createGroupDlg.DoModal();
 	EndDialog(ID_BTN_MODIFY_GROUP);

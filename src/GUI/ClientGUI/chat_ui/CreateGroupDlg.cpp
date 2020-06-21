@@ -24,7 +24,7 @@ CreateGroupDlg::CreateGroupDlg(AccountManagement* accMa, Account* account, std::
 	, members(members)
 {
 	this->members.insert(this->members.begin(), account->GetUsername());
-	groups = accMa->GetGroups(*account);
+	//groups = accMa->GetGroups(*account);
 	friends = accMa->GetFriends(*account);
 	for (size_t i = 0; i < friends.size(); ++i) {
 		for (size_t j = 0; j < members.size(); ++j) {
@@ -44,9 +44,9 @@ CreateGroupDlg::CreateGroupDlg(AccountManagement* accMa, Account* account, std::
 	, account(account)
 {
 	friends = accMa->GetFriends(*account);
-	groups = accMa->GetGroups(*account);
+	//groups = accMa->GetGroups(*account);
 	for (size_t i = 0; i < groups.size(); ++i) {
-		if (groups[i].name == group_name) {
+		if (groups[i] == group_name) {
 			this->group = groups[i];
 			for (size_t i = 0; i < group.members.size(); ++i) {
 				if (group.members[i] == account->GetUsername()) {
@@ -72,11 +72,12 @@ CreateGroupDlg::CreateGroupDlg(AccountManagement* accMa, Account* account, std::
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
-CreateGroupDlg::CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends)
+CreateGroupDlg::CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends, std::vector<std::wstring> groups)
 	: CDialog(IDD_CreateGroupDlg, nullptr)
 	, username(username)
 	, members(members)
 	, friends(friends)
+	, groups(groups)
 {
 	this->members.insert(this->members.begin(), username);
 	for (size_t i = 0; i < this->friends.size(); ++i) {
@@ -234,9 +235,9 @@ void CreateGroupDlg::OnPaint()
 //	*pResult = 0;
 //}
 
-bool isIn(std::wstring item, std::vector<Group> list) {
+bool isIn(std::wstring item, std::vector<std::wstring> list) {
 	for (auto x : list) {
-		if (x.name == item) {
+		if (x == item) {
 			return true;
 		}
 	}
@@ -270,54 +271,31 @@ void CreateGroupDlg::OnBnClickedBtnCreateGroup()
 	GetDlgItemText(IDC_GROUP_NAME, _groupname);
 	std::wstring name(_groupname);
 
-	if (_groupname.GetLength() < 1) {
+	if (isIn(name, groups)) {
+		MessageBox(_T("Group conversation name already exist, you're already in this group!"), _T("Alert"), MB_ICONERROR);
+	}
+	else if (_groupname.GetLength() < 1) {
 		MessageBox(_T("Group name must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
 	else if (members.size() < 2) {
 		MessageBox(_T("Group must have at least two members, please add more by click friend name on Friends box!"), _T("Alert"), MB_ICONWARNING);
 	}
 	else {
-		this->_groupname = _groupname;
-		OnOK();
+		CString _mess;
+		if (group.name.size()) {
+			members.insert(members.begin(), name);
+				_mess = _T("Group '") + _groupname + _T("' modify successfully!");
+				MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
+				this->_groupname = _groupname;
+				OnOK();
+		}
+		else {
+				_mess = _T("Group '") + _groupname + _T("' create successfully!");
+				MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
+				this->_groupname = _groupname;
+				OnOK();
+		}
 	}
-
-	//if (isIn(name, groups)) {
-	//	MessageBox(_T("Group name already exist, you're already in this group!"), _T("Alert"), MB_ICONERROR);
-	//}
-	//else if (_groupname.GetLength() < 1) {
-	//	MessageBox(_T("Group name must not be empty!"), _T("Alert"), MB_ICONERROR);
-	//}
-	//else if (members.size() < 2) {
-	//	MessageBox(_T("Group must have at least two members, please add more by click friend name on Friends box!"), _T("Alert"), MB_ICONWARNING);
-	//}
-	//else {
-	//	CString _mess;
-	//	if (group.name.size()) {
-	//		members.insert(members.begin(), name);
-
-	//		if (accMa->UpdateGroup(*account, group.name, Group(members))) {
-	//			_mess = _T("Group '") + _groupname + _T("' modify successfully!");
-	//			MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
-	//			CDialog::OnOK();
-	//		}
-	//		else {
-	//			_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
-	//			MessageBox(_mess, _T("Alert"), MB_ICONERROR);
-	//		}
-	//	}
-	//	else {
-	//		if (accMa->CreateGroup(*account, name, members)) {
-	//			_mess = _T("Group '") + _groupname + _T("' create successfully!");
-	//			MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
-	//			CDialog::OnOK();
-	//		}
-	//		else {
-	//			_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
-	//			MessageBox(_mess, _T("Alert"), MB_ICONERROR);
-	//		}
-
-	//	}
-	//}
 	groupname.SetFocus();
 	groupname.SetSel(-1);
 }
