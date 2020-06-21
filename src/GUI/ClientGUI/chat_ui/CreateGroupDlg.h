@@ -12,6 +12,7 @@ public:
 	CreateGroupDlg(CWnd* pParent = nullptr);   // standard constructor
 	CreateGroupDlg(AccountManagement* accMa, Account* account, std::vector<std::wstring> members = {});
 	CreateGroupDlg(AccountManagement* accMa, Account* account, std::wstring group_name);
+	CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends);
 	virtual ~CreateGroupDlg();
 
 	// Dialog Data
@@ -29,6 +30,7 @@ public:
 	Account* account;
 	AccountManagement* accMa;
 	std::vector<Group> groups;
+	std::wstring username;
 	std::vector<std::wstring> friends;
 	std::vector<std::wstring> members;
 	CListCtrl list_members;
@@ -48,4 +50,7 @@ public:
 	afx_msg void OnBnClickedBtnSwap();
 	afx_msg void OnBnClickedBtnLeft();
 	afx_msg void OnBnClickedBtnRight();
+	CString _groupname;
+	CString GetGroupName() { return _groupname; }
+	std::vector<std::wstring> GetMembers() { return members; }
 };

@@ -240,6 +240,7 @@
     <None Include="ServerGUI.aps" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\ClientGUI\chat_ui\res\icons8-chat-64.ico" />
     <Image Include="res\ServerGUI.ico" />
   </ItemGroup>
   <ItemGroup>

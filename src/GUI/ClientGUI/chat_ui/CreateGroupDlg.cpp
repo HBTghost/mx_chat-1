@@ -72,6 +72,25 @@ CreateGroupDlg::CreateGroupDlg(AccountManagement* accMa, Account* account, std::
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
+CreateGroupDlg::CreateGroupDlg(std::wstring username, std::vector<std::wstring> members, std::vector<std::wstring> friends)
+	: CDialog(IDD_CreateGroupDlg, nullptr)
+	, username(username)
+	, members(members)
+	, friends(friends)
+{
+	this->members.insert(this->members.begin(), username);
+	for (size_t i = 0; i < this->friends.size(); ++i) {
+		for (size_t j = 0; j < this->members.size(); ++j) {
+			if (this->friends[i] == this->members[j]) {
+				this->friends.erase(this->friends.begin() + i);
+				--i;
+				break;
+			}
+		}
+	}
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
+}
+
 CreateGroupDlg::~CreateGroupDlg()
 {
 }
@@ -106,12 +125,12 @@ void CreateGroupDlg::DoDataExchange(CDataExchange* pDX)
 	SetBtnIcon(IDC_BTN_LEFT, IDI_LEFT, 16);
 	SetBtnIcon(IDC_BTN_RIGHT, IDI_RIGHT, 16);
 
-	SetSwitchBox();
 	if (group.name.size()) {
 		groupname.SetWindowTextW(group.name.c_str());
 		groupname.SetSel(-1);
 		GetDlgItem(IDC_BTN_CREATE_GROUP)->SetWindowTextW(TEXT("Modify"));
 	}
+	SetSwitchBox();
 }
 
 void CreateGroupDlg::SetSwitchBox()
@@ -251,43 +270,54 @@ void CreateGroupDlg::OnBnClickedBtnCreateGroup()
 	GetDlgItemText(IDC_GROUP_NAME, _groupname);
 	std::wstring name(_groupname);
 
-	if (isIn(name, groups)) {
-		MessageBox(_T("Group name already exist, you're already in this group!"), _T("Alert"), MB_ICONERROR);
-	}
-	else if (_groupname.GetLength() < 1) {
+	if (_groupname.GetLength() < 1) {
 		MessageBox(_T("Group name must not be empty!"), _T("Alert"), MB_ICONERROR);
 	}
 	else if (members.size() < 2) {
 		MessageBox(_T("Group must have at least two members, please add more by click friend name on Friends box!"), _T("Alert"), MB_ICONWARNING);
 	}
 	else {
-		CString _mess;
-		if (group.name.size()) {
-			members.insert(members.begin(), name);
-
-			if (accMa->UpdateGroup(*account, group.name, Group(members))) {
-				_mess = _T("Group '") + _groupname + _T("' modify successfully!");
-				MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
-				CDialog::OnOK();
-			}
-			else {
-				_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
-				MessageBox(_mess, _T("Alert"), MB_ICONERROR);
-			}
-		}
-		else {
-			if (accMa->CreateGroup(*account, name, members)) {
-				_mess = _T("Group '") + _groupname + _T("' create successfully!");
-				MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
-				CDialog::OnOK();
-			}
-			else {
-				_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
-				MessageBox(_mess, _T("Alert"), MB_ICONERROR);
-			}
-
-		}
+		this->_groupname = _groupname;
+		OnOK();
 	}
+
+	//if (isIn(name, groups)) {
+	//	MessageBox(_T("Group name already exist, you're already in this group!"), _T("Alert"), MB_ICONERROR);
+	//}
+	//else if (_groupname.GetLength() < 1) {
+	//	MessageBox(_T("Group name must not be empty!"), _T("Alert"), MB_ICONERROR);
+	//}
+	//else if (members.size() < 2) {
+	//	MessageBox(_T("Group must have at least two members, please add more by click friend name on Friends box!"), _T("Alert"), MB_ICONWARNING);
+	//}
+	//else {
+	//	CString _mess;
+	//	if (group.name.size()) {
+	//		members.insert(members.begin(), name);
+
+	//		if (accMa->UpdateGroup(*account, group.name, Group(members))) {
+	//			_mess = _T("Group '") + _groupname + _T("' modify successfully!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
+	//			CDialog::OnOK();
+	//		}
+	//		else {
+	//			_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONERROR);
+	//		}
+	//	}
+	//	else {
+	//		if (accMa->CreateGroup(*account, name, members)) {
+	//			_mess = _T("Group '") + _groupname + _T("' create successfully!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONINFORMATION);
+	//			CDialog::OnOK();
+	//		}
+	//		else {
+	//			_mess = _T("Group '") + _groupname + _T("' already exist! Please try other name!");
+	//			MessageBox(_mess, _T("Alert"), MB_ICONERROR);
+	//		}
+
+	//	}
+	//}
 	groupname.SetFocus();
 	groupname.SetSel(-1);
 }
@@ -308,7 +338,7 @@ void CreateGroupDlg::OnNMClickListMembers(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	int nSelected = pNMItemActivate->iItem;
 	CString strItem = list_members.GetItemText(nSelected, 0);
-	if (strItem.GetLength() && strItem != account->GetUsername().c_str()) {
+	if (strItem.GetLength() && strItem != username.c_str()) {
 		friends.emplace_back(strItem);
 		members.erase(members.begin() + nSelected);
 		SetSwitchBox();
