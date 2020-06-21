@@ -125,7 +125,7 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_NOTIFY(NM_RCLICK, IDC_LIST_FRIENDS, &messenger::OnRightClickListFriends)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_FRIENDS, &messenger::OnDoubleClickListFriends)
 	ON_BN_CLICKED(IDC_BTN_SEND_ICON, &messenger::OnBnClickedBtnSendIcon)
-	ON_NOTIFY(NM_DBLCLK, IDC_LIST_GROUPS, &messenger::OnDoubleClickListGroups)
+//	ON_NOTIFY(NM_DBLCLK, IDC_LIST_GROUPS, &messenger::OnDoubleClickListGroups)
 	ON_NOTIFY(NM_RCLICK, IDC_LIST_GROUPS, &messenger::OnRightClickListGroups)
 	ON_BN_CLICKED(IDC_BTN_NOTIFICATION, &messenger::OnBnClickedBtnNotification)
 	ON_BN_CLICKED(IDC_BTN_ADD_GROUP, &messenger::OnBnClickedBtnAddGroup)
@@ -138,6 +138,8 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_BN_CLICKED(IDC_BTN_VIDEO, &messenger::OnBnClickedBtnVideo)
 	ON_BN_CLICKED(IDC_BTN_SOUND, &messenger::OnBnClickedBtnSound)
 	ON_BN_CLICKED(IDC_BTN_DOC, &messenger::OnBnClickedBtnDoc)
+	ON_NOTIFY(NM_CLICK, IDC_LIST_GROUPS, &messenger::OnNMClickListGroups)
+//	ON_NOTIFY(NM_CLICK, IDC_LIST_FRIENDS, &messenger::OnNMClickListFriends)
 END_MESSAGE_MAP()
 
 
@@ -238,7 +240,10 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 				//copy()
 			}
 			mListChat.insert(pair<string, ClientConversation*>(hash_id, tempConv));
-		//	current_hash = hash_id;
+
+			current_hash = tempConv->hash_id;
+			target = Tools().StringToWstring(tempConv->display_name);
+			ShowMessages();
 			ShowGroups();
 
 			LOG_INFO("Handle set hash");
@@ -384,8 +389,7 @@ void messenger::ShowGroups()
 	{
 		groups.push_back(element.second->display_name);
 		int pending_msg = element.second->pending_msg;
-		bool isGroup = element.second->list_member.size() > 2;
-		if (isGroup) {
+		if (element.second->_is_group_msg == true) {
 			if (element.second->display_name == Tools().WstringToString(target)) {
 				imgList3.Add(AfxGetApp()->LoadIconW(IDI_GROUP_CHATTING));
 			}
@@ -551,10 +555,15 @@ void messenger::SetChatBoxTitle()
 	CString friendName = target.c_str();
 	CString title;
 	if (friendName.GetLength() > 0) {
-		title = _T(" Chatting with: ") + friendName + _T(" ");
+		if (mListChat[current_hash]->_is_group_msg) {
+			title = _T(" Chatting in: ") + friendName + _T(" ");
+		}
+		else {
+			title = _T(" Chatting with: ") + friendName + _T(" ");
+		}
 	}
 	else {
-		title = _T(" Add friend or Create / Join group to start chat ");
+		title = _T(" Add friend or Create / Create group to start chat ");
 	}
 	CClientDC dc(&list_mess);
 	CFont* pOldFont = dc.SelectObject(list_mess.GetFont());
@@ -643,7 +652,7 @@ void messenger::OnBnClickedCancel()
 void messenger::OnBnClickedBtnSend()
 {
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	
@@ -672,7 +681,7 @@ void messenger::OnBnClickedBtnSend()
 		if (mListChat[current_hash]->_is_group_msg == true) {
 			this->mClientService->SendGroupMessage(current_hash, s_content);
 
-		}else{
+		} else{
 			this->mClientService->SendPrivateMessage(current_hash, s_content);
 		}
 
@@ -824,7 +833,7 @@ void messenger::OnBnClickedIcon()
 
 void messenger::SendFile(CString filetype) {
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	// TODO: Add your control notification handler code here
@@ -1037,6 +1046,7 @@ void messenger::OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: Add your control notification handler code here
+
 	int nSelected = pNMItemActivate->iItem;
 	CString strItem = list_friends.GetItemText(nSelected, 0);
 	if (strItem.GetLength() && !Tools().isIn(strItem, groups)) {
@@ -1045,11 +1055,9 @@ void messenger::OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
 		string des = strName.m_psz;
 
 		this->mClientService->CreatePrivateConversation(string(strName.m_psz), string(strName.m_psz));
-
 	}
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
-	
 	
 	/*
 	if (strItem.GetLength()) {
@@ -1065,7 +1073,7 @@ void messenger::OnBnClickedBtnSendIcon()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	CString name;
@@ -1077,43 +1085,20 @@ void messenger::OnBnClickedBtnSendIcon()
 }
 
 
-void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
-{
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: Add your control notification handler code here
-	int nSelected = pNMItemActivate->iItem;
-	CString selected = list_groups.GetItemText(nSelected, 0);
-	
-	// 4 3 2 1 
-	// 3 2 1 0 (n-i-1) i = 0 n= 4 => 3
-	// i = 1 => rever = 2 
-	//
-	//int reverse_idx_counter = mListChat.size() - nSelected - 1;
-	if (selected.GetLength()) {
-		for (std::pair<std::string, ClientConversation*> element : mListChat)
-		{
-			if (nSelected-- == 0) {
-				current_hash = element.second->hash_id;
-				element.second->pending_msg = 0;//read
-				break;
-			}
-			//std::cout << element.first << " :: " << element.second << std::endl;
-		}
-
-		ShowMessages();
-		ShowGroups();
-	}
-	mess_content.SetFocus();
-	mess_content.SetSel(-1);
-	/*
-	CString strItem = list_groups.GetItemText(nSelected, 0);
-	if (strItem.GetLength()) {
-
-		StartChat(std::wstring(strItem), true);
-	}
-	*/
-	*pResult = 0;
-}
+//void messenger::OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
+//{
+//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+//	// TODO: Add your control notification handler code here
+//	
+//	/*
+//	CString strItem = list_groups.GetItemText(nSelected, 0);
+//	if (strItem.GetLength()) {
+//
+//		StartChat(std::wstring(strItem), true);
+//	}
+//	*/
+//	*pResult = 0;
+//}
 
 void messenger::OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -1312,7 +1297,7 @@ void messenger::OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult)
 void messenger::OnBnClickedBtnLink()
 {
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	// TODO: Add your control notification handler code here
@@ -1338,7 +1323,7 @@ void messenger::OnBnClickedBtnLink()
 void messenger::OnBnClickedBtnCamera()
 {
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	// TODO: Add your control notification handler code here
@@ -1349,7 +1334,7 @@ void messenger::OnBnClickedBtnImage()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	SendFile(_T("Image Files (*.png, *.jpg, *.jpeg, *.gif)|*.png; *.jpg; *.jpeg, *.gif||"));
@@ -1360,7 +1345,7 @@ void messenger::OnBnClickedBtnVideo()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	SendFile(_T("Video Files (*.mp4, *.flv, *.avi, *.wmv)|*.mp4; *.flv; *.avi; *.wmv||"));
@@ -1371,7 +1356,7 @@ void messenger::OnBnClickedBtnSound()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	SendFile(_T("Sound Files (*.mp3, *.wav, *.flac, *.aac)|*.mp3; *.wav; *.flac; *.aac||"));
@@ -1382,8 +1367,49 @@ void messenger::OnBnClickedBtnDoc()
 {
 	// TODO: Add your control notification handler code here
 	if (current_hash == "") {
-		MessageBox(_T("Please choose a conversation in group!"), _T("Alert"), MB_ICONERROR);
+		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
 	SendFile(_T("Documents (*txt, *.doc, *.docx, *.pdf, *.epub)|*.doc; *.docx; *.pdf; *.epub||"));
 }
+
+
+void messenger::OnNMClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	int nSelected = pNMItemActivate->iItem;
+	CString selected = list_groups.GetItemText(nSelected, 0);
+
+	// 4 3 2 1 
+	// 3 2 1 0 (n-i-1) i = 0 n= 4 => 3
+	// i = 1 => rever = 2 
+	//
+	//int reverse_idx_counter = mListChat.size() - nSelected - 1;
+	if (selected.GetLength()) {
+		for (std::pair<std::string, ClientConversation*> element : mListChat)
+		{
+			if (nSelected-- == 0) {
+				current_hash = element.second->hash_id;
+				element.second->pending_msg = 0;//read
+				break;
+			}
+			//std::cout << element.first << " :: " << element.second << std::endl;
+		}
+
+		ShowMessages();
+		ShowGroups();
+	}
+	mess_content.SetFocus();
+	mess_content.SetSel(-1);
+	*pResult = 0;
+}
+
+
+//void messenger::OnNMClickListFriends(NMHDR* pNMHDR, LRESULT* pResult)
+//{
+//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+//	// TODO: Add your control notification handler code here
+//
+//	*pResult = 0;
+//}

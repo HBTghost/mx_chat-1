@@ -106,7 +106,7 @@ public:
 	afx_msg void OnBnClickedBtnSendIcon();
 	AccountManagement* accMa;
 	CListCtrl list_groups;
-	afx_msg void OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
+//	afx_msg void OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnNotification();
 	bool notification = true;
@@ -126,4 +126,6 @@ public:
 	afx_msg void OnBnClickedBtnVideo();
 	afx_msg void OnBnClickedBtnSound();
 	afx_msg void OnBnClickedBtnDoc();
+	afx_msg void OnNMClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
+//	afx_msg void OnNMClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
 };

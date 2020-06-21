@@ -89,6 +89,7 @@ void EditProfileDlg::OnPaint()
 
 void EditProfileDlg::OnBnClickedBtnEditPassword()
 {
+	return;
 	// TODO: Add your control notification handler code here
 	EditPasswordDlg editPass(accMa, account);
 	editPass.DoModal();
