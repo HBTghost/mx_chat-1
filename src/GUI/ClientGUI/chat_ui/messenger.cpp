@@ -1069,7 +1069,7 @@ void messenger::OnBnClickedBtnSendIcon()
 		return;
 	}
 	CString name;
-	EmojiDlg emojiDlg(&mess_content, std::wstring(name));
+	EmojiDlg emojiDlg(&mess_content, std::wstring(username));
 	emojiDlg.DoModal();
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);
