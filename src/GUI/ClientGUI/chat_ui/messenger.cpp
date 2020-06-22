@@ -264,10 +264,69 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 				}
 				cCon->list_mess.push_back(from_src + " : " + message);
 				if (current_hash == hash_conversation_id) {
-					wstring msg_received = StringHelper::utf8_decode( from_src + " : " + message);
-					list_mess.InsertItem(count++, msg_received.c_str());
-					//wstring msg_received = StringHelper::utf8_decode(model->_data_items[0]);
-					//list_mess.InsertItem(count++, msg_received.c_str());
+					wstring dest = StringHelper::utf8_decode(from_src);
+					
+					
+					wchar_t space(L' ');
+					std::wstring mess = StringHelper::utf8_decode(message);
+
+					int line_size = 50;
+					std::vector<std::wstring> contents;
+					int p1, buf;
+					std::wstring t1 = mess, t2;
+					do {
+						t2 = t1;
+						p1 = t2.find_first_of(L"\r\n");
+						if (p1 == std::string::npos) {
+							p1 = t2.find_first_of(L"\n");
+							if (p1 == std::string::npos) {
+								p1 = t2.find_first_of(L"\r");
+							}
+							buf = 1;
+						}
+						else {
+							buf = 2;
+						}
+						if (p1 == std::string::npos) {
+							contents.push_back(t2);
+							break;
+						}
+						else {
+							t1 = t2.substr(p1 + buf, t2.size() - p1 - buf);
+							contents.push_back(t2.substr(0, p1));
+						}
+					} while (true);
+					std::wstring tmp;
+					for (int j = 0; j < contents.size(); ++j) {
+						for (int i = 0, end = line_size + i; i < contents[j].size();) {
+							if (end > contents[j].size()) {
+								std::wstring mess = contents[j].substr(i, contents[j].size() - end);
+								mess = (j == 0 && i == 0 ? dest + L" : " : L"······ ") + wstring(CString(mess.c_str()).Trim());
+								list_mess.InsertItem(count++, mess.c_str());
+								break;
+							}
+							tmp = contents[j].substr(i, line_size);
+							int end_s = line_size;
+							if (contents[j][end] != space && contents[j][end - 1] != space) {
+								end_s = tmp.find_last_of(space);
+								if (end_s == -1) {
+									end_s = line_size;
+								}
+							}
+							std::wstring mess = tmp.substr(0, end_s);
+
+
+							mess = (j == 0 && i == 0 ? dest + L" : " : L"······ ") + wstring(CString(mess.c_str()).Trim());
+
+							list_mess.InsertItem(count++, mess.c_str());
+							i += end_s;
+							end = line_size + i;
+						}
+					}
+
+
+
+					// list_mess.InsertItem(count++, msg_received.c_str());
 					LOG_INFO("Handle insert to chatbox");
 				}
 				else {
@@ -670,14 +729,6 @@ void messenger::OnBnClickedBtnSend()
 
 		s_content = StringHelper::utf8_encode(mess);
 		mListChat[current_hash]->list_mess.push_back(s_content);
-		/*
-		SDataPackage* msg_send = (new SDataPackage())
-			->SetHeaderDesSrc(this->mClientService->username, this->current_des_name)
-			->SetHeaderDesSrcHash(SHA256()(this->mClientService->username), current_hash)
-			->SetHeaderTotalSize(4096)
-			->SetHeaderNumPackage(0);
-		char* msg_raw = msg_send->BuildMessage();
-		*/
 		if (mListChat[current_hash]->_is_group_msg == true) {
 			this->mClientService->SendGroupMessage(current_hash, s_content);
 
@@ -685,7 +736,7 @@ void messenger::OnBnClickedBtnSend()
 			this->mClientService->SendPrivateMessage(current_hash, s_content);
 		}
 
-		int line_size = 60;
+		int line_size = 50;
 		std::vector<std::wstring> contents;
 		int p1, buf;
 		std::wstring t1 = mess, t2;
@@ -716,7 +767,7 @@ void messenger::OnBnClickedBtnSend()
 			for (int i = 0, end = line_size + i; i < contents[j].size();) {
 				if (end > contents[j].size()) {
 					std::wstring mess = contents[j].substr(i, contents[j].size() - end);
-					mess = (j == 0 && i == 0 ? _T("Me : ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
+					mess = (j == 0 && i == 0 ? _T("Me : ") : _T("······ ")) + std::wstring(CString(mess.c_str()).Trim());
 					list_mess.InsertItem(count++, mess.c_str());
 					break;
 				}
@@ -731,7 +782,7 @@ void messenger::OnBnClickedBtnSend()
 				std::wstring mess = tmp.substr(0, end_s);
 
 
-				mess = (j == 0 && i == 0 ? _T("Me : ") : _T("       ")) + std::wstring(CString(mess.c_str()).Trim());
+				mess = (j == 0 && i == 0 ? _T("Me : ") : _T("······ ")) + std::wstring(CString(mess.c_str()).Trim());
 				string str_mess = StringHelper::utf8_encode(mess);
 				mListChat[current_hash]->list_mess.push_back(str_mess);
 
@@ -890,6 +941,7 @@ void messenger::OnEnChangeMessContent()
 	CSize size = dc.GetTextExtent(mess);
 
 	int line = int(size.cx / 858);
+	line += Tools().countChInString(_T("\r\n"), mess);
 	line = line > 8 ? 8 : line;
 	listRect.top = listRect.top - 22 * line;
 	mess_content.MoveWindow(&listRect);

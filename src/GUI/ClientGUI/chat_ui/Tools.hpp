@@ -20,6 +20,16 @@ public:
         PlaySound(TEXT("./res/uh-oh.wav"), NULL, SND_SYNC);
     }
 
+    int countChInString(CString ch, CString str) {
+        int p, s = 0;
+        p = str.Find(ch);
+        while (p != -1) {
+            ++s;
+            p = str.Find(ch, p + ch.GetLength());
+        }
+        return s;
+    }
+
     bool isIn(CString _item, std::vector<std::string> list) {
         std::string item = Tools().WstringToString(std::wstring(_item));
         for (auto x : list) {
