@@ -16,7 +16,7 @@ IMPLEMENT_DYNAMIC(EditProfileDlg, CDialog)
 EditProfileDlg::EditProfileDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_EditProfileDlg, pParent)
 {
-
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 EditProfileDlg::EditProfileDlg(AccountManagement* accMa, Account* account)
 	: CDialog(IDD_EditProfileDlg, nullptr)

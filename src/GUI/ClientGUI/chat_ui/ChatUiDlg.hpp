@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "Account.hpp"
+//#include "Account.hpp"
 #include "ClientBackgroundService.h"
 
 // ChatUiDlg dialog
@@ -41,7 +41,7 @@ protected:
 		return &win;
 	}
 public:
-	AccountManagement accMa;
+	//AccountManagement accMa;
 	CStatic title;
 	CString _username;
 	CEdit username;
