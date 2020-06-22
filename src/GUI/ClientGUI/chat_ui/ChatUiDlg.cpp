@@ -327,6 +327,12 @@ void ChatUiDlg::OnEnUpdateUsername()
 	CString tmp;
 	GetDlgItemText(IDC_USERNAME, tmp);
 	std::wstring _username(tmp);
+	if (_username.size() > 10) {
+		MessageBox(_T("Username must smaller than or equal 10 characters!"), _T("Alert"), MB_ICONERROR);
+		tmp.Delete(tmp.GetLength() - 1, 1);
+		username.SetWindowTextW(tmp);
+		username.SetSel(-1);
+	}
 	if (_username.find_first_not_of(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_") != std::string::npos) {
 		MessageBox(_T("Username must contain a-z, A-Z, 0-9 and _ character only!"), _T("Alert"), MB_ICONERROR);
 		tmp.Delete(tmp.GetLength() - 1, 1);
