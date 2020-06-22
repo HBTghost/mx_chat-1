@@ -265,65 +265,74 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 				cCon->list_mess.push_back(from_src + " : " + message);
 				if (current_hash == hash_conversation_id) {
 					wstring dest = StringHelper::utf8_decode(from_src);
-					
-					
-					wchar_t space(L' ');
 					std::wstring mess = StringHelper::utf8_decode(message);
+					
+					CString flag = ATTACH_FILE_FLAG;
+					int p1 = mess.find(flag);
+					if (p1 != mess.length() - flag.GetLength() || p1 == -1) {
 
-					int line_size = 50;
-					std::vector<std::wstring> contents;
-					int p1, buf;
-					std::wstring t1 = mess, t2;
-					do {
-						t2 = t1;
-						p1 = t2.find_first_of(L"\r\n");
-						if (p1 == std::string::npos) {
-							p1 = t2.find_first_of(L"\n");
+
+						wchar_t space(L' ');
+					
+
+						int line_size = 50;
+						std::vector<std::wstring> contents;
+						int p1, buf;
+						std::wstring t1 = mess, t2;
+						do {
+							t2 = t1;
+							p1 = t2.find_first_of(L"\r\n");
 							if (p1 == std::string::npos) {
-								p1 = t2.find_first_of(L"\r");
+								p1 = t2.find_first_of(L"\n");
+								if (p1 == std::string::npos) {
+									p1 = t2.find_first_of(L"\r");
+								}
+								buf = 1;
 							}
-							buf = 1;
-						}
-						else {
-							buf = 2;
-						}
-						if (p1 == std::string::npos) {
-							contents.push_back(t2);
-							break;
-						}
-						else {
-							t1 = t2.substr(p1 + buf, t2.size() - p1 - buf);
-							contents.push_back(t2.substr(0, p1));
-						}
-					} while (true);
-					std::wstring tmp;
-					for (int j = 0; j < contents.size(); ++j) {
-						for (int i = 0, end = line_size + i; i < contents[j].size();) {
-							if (end > contents[j].size()) {
-								std::wstring mess = contents[j].substr(i, contents[j].size() - end);
-								mess = (j == 0 && i == 0 ? dest + L" : " : L"······ ") + wstring(CString(mess.c_str()).Trim());
-								list_mess.InsertItem(count++, mess.c_str());
+							else {
+								buf = 2;
+							}
+							if (p1 == std::string::npos) {
+								contents.push_back(t2);
 								break;
 							}
-							tmp = contents[j].substr(i, line_size);
-							int end_s = line_size;
-							if (contents[j][end] != space && contents[j][end - 1] != space) {
-								end_s = tmp.find_last_of(space);
-								if (end_s == -1) {
-									end_s = line_size;
-								}
+							else {
+								t1 = t2.substr(p1 + buf, t2.size() - p1 - buf);
+								contents.push_back(t2.substr(0, p1));
 							}
-							std::wstring mess = tmp.substr(0, end_s);
+						} while (true);
+						std::wstring tmp;
+						for (int j = 0; j < contents.size(); ++j) {
+							for (int i = 0, end = line_size + i; i < contents[j].size();) {
+								if (end > contents[j].size()) {
+									std::wstring mess = contents[j].substr(i, contents[j].size() - end);
+									mess = (j == 0 && i == 0 ? dest + L" : " : L"······ ") + wstring(CString(mess.c_str()).Trim());
+									list_mess.InsertItem(count++, mess.c_str());
+									break;
+								}
+								tmp = contents[j].substr(i, line_size);
+								int end_s = line_size;
+								if (contents[j][end] != space && contents[j][end - 1] != space) {
+									end_s = tmp.find_last_of(space);
+									if (end_s == -1) {
+										end_s = line_size;
+									}
+								}
+								std::wstring mess = tmp.substr(0, end_s);
 
 
-							mess = (j == 0 && i == 0 ? dest + L" : " : L"······ ") + wstring(CString(mess.c_str()).Trim());
+								mess = (j == 0 && i == 0 ? dest + L" : " : L"······ ") + wstring(CString(mess.c_str()).Trim());
 
-							list_mess.InsertItem(count++, mess.c_str());
-							i += end_s;
-							end = line_size + i;
+								list_mess.InsertItem(count++, mess.c_str());
+								i += end_s;
+								end = line_size + i;
+							}
 						}
 					}
-
+					else {
+						CString tmp = _T(" : ");
+						list_mess.InsertItem(count++, dest.c_str() + tmp + mess.c_str());
+					}
 
 
 					// list_mess.InsertItem(count++, msg_received.c_str());
