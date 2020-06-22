@@ -470,6 +470,18 @@
     <Image Include="res\icons8-document-64.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\..\res\icons8-double-left-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-double-left-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-double-right-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-replace-64.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />

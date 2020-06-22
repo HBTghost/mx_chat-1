@@ -260,6 +260,7 @@
     <None Include="res\chatui.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\..\res\icons8-double-left-64.ico" />
     <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-double-left-64.ico" />
     <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-double-right-64.ico" />
     <Image Include="..\..\..\..\..\chat_ui_mfc\chat_ui\res\icons8-replace-64.ico" />
@@ -319,6 +320,8 @@
     <Image Include="res\icons8-conference-64.ico" />
     <Image Include="res\icons8-denied-64.ico" />
     <Image Include="res\icons8-document-64.ico" />
+    <Image Include="res\icons8-double-left-64.ico" />
+    <Image Include="res\icons8-double-right-64.ico" />
     <Image Include="res\icons8-hamburger-64.ico" />
     <Image Include="res\icons8-heart-64.ico" />
     <Image Include="res\icons8-image-file-64.ico" />
@@ -330,6 +333,7 @@
     <Image Include="res\icons8-notification-64.ico" />
     <Image Include="res\icons8-pdf-64.ico" />
     <Image Include="res\icons8-people-working-together-64.ico" />
+    <Image Include="res\icons8-replace-64.ico" />
     <Image Include="res\icons8-sent-64.ico" />
     <Image Include="res\icons8-slr-camera-64.ico" />
     <Image Include="res\icons8-so-so-64.ico" />
