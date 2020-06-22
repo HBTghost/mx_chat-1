@@ -43,6 +43,7 @@ public:
 		server_addr.sin_port = htons((u_short)8084);
 		server_addr.sin_addr.S_un.S_addr = INADDR_ANY;
 		this->_socketListenClient = socket(AF_INET, SOCK_STREAM, 0);
+		this->_socketListenClient = socket(AF_INET, SOCK_STREAM, 0);
 		if (_socketListenClient == INVALID_SOCKET) {
 			return;
 		}

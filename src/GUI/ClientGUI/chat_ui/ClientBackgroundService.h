@@ -221,6 +221,15 @@ public:
 		char* data = sdata->BuildMessage();
 		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
 	}
+	void GetListOnline() {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_REQUEST_LIST_ONLINE)
+			->SetHeaderDesSrc("server", "client")
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(4096);
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
+	}
 
 
 	void CloseConnection() {

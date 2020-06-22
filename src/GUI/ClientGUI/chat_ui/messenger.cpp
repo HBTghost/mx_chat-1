@@ -171,6 +171,11 @@ BOOL messenger::OnInitDialog()
 	this->mClientService->AddHwnd(this->GetSafeHwnd());
 	SetWindowText(_T("Messenger: ") + username);
 
+
+	
+	mClientService->GetListOnline();
+
+
 	// TODO: Add extra initialization here
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -415,6 +420,7 @@ void messenger::ShowFriends()
 	CString strItem = _T("");
 	imgList.DeleteImageList();
 	imgList.Create(32, 32, ILC_COLOR32, 0, 0);
+
 	if (list_friends.GetItemCount() != friends.size()-1) {
 		list_friends.DeleteAllItems();
 	}
