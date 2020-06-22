@@ -718,7 +718,6 @@ void messenger::OnBnClickedCancel()
 	// TODO: Add your control notification handler code here
 	//SaveMessages();
 	CDialog::OnOK();
-
 }
 
 
