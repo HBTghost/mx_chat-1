@@ -1,5 +1,5 @@
 #pragma once
-#include "Account.hpp"
+//#include "Account.hpp"
 #include <map>
 #include <unordered_map>
 
@@ -54,9 +54,9 @@ protected:
 	afx_msg void OnPaint();
 public:
 	 
-	std::pair<std::string, ClientConversation*> *chatBoxTarget; //selected
+	std::pair<std::string, ClientConversation*> *chatBoxTarget = nullptr; //selected
 
-	ClientBackgroundService* mClientService;
+	ClientBackgroundService* mClientService = nullptr;
 	LRESULT OnFormMsgHandler(WPARAM wParam, LPARAM lParam);
 
 
@@ -80,7 +80,7 @@ public:
 	std::vector<CString> GetSelectedItemText(CListCtrl* plctrl);
 	void StartChat(std::wstring item, bool isGroup = false);
 	bool targetIsGroup = false;
-	Account* account;
+	//Account* account;
 	std::vector<wstring> friends;
 	std::wstring target;
 	std::vector<string> groups;
@@ -104,7 +104,7 @@ public:
 	afx_msg void OnRightClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDoubleClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnSendIcon();
-	AccountManagement* accMa;
+	//AccountManagement* accMa;
 	CListCtrl list_groups;
 //	afx_msg void OnDoubleClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);

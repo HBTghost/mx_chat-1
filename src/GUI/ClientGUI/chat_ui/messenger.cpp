@@ -37,9 +37,9 @@ messenger::messenger(ClientBackgroundService* mClientService, CWnd* parent) : CD
 {
 	this->mClientService = mClientService;
 	this->mClientService->CreateWorkerThread();
-	wstring username = L"a";
-	accMa = new AccountManagement;
-	account = accMa->GetAccount(username).Clone();
+	//wstring username = L"a";
+	//accMa = new AccountManagement;
+	//account = accMa->GetAccount(username).Clone();
 	friends = StringHelper::VectorStringToWideString(this->mClientService->gClientObj._list_online);
 	this->username = StringHelper::utf8_decode(mClientService->username).c_str();
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
@@ -48,9 +48,9 @@ messenger::messenger(ClientBackgroundService* mClientService, CWnd* parent) : CD
 messenger::messenger(std::wstring username)
 	: CDialog(IDD_messenger, nullptr)
 {
-	accMa = new AccountManagement;
-	account = accMa->GetAccount(username).Clone();
-	friends = accMa->GetFriends(*account);
+	//accMa = new AccountManagement;
+	//account = accMa->GetAccount(username).Clone();
+	//friends = accMa->GetFriends(*account);
 	//groups = accMa->GetGroups(*account);
 	if (friends.size()) {
 		target = friends[0];
@@ -65,12 +65,12 @@ messenger::messenger(std::wstring username)
 
 messenger::~messenger()
 {
-	if (account) {
-		delete account;
-	}
-	if (accMa) {
-		delete accMa;
-	}
+	//if (account) {
+	//	delete account;
+	//}
+	//if (accMa) {
+	//	delete accMa;
+	//}
 }
 
 void messenger::DoDataExchange(CDataExchange* pDX)
@@ -657,12 +657,12 @@ void messenger::SaveMessages()
 	if (fileName != L"")
 	{
 		std::wstring path;
-		if (targetIsGroup) {
-			path = L"./data/messages/" + account->GetUsername() + L"/groups/" + fileName + L".dat";
-		}
-		else {
-			path = L"./data/messages/" + account->GetUsername() + L"/friends/" + fileName + L".dat";
-		}
+		//if (targetIsGroup) {
+		//	path = L"./data/messages/" + account->GetUsername() + L"/groups/" + fileName + L".dat";
+		//}
+		//else {
+		//	path = L"./data/messages/" + account->GetUsername() + L"/friends/" + fileName + L".dat";
+		//}
 		std::vector < CString > messages = GetMessagesFromListMess();
 		Tools().WriteToFile(path, messages);
 	}
@@ -863,7 +863,7 @@ void messenger::OnBnClickedBtnSend()
 void messenger::OnBnClickedIcon()
 {
 	// TODO: Add your control notification handler code here
-	EditProfileDlg edit(accMa, account);
+	EditProfileDlg edit;
 
 	INT_PTR nRet = -1;
 	nRet = edit.DoModal();
@@ -1180,7 +1180,7 @@ void messenger::OnRightClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 	if (groups_name.size()) {
 
-		ChooseGroup chooseGroup(accMa, account, groups_name);
+		ChooseGroup chooseGroup;
 
 		//ChooseFriend chooseFriend;
 		INT_PTR nRet = -1;
