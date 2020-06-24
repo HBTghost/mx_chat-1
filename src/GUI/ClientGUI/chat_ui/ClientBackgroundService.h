@@ -168,8 +168,9 @@ public:
 			char* msg = sdata->BuildMessageDataFileSpecial(c_chunk_data, chunk_size);
 			
 			gClientObj.SendMessagePackage(msg, PACKAGE_SIZE);
-			EndTransferFile(hash_conversation);
 		}
+		EndTransferFile(hash_conversation);
+
 
 	}
 	void EndTransferFile(string hash_des) {

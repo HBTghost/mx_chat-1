@@ -396,7 +396,6 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 			ClientConversation* cCon = mListChat[hash_conversation_id];
 			if (cCon) {
 				cCon->ProcessChunk(model);
-			
 				//use current packet for chunk size
 				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
 			}
@@ -412,7 +411,8 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 		string from_src = model->GetSrc();
 		string hash_conversation_id = model->GetSHA256Des();
 		ClientConversation* cCon = mListChat[hash_conversation_id];
-		
+		AfxMessageBox(L"Received file successfully!!!");
+
 		
 		//MessageBox(_T("END TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
 		break;
