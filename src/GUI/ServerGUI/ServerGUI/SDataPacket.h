@@ -35,6 +35,10 @@ public:
 
 	}
 
+	uint32_t GetCurrentPacket()
+	{
+		return this->current_packet;
+	}
 	SDataPackage* SetHeaderCommand(EMessageCommand type) {
 		this->command = type;
 		return this;

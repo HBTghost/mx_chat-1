@@ -168,8 +168,19 @@ public:
 			char* msg = sdata->BuildMessageDataFileSpecial(c_chunk_data, chunk_size);
 			
 			gClientObj.SendMessagePackage(msg, PACKAGE_SIZE);
+			EndTransferFile(hash_conversation);
 		}
 
+	}
+	void EndTransferFile(string hash_des) {
+		SDataPackage* sdata = (new SDataPackage())
+			->SetHeaderCommand(EMessageCommand::CLIENT_END_TRANSFER_FILE)
+			->SetHeaderDesSrc(username, "server")
+			->SetHeaderDesSrcHash(SHA256()(username), hash_des)
+			->SetHeaderNumPackage(0)
+			->SetHeaderTotalSize(PACKAGE_SIZE);
+		char* data = sdata->BuildMessage();
+		gClientObj.SendMessagePackage(data, PACKAGE_SIZE);
 	}
 	
 	void CreateGroupConversation(vector<string> list_member, string name_conversation) {

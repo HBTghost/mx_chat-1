@@ -16,6 +16,7 @@ public:
 	int pending_msg = 0;
 	bool _is_group_msg = false;
 
+	bool transfering = false;
 	
 
 	ClientConversation(string display_name, string hash_id, bool isGroup = false) {
@@ -29,6 +30,10 @@ public:
 	}
 	void ProcessChunk(SDataPackage *model){
 		ftm->AddChunk(model);
+		if (ftm->completed == true) {
+			transfering = false;
+			delete ftm;
+		}
 	}
 	
 

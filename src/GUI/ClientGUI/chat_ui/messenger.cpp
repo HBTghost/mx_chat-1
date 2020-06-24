@@ -363,17 +363,23 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 			string hash_conversation_id = model->GetSHA256Des();
 			ClientConversation* cCon = mListChat[hash_conversation_id];
 			if (cCon) {
-				//use current packet for chunk size
-				cCon->InitFileTransferManagement(model->_data_items[0], model->GetTotalSize(), model->GetCurrentPacket());
-				if (current_hash == model->GetSHA256Des()) {
-					if (notification) {
-						Tools().PlayGotMessSound();
+				if(cCon->transfering == false){
+					//use current packet for chunk size
+					cCon->transfering = true;
+					cCon->InitFileTransferManagement(model->_data_items[0], model->GetTotalSize(), model->GetCurrentPacket());
+					if (current_hash == model->GetSHA256Des()) {
+						if (notification) {
+							Tools().PlayGotMessSound();
+						}
+						m_ListFile.AddString(StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str());
+						CString _mess = CString((from_src + " : ").c_str()) + ATTACH_FILE_ICON + StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str() + ATTACH_FILE_FLAG;
+						list_mess.InsertItem(count++, _mess);
 					}
-					m_ListFile.AddString(StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str());
-					CString _mess = CString((from_src + " : ").c_str()) + ATTACH_FILE_ICON + StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str() + ATTACH_FILE_FLAG;
-					list_mess.InsertItem(count++, _mess);
+					LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
 				}
-				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
+				else {
+					LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : transfering not allow send new file");
+				}
 			}
 			else {
 				LOG_ERROR("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : Cannot find conversation ");
@@ -385,12 +391,12 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 	case IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE:
 		if (lParam) {
 			model = (SDataPackage*)lParam;
-
 			string from_src = model->GetSrc();
 			string hash_conversation_id = model->GetSHA256Des();
 			ClientConversation* cCon = mListChat[hash_conversation_id];
 			if (cCon) {
 				cCon->ProcessChunk(model);
+			
 				//use current packet for chunk size
 				LOG_INFO("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE() : add new message");
 			}
@@ -401,11 +407,16 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 		
 		//MessageBox(_T("IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE BEGIN TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
 		break;
-	case IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE:
+	case IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE:{
+		model = (SDataPackage*)lParam;
+		string from_src = model->GetSrc();
+		string hash_conversation_id = model->GetSHA256Des();
+		ClientConversation* cCon = mListChat[hash_conversation_id];
 		
 		
 		//MessageBox(_T("END TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
 		break;
+	}
 	default:
 		break;
 	}
@@ -920,11 +931,18 @@ void messenger::SendFile(CString filetype) {
 		CT2A str_file_name(sFileName);
 		CT2A str_file_ext(sFileExt);
 
-		m_ListFile.AddString(sFilePath);
-
-		mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
-
-		list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
+	
+		ClientConversation* cCon = mListChat[current_hash];
+		if (cCon->transfering == true) {
+			AfxMessageBox(L"Please wait transfer completed");
+		}
+		else{
+			m_ListFile.AddString(sFilePath);
+			cCon->transfering = true;
+			mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
+			cCon->transfering = false ;//completed
+			list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
+		}
 	}
 	mess_content.SetFocus();
 	mess_content.SetSel(-1);

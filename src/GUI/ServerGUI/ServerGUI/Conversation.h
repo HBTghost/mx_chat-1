@@ -9,7 +9,8 @@ public:
 	vector<SClientPacket*> _list_client;
 	string id_hash;
 	string id_key;
-	string conversation_name = ""; 
+	string conversation_name = "";
+	bool transfering = false;
 	Conversation() {
 
 	}
@@ -29,7 +30,7 @@ public:
 			else {
 				//_server->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
 				string log_msg = ss.str();
-				LOG_INFO(log_msg);
+				LOG_INFO(log_msg);                       
 			}
 		}
 	}

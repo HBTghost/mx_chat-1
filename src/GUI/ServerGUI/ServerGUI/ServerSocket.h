@@ -233,7 +233,7 @@ public:
 		}
 		case CLIENT_END_TRANSFER_FILE:
 		{
-
+			EndFileMessage(&model, c_socket);
 			break;
 		}
 		default:
@@ -272,7 +272,7 @@ public:
 		vector<SClientPacket*> list_client_on;
 		for (string item : list_mem) {
 			PSIClientPacket desClient = this->FindClientByUsername(item);
-			list_client_on.push_back(*desClient); 
+			list_client_on.push_back(*desClient);
 		}
 		return  list_client_on;
 	}
@@ -282,13 +282,26 @@ public:
 		string hash_key_con = package->GetSHA256Des();
 		Conversation* pcon = _lcs[hash_key_con];
 		if (pcon != nullptr) {
-			char* msg = package->data();
-			for (SClientPacket*& p_client : pcon->_list_client) {
-				if (p_client != *srcClient) {
-					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
-					LOG_INFO("InitRequestTransferFile() : + 1 Sent to other clients ");
+			
+				char* msg = package->data();
+				for (SClientPacket*& p_client : pcon->_list_client) {
+					if (p_client != *srcClient) {
+						this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+						LOG_INFO("InitRequestTransferFile() : + 1 Sent to other clients ");
+					}
 				}
-			}
+
+				/*
+				SDataPackage* transfer_stt_msg = (new SDataPackage())
+					->SetHeaderCommand(EMessageCommand::SERVER_RESPONSE_TRANSFER_STATUS)
+					->SetHeaderDesSrc("server", hash_key_con)
+					->SetHeaderNumPackage(package->GetCurrentPacket())
+					->SetHeaderTotalSize(PACKAGE_SIZE);
+				transfer_stt_msg->_data_items.push_back("allow");
+				char* res_msg_buff = transfer_stt_msg->BuildMessage();
+				this->SendMessagePackage(*srcClient, res_msg_buff, PACKAGE_SIZE);
+				*/
+			
 		}
 		else {
 			LOG_ERROR("InitRequestTransferFile() : Cannot find conversation ");
@@ -314,14 +327,31 @@ public:
 			LOG_ERROR("TransferFileMessage() : Cannot find conversation ");
 		}
 	}
-
+	void EndFileMessage(SDataPackage* package, PSIClientPacket srcClient) {
+		//find conversation
+		//sha des is package conversation
+		string hash_key_con = package->GetSHA256Des();
+		Conversation* pcon = _lcs[hash_key_con];
+		if (pcon != nullptr) {
+			char* msg = package->data();
+			for (SClientPacket*& p_client : pcon->_list_client) {
+				if (p_client != *srcClient) {
+					this->SendMessagePackage(p_client, msg, PACKAGE_SIZE);
+					LOG_INFO("TransferFileMessage() : + 1 Sent to other clients ");
+				}
+			}
+		}
+		else {
+			LOG_ERROR("TransferFileMessage() : Cannot find conversation ");
+		}
+	}
 
 	void InitRequestGroupChat(SDataPackage* package, PSIClientPacket srcClient) {
 		vector<string> list_mem;
 		copy(package->_data_items.begin() + 1, package->_data_items.end(), back_inserter(list_mem));
 
 		vector<SClientPacket*> list_client_online = this->FindClientOnlineClientPacket(list_mem);
-		GroupConversation* pcon = new GroupConversation(package->_data_items[0] ,   list_mem);
+		GroupConversation* pcon = new GroupConversation(package->_data_items[0], list_mem);
 		pcon->_list_client = list_client_online;
 
 		char* msg = pcon->BuildNewHashMsg();
@@ -352,14 +382,14 @@ public:
 		}
 	}
 
-	
+
 
 
 	void InitRequestPrivateChat(SDataPackage* package, PSIClientPacket srcClient) {
 		PSIClientPacket desClient = this->FindClientByUsername(package->_data_items[0]);
 
 		PrivateConversation* pcon = new PrivateConversation();
-		
+
 		pcon->_list_client.push_back(*srcClient);
 		pcon->_list_client.push_back(*desClient);
 

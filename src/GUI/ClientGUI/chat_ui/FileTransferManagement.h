@@ -22,6 +22,7 @@ public:
 	string _desPart;
 	ofstream myfile;
 	string _desFileName = ""; 
+	bool completed = false;
 
 	FileTransferManagement() {
 		//myfile.open("debug_out", ios::out | ios::app | ios::binary);
@@ -59,6 +60,7 @@ public:
 		if (_currentSize == _totalSize) {
 			LOG_INFO("COMPELETED TRANSFER ");
 			myfile.close();
+			completed = true;
 		}
 		/*
 		WCHAR* w_content = StringHelper::wstringToWcharP(content);

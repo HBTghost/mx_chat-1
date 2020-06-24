@@ -202,15 +202,18 @@ public:
 			LOG_INFO("Response request transfer file");
 
 			break;
+		case SERVER_RESPONSE_TRANSFER_STATUS:
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_STATUS_TRANSFER_FILE, (LPARAM)&model);
+			LOG_INFO("Response request transfer file");
+
+			break;
 		case CLIENT_BEGIN_TRANSFER_FILE:
 			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE, (LPARAM)&model);
 			LOG_INFO("Response begin transfer file");
-
 			break;
 		case CLIENT_END_TRANSFER_FILE:
 			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE, (LPARAM)&model);
 			LOG_INFO("Response end transfer file");
-
 			break;
 		default:
 			break;
