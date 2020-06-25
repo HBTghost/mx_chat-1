@@ -90,10 +90,11 @@ LRESULT ChatUiDlg::OnFormLoginMsgHandler(WPARAM wParam, LPARAM lParam) {
 		messenger mess(this->m_ClientService);
 		//this->m_ClientService->AddHwnd(mess.GetSafeHwnd());
 		//this->ShowWindow(SW_HIDE);
-		this->ShowWindow(FALSE);
+		//this->ShowWindow(FALSE);
+		this->OnOK();
 		mess.DoModal();
-		this->ShowWindow(TRUE);
-		password.SetWindowTextW(_T("\r\r\r"));
+		//this->ShowWindow(TRUE);
+		//password.SetWindowTextW(_T("\r\r\r"));
 		break;
 	}
 	case IDC_FORM_LOGIN_MSG_HANDLER_LOGIN_ERROR:

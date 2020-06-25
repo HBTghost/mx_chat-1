@@ -7,8 +7,8 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_SERVERGUI_DIALOG            102
 #define IDP_SOCKETS_INIT_FAILED         103
-#define IDI_ICON1                       130
-#define IDR_MAINFRAME                   130
+#define IDR_MAINFRAME                   131
+#define IDI_APP                         130
 #define IDC_EDIT_PORT                   1000
 #define IDC_EDIT_IP                     1001
 #define IDC_BUTTON_LISTEN               1002
@@ -19,7 +19,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           101
