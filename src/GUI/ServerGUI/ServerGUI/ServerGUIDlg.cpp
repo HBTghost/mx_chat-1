@@ -15,6 +15,7 @@
 #define new DEBUG_NEW
 #endif
 
+//#define SERVER_DEBUG
 
 // CAboutDlg dialog used for App About
 
@@ -56,7 +57,8 @@ END_MESSAGE_MAP()
 
 
 
-int initServer() {
+int initServer(int port = 8084, int max_accept = 10) {
+	gServerObj.InitServer(port, max_accept);
 	if (!gServerObj.IsConnected())
 	{
 		cout << "Failed to initialise server socket." << endl;
@@ -76,6 +78,7 @@ CServerGUIDlg::CServerGUIDlg(CWnd* pParent /*=nullptr*/)
 	, m_ServerIP(_T("127.0.0.1"))
 	, m_ServerPort(_T("8084"))
 	, m_ServerLogger(_T(""))
+	, m_MaxAccept(_T("10"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 
@@ -89,6 +92,7 @@ void CServerGUIDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_IP, m_ServerIP);
 	DDX_Text(pDX, IDC_EDIT_PORT, m_ServerPort);
 	DDX_Text(pDX, IDC_RICHEDIT_LOGGER, m_ServerLogger);
+	DDX_Text(pDX, IDC_EDIT_MAX_ACCEPT, m_MaxAccept);
 }
 
 LRESULT CServerGUIDlg::OnCommandIdTestMsg(WPARAM wParam, LPARAM lParam)
@@ -151,7 +155,10 @@ BOOL CServerGUIDlg::OnInitDialog()
 	pLogger->updateLogType(LOG_TYPE::BOTH_LOG);
 	pLogger->setHwnd(*this->GetHwnd());
 
-	initServer();
+#ifdef SERVER_DEBUG
+	initServer(8084, 10);
+#endif // SERVER_DEBUG
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -212,11 +219,17 @@ void CServerGUIDlg::OnBnClickedButtonListen()
 	UpdateData(true);
 	CT2A ascii_ip(m_ServerIP);
 	CT2A ascii_port(m_ServerPort);
+	CT2A ascii_max_accept(m_MaxAccept);
 	char* ip = ascii_ip.m_psz;
 	char* port = ascii_port.m_psz;
-	//initServer();
-	LOG_INFO("Init GUI Server 127.0.0.1 8084");
+	char* max_accept = ascii_max_accept.m_psz;
+	if (!gServerObj.IsConnected()) {
+		initServer(atoi(port), atoi(max_accept));
+		LOG_INFO("Init GUI Server");
+	}
+
 	//AfxMessageBox(L"Sign in ....");
+
 	UpdateData(false);
 
 }

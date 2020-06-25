@@ -20,9 +20,10 @@ public:
 
 
 	ServerSocket() {
-		this->InitServer();
+		
 	}
-	void InitServer() {
+
+	void InitServer(int port=8084, int max_accept = 10) {
 		LOG_INFO("Starting TCP Socket server ");
 		cout << "Starting TCP Socket server " << endl;
 		//initialize winsock https://docs.microsoft.com/en-us/windows/win32/winsock/initializing-winsock
@@ -40,7 +41,7 @@ public:
 		}
 		sockaddr_in server_addr;
 		server_addr.sin_family = AF_INET;
-		server_addr.sin_port = htons((u_short)8084);
+		server_addr.sin_port = htons((u_short)port);
 		server_addr.sin_addr.S_un.S_addr = INADDR_ANY;
 		this->_socketListenClient = socket(AF_INET, SOCK_STREAM, 0);
 		this->_socketListenClient = socket(AF_INET, SOCK_STREAM, 0);
@@ -51,12 +52,27 @@ public:
 		{
 			return;
 		}
-		if (listen(_socketListenClient, 10) != 0)
+		if (listen(_socketListenClient, max_accept) != 0)
 		{
 			return;
 		}
 		_isConnected = true;
 		return;
+	}
+
+	void Shutdown() {
+		if (_isConnected) {
+			_isConnected = false;
+			closesocket(_socketListenClient);
+			WSACleanup();
+			if (_listClient.size() != 0)
+			{
+				for (auto& client : _listClient)
+				{
+					delete client;
+				}
+			}
+		}
 	}
 	~ServerSocket() {
 		closesocket(_socketListenClient);

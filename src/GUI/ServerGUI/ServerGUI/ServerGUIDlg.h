@@ -32,12 +32,13 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-	friend int initServer();
+	friend int initServer(int, int );
 	HWND* GetHwnd() {
 		HWND win = this->GetSafeHwnd();
 		return &win; 
 	}
 	afx_msg LRESULT OnCommandIdTestMsg(WPARAM wParam, LPARAM lParam);
+	BOOL OnMenuIdApplicationExit(WPARAM wParam, LPARAM lParam);
 
 
 public:
@@ -48,4 +49,5 @@ public:
 
 	CString m_ServerLogger;
 	afx_msg void OnBnClickedBtnClearLog();
+	CString m_MaxAccept;
 };
