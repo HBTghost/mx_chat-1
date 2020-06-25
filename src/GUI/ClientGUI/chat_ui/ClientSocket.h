@@ -126,10 +126,15 @@ public:
 		if (iStat == -1) {
 			DWORD err = GetLastError();
 			cout << "error connection " << err << endl;
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_SERVER_DISCONNECTED, 0);
+
+
 			return -1;
 		}
 		else if (iStat == 0) {
 			cout << "Server disconnected" << endl;
+			SendMessageW(hwnd, IDC_FORM_CHAT_MSG_HANDLER, IDC_FORM_CHAT_MSG_HANDLER_SERVER_DISCONNECTED, 0);
+			
 			return 1;
 		}
 		else {

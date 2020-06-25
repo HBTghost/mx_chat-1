@@ -1,8 +1,0 @@
-Chrome
-IDM
-Unikey
-Winrar
-Visual Studio
-Visual Code
-Android Studio
-github

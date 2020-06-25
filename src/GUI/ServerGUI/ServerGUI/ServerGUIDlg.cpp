@@ -106,6 +106,7 @@ BEGIN_MESSAGE_MAP(CServerGUIDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_LISTEN, &CServerGUIDlg::OnBnClickedButtonListen)
 
 	ON_MESSAGE(IDC_MSG_TEST, &CServerGUIDlg::OnCommandIdTestMsg)
+	ON_BN_CLICKED(IDC_BTN_CLEAR_LOG, &CServerGUIDlg::OnBnClickedBtnClearLog)
 END_MESSAGE_MAP()
 
 
@@ -218,4 +219,13 @@ void CServerGUIDlg::OnBnClickedButtonListen()
 	//AfxMessageBox(L"Sign in ....");
 	UpdateData(false);
 
+}
+
+
+void CServerGUIDlg::OnBnClickedBtnClearLog()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData(true);
+	m_ServerLogger = L"";
+	UpdateData(false);
 }

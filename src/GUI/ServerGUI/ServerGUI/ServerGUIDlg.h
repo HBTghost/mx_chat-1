@@ -47,4 +47,5 @@ public:
 
 
 	CString m_ServerLogger;
+	afx_msg void OnBnClickedBtnClearLog();
 };

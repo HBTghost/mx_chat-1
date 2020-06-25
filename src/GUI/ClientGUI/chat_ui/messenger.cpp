@@ -255,6 +255,9 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+	case IDC_FORM_CHAT_MSG_HANDLER_SERVER_DISCONNECTED:
+		MessageBox(_T("Server Disconnected, exit application"), _T("Alert"), MB_ICONERROR | MB_TASKMODAL);
+		break; 
 	case IDC_FORM_CHAT_MSG_HANDLER_RECEIVE_CONVERSATION:
 		if (lParam) {
 			model = (SDataPackage*)lParam;
