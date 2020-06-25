@@ -7,14 +7,16 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_SERVERGUI_DIALOG            102
 #define IDP_SOCKETS_INIT_FAILED         103
-#define IDR_MAINFRAME                   131
 #define IDI_APP                         130
+#define IDR_MAINFRAME                   131
 #define IDC_EDIT_PORT                   1000
 #define IDC_EDIT_IP                     1001
 #define IDC_BUTTON_LISTEN               1002
 #define IDC_RICHEDIT_LOGGER             1003
 #define IDC_BUTTON1                     1004
 #define IDC_BTN_CLEAR_LOG               1004
+#define IDC_EDIT_PORT2                  1005
+#define IDC_EDIT_MAX_ACCEPT             1005
 #define IDC_MSG_TEST                    10004
 
 // Next default values for new objects
