@@ -77,7 +77,7 @@ CServerGUIDlg::CServerGUIDlg(CWnd* pParent /*=nullptr*/)
 	, m_ServerPort(_T("8084"))
 	, m_ServerLogger(_T(""))
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 
 
 

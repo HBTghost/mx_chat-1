@@ -414,8 +414,8 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 		string from_src = model->GetSrc();
 		string hash_conversation_id = model->GetSHA256Des();
 		ClientConversation* cCon = mListChat[hash_conversation_id];
-		AfxMessageBox(L"Received file successfully!!!");
-
+		//AfxMessageBox(L"Received file successfully!!!");
+		MessageBox(_T("Received file successfully!!!"), _T("Alert"), MB_ICONINFORMATION);
 		
 		//MessageBox(_T("END TRANSFER FILE !!!"), _T("Alert"), MB_ICONERROR);
 		break;
