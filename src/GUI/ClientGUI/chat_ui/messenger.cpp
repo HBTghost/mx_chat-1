@@ -934,7 +934,7 @@ void messenger::SendFile(CString filetype) {
 		CT2A str_file_name(sFileName);
 		CT2A str_file_ext(sFileExt);
 
-		if (Tools().is_ascii(str_path.m_psz)) {
+		if (Tools().is_ascii(str_path.m_psz)) { // path -> chi chua tieng anh
 			ClientConversation* cCon = mListChat[current_hash];
 			if (cCon->transfering == true) {
 				AfxMessageBox(L"Please wait transfer completed");
@@ -945,7 +945,7 @@ void messenger::SendFile(CString filetype) {
 				mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
 				cCon->transfering = false;//completed
 				list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
-			}
+			} // chen ten file, ki hieu
 		}
 		else {
 			MessageBox(_T("Please choose another file or rename file and file path so that file path and file name contain ASCII characters only!"), _T("Alert"), MB_ICONERROR);
@@ -1360,18 +1360,18 @@ void messenger::OnNMClickListMess(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: Add your control notification handler code here
-	int nSelected = pNMItemActivate->iItem;
-	CString strItem = list_mess.GetItemText(nSelected, 0);
+	int nSelected = pNMItemActivate->iItem; // get item -> vi tri
+	CString strItem = list_mess.GetItemText(nSelected, 0); // lay vi tri dau tien
 	if (strItem.GetLength()) {
 		CString flag = ATTACH_FILE_FLAG;
 		bool isFile = false;
 		int p1 = strItem.Find(flag);
 		if (p1 == strItem.GetLength() - flag.GetLength()) {
 			CString icon = ATTACH_FILE_ICON;
-			int p2 = strItem.Find(icon);
+			int p2 = strItem.Find(icon); // vi tri icon
 			if (p2 != -1) {
-				p2 += icon.GetLength();
-				CString path = strItem.Mid(p2, p1 - p2);
+				p2 += icon.GetLength(); // do dai icon
+				CString path = strItem.Mid(p2, p1 - p2); // lay duong dan
 				ConfirmDlg confirmDlg;
 				confirmDlg.SetMess(L"File \"" + std::wstring(path) + L"\" may contain viruses that may be harmful to your computer!\r\nAre you sure to open this file?");
 				if (confirmDlg.DoModal() == IDOK) {
@@ -1424,11 +1424,11 @@ void messenger::OnBnClickedBtnCamera()
 void messenger::OnBnClickedBtnImage()
 {
 	// TODO: Add your control notification handler code here
-	if (current_hash == "") {
+	if (current_hash == "") { // kiem tra xem chon chua
 		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
-	SendFile(_T("Image Files (*.png, *.jpg, *.jpeg, *.gif)|*.png; *.jpg; *.jpeg, *.gif||"));
+	SendFile(_T("Image Files (*.png, *.jpg, *.jpeg, *.gif)|*.png; *.jpg; *.jpeg; *.gif||"));
 }
 
 
@@ -1439,7 +1439,7 @@ void messenger::OnBnClickedBtnVideo()
 		MessageBox(_T("Please create a conversation to start!"), _T("Alert"), MB_ICONERROR);
 		return;
 	}
-	SendFile(_T("Video Files (*.mp4, *.flv, *.avi, *.wmv)|*.mp4; *.flv; *.avi; *.wmv||"));
+	SendFile(_T("Video Files (*.mp4, *.flv, *.avi, *.wmv)|*.mp4; *.flv; *.avi; *.wmv||")); // loc
 }
 
 

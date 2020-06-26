@@ -122,7 +122,7 @@ public:
 		char* message;
 		char temp[PACKAGE_SIZE];
 		int iStat;
-		iStat = recv(_connect, (char*)temp, PACKAGE_SIZE, 0);
+		iStat = recv(_connect, (char*)temp, PACKAGE_SIZE, 0); // nhan du lieu tu server, packet 8192 vào mang temp
 		if (iStat == -1) {
 			DWORD err = GetLastError();
 			cout << "error connection " << err << endl;

@@ -138,6 +138,7 @@
 #define IDC_BTN_LEFT                    1049
 #define IDC_FORM_CHAT_MSG_HANDLER       1050
 #define IDC_BTN_SWAP                    1050
+#define IDC_MFCBUTTON1                  1050
 #define IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE 1051
 #define IDC_BTN_RIGHT                   1051
 #define IDC_FORM_CHAT_MSG_HANDLER_HASH_CONVERSATION 1052
@@ -154,7 +155,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        246
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           113
 #endif
 #endif
