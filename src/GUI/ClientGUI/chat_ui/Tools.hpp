@@ -9,6 +9,7 @@
 #include "Mmsystem.h"
 
 namespace fs = std::filesystem;
+using namespace std;
 
 class Tools
 {
@@ -21,6 +22,29 @@ public:
             if (c[i] < 0) return false;
         }
         return true;
+    }
+
+    void Fillter(
+        vector<wstring> src,
+        vector<wstring> des,
+        vector<wstring>* val_add,
+        vector<wstring>* val_remove
+    ) {
+        vector<wstring> commons;
+        for (size_t i = 0; i < src.size(); ++i) {
+            for (size_t j = 0; j < des.size(); ++j) {
+                if (src[i] == des[j]) {
+                    commons.push_back(src[i]);
+                    src.erase(src.begin() + i);
+                    des.erase(des.begin() + j);
+                    --i;
+                    --j;
+                    break;
+                }
+            }
+        }
+        *val_add = des;
+        *val_remove = src;
     }
 
     void PlayGotMessSound() {

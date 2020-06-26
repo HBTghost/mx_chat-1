@@ -229,12 +229,26 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 	UINT command_msg = (UINT)wParam;
 	SDataPackage* model;
 	ClientConversation* tempConv;
+	vector<wstring> new_friends, val_add, val_remove;
 	switch (command_msg)
 	{
 	case IDC_FORM_CHAT_MSG_HANDLER_LIST_ONLINE:
 	{
 		//MessageBox(_T("Form list online chat update "), _T("Alert"), MB_ICONINFORMATION);
-		friends = StringHelper::VectorStringToWideString(this->mClientService->gClientObj._list_online);
+		new_friends = StringHelper::VectorStringToWideString(this->mClientService->gClientObj._list_online);
+		Tools().Fillter(friends, new_friends, &val_add, &val_remove);
+		for (auto x : val_add) {
+			list_logs.AddString((x + L" online 😃").c_str());
+		}
+		for (auto x : val_remove) {
+			list_logs.AddString((x + L" offline 😭").c_str());
+		}
+		int nCount = 0;
+		nCount = list_logs.GetCount(); // Declare m_LisBox as a control in ClassView member variables.
+		list_logs.SetCurSel(nCount - 1); // List box is zero based.
+
+		list_logs.SetTopIndex(nCount - 1); // moves the view.
+		friends = new_friends;
 		ShowFriends();
 		break;
 	}
@@ -387,6 +401,11 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 							Tools().PlayGotMessSound();
 						}
 						m_ListFile.AddString(StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str());
+						int nCount = 0;
+						nCount = m_ListFile.GetCount(); // Declare m_LisBox as a control in ClassView member variables.
+						m_ListFile.SetCurSel(nCount - 1); // List box is zero based.
+
+						m_ListFile.SetTopIndex(nCount - 1); // moves the view.
 						CString _mess = CString((from_src + " : ").c_str()) + ATTACH_FILE_ICON + StringHelper::utf8_decode(cCon->ftm->_desFileName).c_str() + ATTACH_FILE_FLAG;
 						list_mess.InsertItem(count++, _mess);
 					}
@@ -953,6 +972,11 @@ void messenger::SendFile(CString filetype) {
 			}
 			else {
 				m_ListFile.AddString(sFilePath);
+				int nCount = 0;
+				nCount = m_ListFile.GetCount(); // Declare m_LisBox as a control in ClassView member variables.
+				m_ListFile.SetCurSel(nCount - 1); // List box is zero based.
+
+				m_ListFile.SetTopIndex(nCount - 1); // moves the view.
 				cCon->transfering = true;
 				mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
 				cCon->transfering = false;//completed
