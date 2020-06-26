@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 // messenger dialog
+enum color { BRICK, PURPLE, BLUE, GREEN, SGREEN, YELLOW, ORANGE, GRAY, WHITE };
 typedef 	unordered_map<string, ClientConversation*> unorder_mapClientConversation;
 typedef 	unordered_map<string, ClientConversation*>::iterator unorder_mapClientConversationIterator;
 class messenger : public CDialog
@@ -25,33 +26,10 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	DECLARE_MESSAGE_MAP()
 	HICON m_hIcon;
-	BOOL sendWndIconToTaskbar(HWND hWnd, HICON hIcon)
-	{
-		BOOL ret = TRUE;
-		ASSERT(hWnd);
-		if (!::IsWindow(hWnd))
-			return FALSE;
-		CWnd* pWnd;
-		pWnd = pWnd->FromHandle(hWnd);
-		ASSERT(pWnd);
-		if (!pWnd)
-			return FALSE;
-		if (pWnd->GetParent())
-		{
-			if (::SetWindowLong(hWnd, GWL_HWNDPARENT, NULL) == 0)
-				return FALSE;
-		}
-
-
-		if (!(pWnd->ModifyStyle(NULL, WS_OVERLAPPEDWINDOW)))
-			ret = FALSE;
-		pWnd->SetIcon(hIcon, TRUE);
-		pWnd->SetIcon(hIcon, FALSE);
-
-		return ret;
-	}
+	BOOL sendWndIconToTaskbar(HWND hWnd, HICON hIcon);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
+	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 public:
 	 
 	std::pair<std::string, ClientConversation*> *chatBoxTarget = nullptr; //selected
@@ -65,6 +43,7 @@ public:
 	string current_hash = "";
 	string current_des_name = "";
 	
+	void SetMessColor();
 	void ShowFriends();
 	void ShowGroups();
 	void ShowGroupsClick();
@@ -127,7 +106,7 @@ public:
 	afx_msg void OnBnClickedBtnSound();
 	afx_msg void OnBnClickedBtnDoc();
 	afx_msg void OnNMClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
-	int colorTheme = 0;
+	int colorTheme = BLUE;
 //	afx_msg void OnNMClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnAddFriend();
 	CListBox list_logs;

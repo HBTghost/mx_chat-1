@@ -84,6 +84,7 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_MEMBER_CHAT, m_messMember);
 	DDX_Control(pDX, IDC_LIST_FILE_TRANSFER, m_ListFile);
 
+	SetMessColor();
 	SetUserIcon();
 	SetSendBtnIcon();
 	SetAddFriendIcon();
@@ -103,28 +104,132 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
+	if (pWnd->GetDlgCtrlID() == IDC_LIST_MEMBER_CHAT || pWnd->GetDlgCtrlID() == IDC_LIST_FILE_TRANSFER)
+	{
+		pDC->SetTextColor(RGB(0, 0, 0));
+		switch (colorTheme)
+		{
+		case BRICK:
+			pDC->SetBkColor(RGB(253, 237, 236));
+			break;
+		case PURPLE:
+			pDC->SetBkColor(RGB(244, 236, 247));
+			break;
+		case BLUE:
+			pDC->SetBkColor(RGB(235, 245, 251));
+			break;
+		case GREEN:
+			pDC->SetBkColor(RGB(232, 246, 243));
+			break;
+		case SGREEN:
+			pDC->SetBkColor(RGB(234, 250, 241));
+			break;
+		case YELLOW:
+			pDC->SetBkColor(RGB(254, 249, 231));
+			break;
+		case ORANGE:
+			pDC->SetBkColor(RGB(251, 238, 230));
+			break;
+		case GRAY:
+			pDC->SetBkColor(RGB(242, 244, 244));
+			break;
+		case WHITE:
+			pDC->SetBkColor(RGB(255, 255, 255));
+			break;
+		default:
+			break;
+		}
+		hbr = m_brush;
+	}
 	if (pWnd->GetDlgCtrlID() == IDC_MESS_CONTENT)
 	{
 		pDC->SetTextColor(RGB(0, 0, 0));
 		switch (colorTheme)
 		{
-		case 0:
-			pDC->SetBkColor(RGB(214, 234, 248));
+		case BRICK:
+			pDC->SetBkColor(RGB(245, 183, 177));
 			break;
-		case 1:
-			pDC->SetBkColor(RGB(0, 234, 248));
+		case PURPLE:
+			pDC->SetBkColor(RGB(210, 180, 222));
+			break;
+		case BLUE:
+			pDC->SetBkColor(RGB(174, 214, 241));
+			break;
+		case GREEN:
+			pDC->SetBkColor(RGB(162, 217, 206));
+			break;
+		case SGREEN:
+			pDC->SetBkColor(RGB(171, 235, 198));
+			break;
+		case YELLOW:
+			pDC->SetBkColor(RGB(249, 231, 159));
+			break;
+		case ORANGE:
+			pDC->SetBkColor(RGB(237, 187, 153));
+			break;
+		case GRAY:
+			pDC->SetBkColor(RGB(204, 209, 209));
+			break;
+		case WHITE:
+			pDC->SetBkColor(RGB(255, 255, 255));
 			break;
 		default:
 			break;
 		}
-		//pDC->SetBkMode(TRANSPARENT);
 		hbr = m_brush;
 	}
 	return hbr;
 }
 
+void messenger::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
+{
+	bool draw = true;
+	COLORREF color;
+	if (nIDCtl == IDC_LIST_MEMBER_CHAT) {
+		color = RGB(175, 122, 197);
+	}
+	else if (nIDCtl == IDC_LIST_FILE_TRANSFER) {
+		color = RGB(72, 201, 176);
+	}
+	else {
+		draw = false;
+	}
+
+	if (draw)
+	{
+		CDC dc;
+
+		dc.Attach(lpDrawItemStruct->hDC);
+		RECT rect;
+		rect = lpDrawItemStruct->rcItem;
+
+		dc.FillSolidRect(&rect, color);
+		UINT state = lpDrawItemStruct->itemState;
+
+		if ((state & ODS_SELECTED))
+		{
+			dc.DrawEdge(&rect, EDGE_BUMP, BF_RECT);
+
+		}
+
+		dc.SetBkColor(RGB(255, 0, 255));
+		dc.SetTextColor(RGB(0, 0, 0));
+		dc.SetBkMode(TRANSPARENT);
+
+		TCHAR buffer[MAX_PATH];
+		ZeroMemory(buffer, MAX_PATH);
+		::GetWindowText(lpDrawItemStruct->hwndItem, buffer, MAX_PATH);
+		dc.DrawText(buffer, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+		dc.Detach();
+	}
+
+	CDialog::OnDrawItem(nIDCtl, lpDrawItemStruct);
+}
+
 BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_WM_PAINT()
+	ON_WM_DRAWITEM()
 	ON_BN_CLICKED(IDCANCEL, &messenger::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_BTN_SEND, &messenger::OnBnClickedBtnSend)
 //	ON_BN_CLICKED(IDC_BTN_ADD_FRIEND, &messenger::OnBnClickedBtnAddFriend)
@@ -222,7 +327,31 @@ void messenger::OnPaint()
 }
 // messenger message handlers
 
+BOOL messenger::sendWndIconToTaskbar(HWND hWnd, HICON hIcon)
+{
+	BOOL ret = TRUE;
+	ASSERT(hWnd);
+	if (!::IsWindow(hWnd))
+		return FALSE;
+	CWnd* pWnd;
+	pWnd = pWnd->FromHandle(hWnd);
+	ASSERT(pWnd);
+	if (!pWnd)
+		return FALSE;
+	if (pWnd->GetParent())
+	{
+		if (::SetWindowLong(hWnd, GWL_HWNDPARENT, NULL) == 0)
+			return FALSE;
+	}
 
+
+	if (!(pWnd->ModifyStyle(NULL, WS_OVERLAPPEDWINDOW)))
+		ret = FALSE;
+	pWnd->SetIcon(hIcon, TRUE);
+	pWnd->SetIcon(hIcon, FALSE);
+
+	return ret;
+}
 
 LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 {
@@ -457,6 +586,60 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
+
+void messenger::SetMessColor()
+{
+	switch (colorTheme)
+	{
+	case BRICK:
+		list_mess.SetBkColor(RGB(253, 237, 236));
+		list_groups.SetBkColor(RGB(253, 237, 236));
+		list_friends.SetBkColor(RGB(253, 237, 236));
+		break;
+	case PURPLE:
+		list_mess.SetBkColor(RGB(244, 236, 247));
+		list_groups.SetBkColor(RGB(244, 236, 247));
+		list_friends.SetBkColor(RGB(244, 236, 247));
+		break;
+	case BLUE:
+		list_mess.SetBkColor(RGB(235, 245, 251));
+		list_groups.SetBkColor(RGB(235, 245, 251));
+		list_friends.SetBkColor(RGB(235, 245, 251));
+		break;
+	case GREEN:
+		list_mess.SetBkColor(RGB(232, 246, 243));
+		list_groups.SetBkColor(RGB(232, 246, 243));
+		list_friends.SetBkColor(RGB(232, 246, 243));
+		break;
+	case SGREEN:
+		list_mess.SetBkColor(RGB(234, 250, 241));
+		list_groups.SetBkColor(RGB(234, 250, 241));
+		list_friends.SetBkColor(RGB(234, 250, 241));
+		break;
+	case YELLOW:
+		list_mess.SetBkColor(RGB(254, 249, 231));
+		list_groups.SetBkColor(RGB(254, 249, 231));
+		list_friends.SetBkColor(RGB(254, 249, 231));
+		break;
+	case ORANGE:
+		list_mess.SetBkColor(RGB(251, 238, 230));
+		list_groups.SetBkColor(RGB(251, 238, 230));
+		list_friends.SetBkColor(RGB(251, 238, 230));
+		break;
+	case GRAY:
+		list_mess.SetBkColor(RGB(242, 244, 244));
+		list_groups.SetBkColor(RGB(242, 244, 244));
+		list_friends.SetBkColor(RGB(242, 244, 244));
+		break;
+	case WHITE:
+		list_mess.SetBkColor(RGB(255, 255, 255));
+		list_groups.SetBkColor(RGB(255, 255, 255));
+		list_friends.SetBkColor(RGB(255, 255, 255));
+		break;
+	default:
+		break;
+	}
+}
 
 // Show friends list to listcontrol component => use to show list user online
 void messenger::ShowFriends()
@@ -754,7 +937,7 @@ void messenger::SetSendBtnIcon()
 
 void messenger::SetAddFriendIcon()
 {
-	SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_ADD_FRIEND, 40);
+	SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_BRICK + colorTheme, 44);
 	SetBtnIcon(IDC_BTN_ADD_GROUP, IDI_ADD_GROUP, 44);
 }
 
@@ -1545,6 +1728,16 @@ void messenger::OnNMClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 void messenger::OnBnClickedBtnAddFriend()
 {
 	// TODO: Add your control notification handler code here
-	colorTheme = (colorTheme + 1) % 2;
+	//colorTheme = (colorTheme + 1) % 8;
+	EmojiDlg emojiDlg(true);
+	INT_PTR nRet = emojiDlg.DoModal();
+	if (emojiDlg.color_val != -1) {
+		this->colorTheme = emojiDlg.color_val;
+		SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_BRICK + colorTheme, 44);
+	}
+	
+	SetMessColor();
 	this->RedrawWindow();
+	mess_content.SetFocus();
+	mess_content.SetSel(-1);
 }

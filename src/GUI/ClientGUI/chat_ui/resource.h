@@ -77,6 +77,16 @@
 #define IDI_SOUND                       244
 #define IDI_ICON1                       245
 #define IDI_DOC                         245
+#define IDI_ORANGE                      266
+#define IDI_GREEN1                      263
+#define IDI_GREEN2                      264
+#define IDI_WHITE                       268
+#define IDI_YELLOWE                     250
+#define IDI_YELLOW                      265
+#define IDI_BRICK                       260
+#define IDI_PURPLE                      261
+#define IDI_BLUE                        262
+#define IDI_GRAY                        267
 #define IDC_USERNAME                    1000
 #define IDC_PASSWORD                    1001
 #define IDC_BTN_LOGIN                   1002
@@ -154,7 +164,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        246
+#define _APS_NEXT_RESOURCE_VALUE        255
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1053
 #define _APS_NEXT_SYMED_VALUE           113

@@ -295,6 +295,11 @@
     <Image Include="C:\Users\hacba\Downloads\Pixelkit-Tasty-Bites-Hamburger.ico" />
     <Image Include="C:\Users\hacba\Downloads\Vcferreira-Firefox-Os-Clock.ico" />
     <Image Include="res\add_group.ico" />
+    <Image Include="res\blue.ico" />
+    <Image Include="res\brick.ico" />
+    <Image Include="res\gray.ico" />
+    <Image Include="res\green 1.ico" />
+    <Image Include="res\green 2.ico" />
     <Image Include="res\group1.ico" />
     <Image Include="res\group2.ico" />
     <Image Include="res\group3.ico" />
@@ -341,6 +346,8 @@
     <Image Include="res\icons8-user-64.ico" />
     <Image Include="res\icons8-video-file-64.ico" />
     <Image Include="res\icons8-word-64.ico" />
+    <Image Include="res\orange.ico" />
+    <Image Include="res\purple.ico" />
     <Image Include="res\user1.ico" />
     <Image Include="res\user2.ico" />
     <Image Include="res\user3.ico" />
@@ -351,6 +358,8 @@
     <Image Include="res\user8.ico" />
     <Image Include="res\user9.ico" />
     <Image Include="res\user9p.ico" />
+    <Image Include="res\white.ico" />
+    <Image Include="res\yellow.ico" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="MyLogFile.log" />
