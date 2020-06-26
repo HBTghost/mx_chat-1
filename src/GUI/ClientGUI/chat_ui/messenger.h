@@ -29,7 +29,6 @@ protected:
 	BOOL sendWndIconToTaskbar(HWND hWnd, HICON hIcon);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
-	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 public:
 	 
 	std::pair<std::string, ClientConversation*> *chatBoxTarget = nullptr; //selected
