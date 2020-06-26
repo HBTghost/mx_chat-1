@@ -16,6 +16,13 @@ public:
     Tools() = default;
     ~Tools() = default;
 
+    bool is_ascii(std::string c) {
+        for (size_t i = 0; i < c.length(); i++) {
+            if (c[i] < 0) return false;
+        }
+        return true;
+    }
+
     void PlayGotMessSound() {
         PlaySound(TEXT("./res/uh-oh.wav"), NULL, SND_SYNC);
     }

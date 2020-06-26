@@ -934,17 +934,21 @@ void messenger::SendFile(CString filetype) {
 		CT2A str_file_name(sFileName);
 		CT2A str_file_ext(sFileExt);
 
-	
-		ClientConversation* cCon = mListChat[current_hash];
-		if (cCon->transfering == true) {
-			AfxMessageBox(L"Please wait transfer completed");
+		if (Tools().is_ascii(str_path.m_psz)) {
+			ClientConversation* cCon = mListChat[current_hash];
+			if (cCon->transfering == true) {
+				AfxMessageBox(L"Please wait transfer completed");
+			}
+			else {
+				m_ListFile.AddString(sFilePath);
+				cCon->transfering = true;
+				mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
+				cCon->transfering = false;//completed
+				list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
+			}
 		}
-		else{
-			m_ListFile.AddString(sFilePath);
-			cCon->transfering = true;
-			mClientService->InitTransferFile(current_hash, 7680, str_path.m_psz, string(str_file_name.m_psz));
-			cCon->transfering = false ;//completed
-			list_mess.InsertItem(count++, _T("Me : ") + ATTACH_FILE_ICON + sFilePath + ATTACH_FILE_FLAG);
+		else {
+			MessageBox(_T("Please choose another file or rename file and file path so that file path and file name contain ASCII characters only!"), _T("Alert"), MB_ICONERROR);
 		}
 	}
 	mess_content.SetFocus();
