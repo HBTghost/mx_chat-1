@@ -97,6 +97,7 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 	ScreenToClient(&mess_rect);
 	list_mess.GetWindowRect(&list_mess_rect);
 	ScreenToClient(&list_mess_rect);
+	DDX_Control(pDX, IDC_LIST_LOGS, list_logs);
 }
 
 HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -105,7 +106,17 @@ HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	if (pWnd->GetDlgCtrlID() == IDC_MESS_CONTENT)
 	{
 		pDC->SetTextColor(RGB(0, 0, 0));
-		pDC->SetBkColor(RGB(214, 234, 248));
+		switch (colorTheme)
+		{
+		case 0:
+			pDC->SetBkColor(RGB(214, 234, 248));
+			break;
+		case 1:
+			pDC->SetBkColor(RGB(0, 234, 248));
+			break;
+		default:
+			break;
+		}
 		//pDC->SetBkMode(TRANSPARENT);
 		hbr = m_brush;
 	}
@@ -140,6 +151,7 @@ BEGIN_MESSAGE_MAP(messenger, CDialog)
 	ON_BN_CLICKED(IDC_BTN_DOC, &messenger::OnBnClickedBtnDoc)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_GROUPS, &messenger::OnNMClickListGroups)
 //	ON_NOTIFY(NM_CLICK, IDC_LIST_FRIENDS, &messenger::OnNMClickListFriends)
+ON_BN_CLICKED(IDC_BTN_ADD_FRIEND, &messenger::OnBnClickedBtnAddFriend)
 END_MESSAGE_MAP()
 
 
@@ -1504,3 +1516,11 @@ void messenger::OnNMClickListGroups(NMHDR* pNMHDR, LRESULT* pResult)
 //
 //	*pResult = 0;
 //}
+
+
+void messenger::OnBnClickedBtnAddFriend()
+{
+	// TODO: Add your control notification handler code here
+	colorTheme = (colorTheme + 1) % 2;
+	this->RedrawWindow();
+}

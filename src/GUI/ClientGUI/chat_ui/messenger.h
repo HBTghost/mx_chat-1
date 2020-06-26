@@ -127,5 +127,8 @@ public:
 	afx_msg void OnBnClickedBtnSound();
 	afx_msg void OnBnClickedBtnDoc();
 	afx_msg void OnNMClickListGroups(NMHDR* pNMHDR, LRESULT* pResult);
+	int colorTheme = 0;
 //	afx_msg void OnNMClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedBtnAddFriend();
+	CListBox list_logs;
 };
