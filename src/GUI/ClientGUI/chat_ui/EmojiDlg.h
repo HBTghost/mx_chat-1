@@ -10,7 +10,7 @@ class EmojiDlg : public CDialog
 public:
 	EmojiDlg(CWnd* pParent = nullptr);   // standard constructor
 	EmojiDlg(CEdit* mess, std::wstring username);
-	EmojiDlg(bool color);
+	EmojiDlg(COLORREF a = RGB(255, 255, 255), COLORREF b = RGB(255, 255, 255));
 	bool color = false;
 	virtual ~EmojiDlg();
 
@@ -30,6 +30,7 @@ public:
 	CListCtrl list_emoji;
 	std::wstring username;
 	CEdit* mess;
-	int color_val = -1;
+	COLORREF a = RGB(255, 255, 255);
+	COLORREF b = RGB(255, 255, 255);
 	afx_msg void OnNMClickListEmoji(NMHDR* pNMHDR, LRESULT* pResult);
 };

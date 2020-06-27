@@ -20,6 +20,7 @@
 #define IDD_ShowEmoijDlg                110
 #define IDD_CreateGroupDlg              111
 #define IDD_ChooseGroup                 112
+#define IDD_CustomColorDlg              113
 #define IDI_APP                         150
 #define IDI_ADD_GROUP                   186
 #define IDI_ICON5                       187
@@ -77,16 +78,17 @@
 #define IDI_SOUND                       244
 #define IDI_ICON1                       245
 #define IDI_DOC                         245
-#define IDI_ORANGE                      266
-#define IDI_GREEN1                      263
-#define IDI_GREEN2                      264
-#define IDI_WHITE                       268
 #define IDI_YELLOWE                     250
-#define IDI_YELLOW                      265
+#define IDI_COLOR                       255
 #define IDI_BRICK                       260
 #define IDI_PURPLE                      261
 #define IDI_BLUE                        262
+#define IDI_GREEN1                      263
+#define IDI_GREEN2                      264
+#define IDI_YELLOW                      265
+#define IDI_ORANGE                      266
 #define IDI_GRAY                        267
+#define IDI_WHITE                       268
 #define IDC_USERNAME                    1000
 #define IDC_PASSWORD                    1001
 #define IDC_BTN_LOGIN                   1002
@@ -158,15 +160,17 @@
 #define IDC_FORM_CHAT_MSG_HANDLER_STATUS_TRANSFER_FILE 1055
 #define IDC_FORM_CHAT_MSG_HANDLER_BEGIN_TRANSFER_FILE 1056
 #define IDC_FORM_CHAT_MSG_HANDLER_END_TRANSFER_FILE 1057
+#define IDC_COLOR_A                     1057
 #define IDC_FORM_CHAT_MSG_HANDLER_SERVER_DISCONNECTED 1058
+#define IDC_COLOR_B                     1058
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        255
+#define _APS_NEXT_RESOURCE_VALUE        258
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1053
-#define _APS_NEXT_SYMED_VALUE           113
+#define _APS_NEXT_CONTROL_VALUE         1058
+#define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

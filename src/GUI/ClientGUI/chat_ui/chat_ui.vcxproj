@@ -199,6 +199,7 @@
     <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="CreateGroupDlg.h" />
+    <ClInclude Include="CustomColorDlg.h" />
     <ClInclude Include="DataHelper.h" />
     <ClInclude Include="DebugHelper.h" />
     <ClInclude Include="EditPasswordDlg.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="CreateGroupDlg.cpp" />
+    <ClCompile Include="CustomColorDlg.cpp" />
     <ClCompile Include="DataHelper.cpp" />
     <ClCompile Include="DebugHelper.cpp" />
     <ClCompile Include="EditPasswordDlg.cpp" />
@@ -321,6 +323,7 @@
     <Image Include="res\icons8-chat-64.ico" />
     <Image Include="res\icons8-checked-user-male-64.ico" />
     <Image Include="res\icons8-clock-64.ico" />
+    <Image Include="res\icons8-color-wheel-80.ico" />
     <Image Include="res\icons8-communicate-64.ico" />
     <Image Include="res\icons8-conference-64.ico" />
     <Image Include="res\icons8-denied-64.ico" />

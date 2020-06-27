@@ -6,6 +6,7 @@
 #include "EmojiDlg.h"
 #include "afxdialogex.h"
 #include "ShowEmoijDlg.h"
+#include "CustomColorDlg.h"
 #include <vector>
 #include <string>
 
@@ -27,8 +28,10 @@ EmojiDlg::EmojiDlg(CEdit* mess, std::wstring username)
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
 }
 
-EmojiDlg::EmojiDlg(bool color)
+EmojiDlg::EmojiDlg(COLORREF a, COLORREF b)
 	: CDialog(IDD_EmojiDlg, nullptr)
+	, a(a)
+	, b(b)
 {
 	this->color = true;
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_APP);
@@ -46,39 +49,39 @@ void EmojiDlg::InitList() {
 	std::vector<CString> list_item_name;
 	if (color) {
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_BRICK));
-		strItem.Format(_T("BRICK", 0));
+		strItem.Format(_T("Brick", 0));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_PURPLE));
-		strItem.Format(_T("PURPLE", 1));
+		strItem.Format(_T("Purple", 1));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_BLUE));
-		strItem.Format(_T("BLUE", 0));
+		strItem.Format(_T("Blue", 0));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_GREEN1));
-		strItem.Format(_T("GREEN 1", 0));
+		strItem.Format(_T("Green 1", 0));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_GREEN2));
-		strItem.Format(_T("GREEN 2", 0));
+		strItem.Format(_T("Green 2", 0));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_YELLOW));
-		strItem.Format(_T("YELLOW", 0));
+		strItem.Format(_T("Yellow", 0));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_ORANGE));
-		strItem.Format(_T("ORANGE", 0));
+		strItem.Format(_T("Orange", 0));
 		list_item_name.push_back(strItem);
 
 		imgList.Add(AfxGetApp()->LoadIconW(IDI_GRAY));
-		strItem.Format(_T("GRAY", 0));
+		strItem.Format(_T("Gray", 0));
 		list_item_name.push_back(strItem);
 
-		imgList.Add(AfxGetApp()->LoadIconW(IDI_WHITE));
-		strItem.Format(_T("WHITE", 0));
+		imgList.Add(AfxGetApp()->LoadIconW(IDI_COLOR));
+		strItem.Format(_T("Custom", 0));
 		list_item_name.push_back(strItem);
 	}
 	else {
@@ -127,9 +130,9 @@ void EmojiDlg::InitList() {
 
 void EmojiDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST_EMOJI, list_emoji);
-	InitList();
+CDialog::DoDataExchange(pDX);
+DDX_Control(pDX, IDC_LIST_EMOJI, list_emoji);
+InitList();
 }
 
 
@@ -192,32 +195,47 @@ void EmojiDlg::OnNMClickListEmoji(NMHDR* pNMHDR, LRESULT* pResult)
 
 	if (strItem.GetLength() > 0) {
 		if (color) {
-			if (strItem == _T("BRICK")) {
-				color_val = 0;
+			if (strItem == _T("Brick")) {
+				a = RGB(253, 237, 236);
+				b = RGB(245, 183, 177);
 			}
-			else if (strItem == _T("PURPLE")) {
-				color_val = 1;
+			else if (strItem == _T("Purple")) {
+				a = RGB(244, 236, 247);
+				b = RGB(210, 180, 222);
 			}
-			else if (strItem == _T("BLUE")) {
-				color_val = 2;
+			else if (strItem == _T("Blue")) {
+				a = RGB(235, 245, 251);
+				b = RGB(174, 214, 241);
 			}
-			else if (strItem == _T("GREEN 1")) {
-				color_val = 3;
+			else if (strItem == _T("Green 1")) {
+				a = RGB(232, 246, 243);
+				b = RGB(162, 217, 206);
 			}
-			else if (strItem == _T("GREEN 2")) {
-				color_val = 4;
+			else if (strItem == _T("Green 2")) {
+				a = RGB(234, 250, 241);
+				b = RGB(171, 235, 198);
 			}
-			else if (strItem == _T("YELLOW")) {
-				color_val = 5;
+			else if (strItem == _T("Yellow")) {
+				a = RGB(254, 249, 231);
+				b = RGB(249, 231, 159);
 			}
-			else if (strItem == _T("ORANGE")) {
-				color_val = 6;
+			else if (strItem == _T("Orange")) {
+				a = RGB(251, 238, 230);
+				b = RGB(237, 187, 153);
 			}
-			else if (strItem == _T("GRAY")) {
-				color_val = 7;
+			else if (strItem == _T("Gray")) {
+				a = RGB(242, 244, 244);
+				b = RGB(204, 209, 209);
 			}
-			else if (strItem == _T("WHITE")) {
-				color_val = 8;
+			else {
+				CustomColorDlg customColor(a, b);
+				if (customColor.DoModal() == IDOK) {
+					a = customColor.a;
+					b = customColor.b;
+				}
+				else {
+					goto CON;
+				}
 			}
 			OnOK();
 		}
@@ -228,5 +246,6 @@ void EmojiDlg::OnNMClickListEmoji(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 
 	// TODO: Add your control notification handler code here
+CON:
 	*pResult = 0;
 }

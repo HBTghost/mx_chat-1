@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 // messenger dialog
-enum color { BRICK, PURPLE, BLUE, GREEN, SGREEN, YELLOW, ORANGE, GRAY, WHITE };
+enum color { BRICK, PURPLE, BLUE, GREEN, SGREEN, YELLOW, ORANGE, GRAY };
 typedef 	unordered_map<string, ClientConversation*> unorder_mapClientConversation;
 typedef 	unordered_map<string, ClientConversation*>::iterator unorder_mapClientConversationIterator;
 class messenger : public CDialog
@@ -109,4 +109,6 @@ public:
 //	afx_msg void OnNMClickListFriends(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnAddFriend();
 	CListBox list_logs;
+	COLORREF a = RGB(235, 245, 251);
+	COLORREF b = RGB(174, 214, 241);
 };

@@ -114,6 +114,9 @@
     <ClInclude Include="FileHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CustomColorDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chat_ui.cpp">
@@ -195,6 +198,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomColorDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -507,6 +513,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\gray.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\icons8-color-wheel-80.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

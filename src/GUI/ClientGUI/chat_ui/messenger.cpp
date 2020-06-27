@@ -104,78 +104,10 @@ void messenger::DoDataExchange(CDataExchange* pDX)
 HBRUSH messenger::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
-	if (pWnd->GetDlgCtrlID() == IDC_LIST_MEMBER_CHAT || pWnd->GetDlgCtrlID() == IDC_LIST_FILE_TRANSFER)
-	{
-		pDC->SetTextColor(RGB(0, 0, 0));
-		switch (colorTheme)
-		{
-		case BRICK:
-			pDC->SetBkColor(RGB(253, 237, 236));
-			break;
-		case PURPLE:
-			pDC->SetBkColor(RGB(244, 236, 247));
-			break;
-		case BLUE:
-			pDC->SetBkColor(RGB(235, 245, 251));
-			break;
-		case GREEN:
-			pDC->SetBkColor(RGB(232, 246, 243));
-			break;
-		case SGREEN:
-			pDC->SetBkColor(RGB(234, 250, 241));
-			break;
-		case YELLOW:
-			pDC->SetBkColor(RGB(254, 249, 231));
-			break;
-		case ORANGE:
-			pDC->SetBkColor(RGB(251, 238, 230));
-			break;
-		case GRAY:
-			pDC->SetBkColor(RGB(242, 244, 244));
-			break;
-		case WHITE:
-			pDC->SetBkColor(RGB(255, 255, 255));
-			break;
-		default:
-			break;
-		}
-		hbr = m_brush;
-	}
 	if (pWnd->GetDlgCtrlID() == IDC_MESS_CONTENT)
 	{
 		pDC->SetTextColor(RGB(0, 0, 0));
-		switch (colorTheme)
-		{
-		case BRICK:
-			pDC->SetBkColor(RGB(245, 183, 177));
-			break;
-		case PURPLE:
-			pDC->SetBkColor(RGB(210, 180, 222));
-			break;
-		case BLUE:
-			pDC->SetBkColor(RGB(174, 214, 241));
-			break;
-		case GREEN:
-			pDC->SetBkColor(RGB(162, 217, 206));
-			break;
-		case SGREEN:
-			pDC->SetBkColor(RGB(171, 235, 198));
-			break;
-		case YELLOW:
-			pDC->SetBkColor(RGB(249, 231, 159));
-			break;
-		case ORANGE:
-			pDC->SetBkColor(RGB(237, 187, 153));
-			break;
-		case GRAY:
-			pDC->SetBkColor(RGB(204, 209, 209));
-			break;
-		case WHITE:
-			pDC->SetBkColor(RGB(255, 255, 255));
-			break;
-		default:
-			break;
-		}
+		pDC->SetBkColor(b);
 		hbr = m_brush;
 	}
 	return hbr;
@@ -545,92 +477,13 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 
 void messenger::SetMessColor()
 {
-	switch (colorTheme)
-	{
-	case BRICK:
-		list_mess.SetBkColor(RGB(253, 237, 236));
-		list_groups.SetBkColor(RGB(253, 237, 236));
-		list_friends.SetBkColor(RGB(253, 237, 236));
+	list_mess.SetBkColor(a);
+	list_groups.SetBkColor(a);
+	list_friends.SetBkColor(a);
 
-		list_mess.SetTextBkColor(RGB(253, 237, 236));
-		list_groups.SetTextBkColor(RGB(253, 237, 236));
-		list_friends.SetTextBkColor(RGB(253, 237, 236));
-		break;
-	case PURPLE:
-		list_mess.SetBkColor(RGB(244, 236, 247));
-		list_groups.SetBkColor(RGB(244, 236, 247));
-		list_friends.SetBkColor(RGB(244, 236, 247));
-
-		list_mess.SetTextBkColor(RGB(244, 236, 247));
-		list_groups.SetTextBkColor(RGB(244, 236, 247));
-		list_friends.SetTextBkColor(RGB(244, 236, 247));
-		break;
-	case BLUE:
-		list_mess.SetBkColor(RGB(235, 245, 251));
-		list_groups.SetBkColor(RGB(235, 245, 251));
-		list_friends.SetBkColor(RGB(235, 245, 251));
-
-		list_mess.SetTextBkColor(RGB(235, 245, 251));
-		list_groups.SetTextBkColor(RGB(235, 245, 251));
-		list_friends.SetTextBkColor(RGB(235, 245, 251));
-		break;
-	case GREEN:
-		list_mess.SetBkColor(RGB(232, 246, 243));
-		list_groups.SetBkColor(RGB(232, 246, 243));
-		list_friends.SetBkColor(RGB(232, 246, 243));
-
-		list_mess.SetTextBkColor(RGB(232, 246, 243));
-		list_groups.SetTextBkColor(RGB(232, 246, 243));
-		list_friends.SetTextBkColor(RGB(232, 246, 243));
-		break;
-	case SGREEN:
-		list_mess.SetBkColor(RGB(234, 250, 241));
-		list_groups.SetBkColor(RGB(234, 250, 241));
-		list_friends.SetBkColor(RGB(234, 250, 241));
-
-		list_mess.SetTextBkColor(RGB(234, 250, 241));
-		list_groups.SetTextBkColor(RGB(234, 250, 241));
-		list_friends.SetTextBkColor(RGB(234, 250, 241));
-		break;
-	case YELLOW:
-		list_mess.SetBkColor(RGB(254, 249, 231));
-		list_groups.SetBkColor(RGB(254, 249, 231));
-		list_friends.SetBkColor(RGB(254, 249, 231));
-
-		list_mess.SetTextBkColor(RGB(254, 249, 231));
-		list_groups.SetTextBkColor(RGB(254, 249, 231));
-		list_friends.SetTextBkColor(RGB(254, 249, 231));
-		break;
-	case ORANGE:
-		list_mess.SetBkColor(RGB(251, 238, 230));
-		list_groups.SetBkColor(RGB(251, 238, 230));
-		list_friends.SetBkColor(RGB(251, 238, 230));
-
-		list_mess.SetTextBkColor(RGB(251, 238, 230));
-		list_groups.SetTextBkColor(RGB(251, 238, 230));
-		list_friends.SetTextBkColor(RGB(251, 238, 230));
-		break;
-	case GRAY:
-		list_mess.SetBkColor(RGB(242, 244, 244));
-		list_groups.SetBkColor(RGB(242, 244, 244));
-		list_friends.SetBkColor(RGB(242, 244, 244));
-
-		list_mess.SetTextBkColor(RGB(242, 244, 244));
-		list_groups.SetTextBkColor(RGB(242, 244, 244));
-		list_friends.SetTextBkColor(RGB(242, 244, 244));
-		break;
-	case WHITE:
-		list_mess.SetBkColor(RGB(255, 255, 255));
-		list_groups.SetBkColor(RGB(255, 255, 255));
-		list_friends.SetBkColor(RGB(255, 255, 255));
-
-		list_mess.SetTextBkColor(RGB(255, 255, 255));
-		list_groups.SetTextBkColor(RGB(255, 255, 255));
-		list_friends.SetTextBkColor(RGB(255, 255, 255));
-		break;
-	default:
-		break;
-	}
+	list_mess.SetTextBkColor(a);
+	list_groups.SetTextBkColor(a);
+	list_friends.SetTextBkColor(a);
 }
 
 // Show friends list to listcontrol component => use to show list user online
@@ -929,7 +782,7 @@ void messenger::SetSendBtnIcon()
 
 void messenger::SetAddFriendIcon()
 {
-	SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_BRICK + colorTheme, 44);
+	SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_COLOR, 44);
 	SetBtnIcon(IDC_BTN_ADD_GROUP, IDI_ADD_GROUP, 44);
 }
 
@@ -1721,11 +1574,11 @@ void messenger::OnBnClickedBtnAddFriend()
 {
 	// TODO: Add your control notification handler code here
 	//colorTheme = (colorTheme + 1) % 8;
-	EmojiDlg emojiDlg(true);
+	EmojiDlg emojiDlg(a, b);
 	INT_PTR nRet = emojiDlg.DoModal();
-	if (emojiDlg.color_val != -1) {
-		this->colorTheme = emojiDlg.color_val;
-		SetBtnIcon(IDC_BTN_ADD_FRIEND, IDI_BRICK + colorTheme, 44);
+	if (nRet == IDOK) {
+		a = emojiDlg.a;
+		b = emojiDlg.b;
 	}
 	
 	SetMessColor();
