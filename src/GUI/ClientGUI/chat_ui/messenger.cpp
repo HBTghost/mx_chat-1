@@ -450,6 +450,9 @@ LRESULT messenger::OnFormMsgHandler(WPARAM wParam, LPARAM lParam)
 						list_mess.InsertItem(count++, dest.c_str() + tmp + mess.c_str());
 					}
 
+					RECT r;
+					list_mess.GetItemRect(0, &r, LVIR_BOUNDS);
+					list_mess.Scroll(CSize(0, (r.bottom - r.top)* list_mess.GetItemCount()));
 
 					// list_mess.InsertItem(count++, msg_received.c_str());
 					LOG_INFO("Handle insert to chatbox");
@@ -545,49 +548,85 @@ void messenger::SetMessColor()
 	switch (colorTheme)
 	{
 	case BRICK:
-		//list_mess.SetBkColor(RGB(253, 237, 236));
+		list_mess.SetBkColor(RGB(253, 237, 236));
 		list_groups.SetBkColor(RGB(253, 237, 236));
 		list_friends.SetBkColor(RGB(253, 237, 236));
+
+		list_mess.SetTextBkColor(RGB(253, 237, 236));
+		list_groups.SetTextBkColor(RGB(253, 237, 236));
+		list_friends.SetTextBkColor(RGB(253, 237, 236));
 		break;
 	case PURPLE:
-		//list_mess.SetBkColor(RGB(244, 236, 247));
+		list_mess.SetBkColor(RGB(244, 236, 247));
 		list_groups.SetBkColor(RGB(244, 236, 247));
 		list_friends.SetBkColor(RGB(244, 236, 247));
+
+		list_mess.SetTextBkColor(RGB(244, 236, 247));
+		list_groups.SetTextBkColor(RGB(244, 236, 247));
+		list_friends.SetTextBkColor(RGB(244, 236, 247));
 		break;
 	case BLUE:
-		//list_mess.SetBkColor(RGB(235, 245, 251));
+		list_mess.SetBkColor(RGB(235, 245, 251));
 		list_groups.SetBkColor(RGB(235, 245, 251));
 		list_friends.SetBkColor(RGB(235, 245, 251));
+
+		list_mess.SetTextBkColor(RGB(235, 245, 251));
+		list_groups.SetTextBkColor(RGB(235, 245, 251));
+		list_friends.SetTextBkColor(RGB(235, 245, 251));
 		break;
 	case GREEN:
-		//list_mess.SetBkColor(RGB(232, 246, 243));
+		list_mess.SetBkColor(RGB(232, 246, 243));
 		list_groups.SetBkColor(RGB(232, 246, 243));
 		list_friends.SetBkColor(RGB(232, 246, 243));
+
+		list_mess.SetTextBkColor(RGB(232, 246, 243));
+		list_groups.SetTextBkColor(RGB(232, 246, 243));
+		list_friends.SetTextBkColor(RGB(232, 246, 243));
 		break;
 	case SGREEN:
-		//list_mess.SetBkColor(RGB(234, 250, 241));
+		list_mess.SetBkColor(RGB(234, 250, 241));
 		list_groups.SetBkColor(RGB(234, 250, 241));
 		list_friends.SetBkColor(RGB(234, 250, 241));
+
+		list_mess.SetTextBkColor(RGB(234, 250, 241));
+		list_groups.SetTextBkColor(RGB(234, 250, 241));
+		list_friends.SetTextBkColor(RGB(234, 250, 241));
 		break;
 	case YELLOW:
-		//list_mess.SetBkColor(RGB(254, 249, 231));
+		list_mess.SetBkColor(RGB(254, 249, 231));
 		list_groups.SetBkColor(RGB(254, 249, 231));
 		list_friends.SetBkColor(RGB(254, 249, 231));
+
+		list_mess.SetTextBkColor(RGB(254, 249, 231));
+		list_groups.SetTextBkColor(RGB(254, 249, 231));
+		list_friends.SetTextBkColor(RGB(254, 249, 231));
 		break;
 	case ORANGE:
-		//list_mess.SetBkColor(RGB(251, 238, 230));
+		list_mess.SetBkColor(RGB(251, 238, 230));
 		list_groups.SetBkColor(RGB(251, 238, 230));
 		list_friends.SetBkColor(RGB(251, 238, 230));
+
+		list_mess.SetTextBkColor(RGB(251, 238, 230));
+		list_groups.SetTextBkColor(RGB(251, 238, 230));
+		list_friends.SetTextBkColor(RGB(251, 238, 230));
 		break;
 	case GRAY:
-		//list_mess.SetBkColor(RGB(242, 244, 244));
+		list_mess.SetBkColor(RGB(242, 244, 244));
 		list_groups.SetBkColor(RGB(242, 244, 244));
 		list_friends.SetBkColor(RGB(242, 244, 244));
+
+		list_mess.SetTextBkColor(RGB(242, 244, 244));
+		list_groups.SetTextBkColor(RGB(242, 244, 244));
+		list_friends.SetTextBkColor(RGB(242, 244, 244));
 		break;
 	case WHITE:
-		//list_mess.SetBkColor(RGB(255, 255, 255));
+		list_mess.SetBkColor(RGB(255, 255, 255));
 		list_groups.SetBkColor(RGB(255, 255, 255));
 		list_friends.SetBkColor(RGB(255, 255, 255));
+
+		list_mess.SetTextBkColor(RGB(255, 255, 255));
+		list_groups.SetTextBkColor(RGB(255, 255, 255));
+		list_friends.SetTextBkColor(RGB(255, 255, 255));
 		break;
 	default:
 		break;
